@@ -156,45 +156,47 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
   const statusStyles = getStatusStyles(order.statusColor);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 shadow-sm transition-all hover:shadow-md cursor-pointer mb-4" onClick={() => setIsExpanded(!isExpanded)}>
-      <div className="flex gap-4">
+    <div className="bg-white p-3 rounded-3xl shadow-sm transition-all hover:shadow-md cursor-pointer mb-4" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="flex gap-4 sm:gap-6">
         {/* Left: Product Image Box */}
-        <div className="w-[84px] h-[84px] sm:w-[100px] sm:h-[100px] bg-[#f8f9fa] rounded-xl flex items-center justify-center shrink-0 relative overflow-hidden">
-          <Image src={order.image} alt={order.title} fill className="object-contain p-2" />
+        <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
+          <Image src={order.image} alt={order.title} fill className="object-cover" />
         </div>
 
         {/* Right: Content container */}
-        <div className="flex-1 flex flex-col justify-between">
-          <div className="flex justify-between items-start gap-2">
-            <div>
-              <h3 className="text-[14px] sm:text-[15px] font-bold text-gray-900 line-clamp-1">{order.title}</h3>
-              <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1">Size: {order.size}</p>
-              <p className="text-[12px] sm:text-[13px] text-gray-500 mt-0.5">Order ID: #{order.id.replace('WOXLY-', '')}</p>
-              <p className="text-[12px] sm:text-[13px] text-gray-500 mt-0.5">{order.date}</p>
-            </div>
-            <span className="text-[15px] sm:text-[16px] font-bold text-gray-900">{order.price}</span>
+        <div className="flex flex-col flex-1 min-w-0 py-1 relative mt-1 sm:mt-2">
+          <div className="flex justify-between items-start mb-1 gap-2 pr-1">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 leading-tight">{order.title}</h3>
+            
+            <button className="text-gray-400 p-1 hover:text-primary transition-colors shrink-0">
+              {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
           </div>
-        </div>
-      </div>
+          
+          <p className="text-[11px] sm:text-[13px] text-gray-400 mb-2 truncate max-w-[85%] leading-tight">
+            Size: {order.size} • #{order.id.replace('WOXLY-', '')} • {order.date.split('•')[0].trim()}
+          </p>
 
-      <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-4">
-        <div className={`${statusStyles.bg} ${statusStyles.text} font-semibold px-3 py-1.5 rounded-lg text-[12px] flex items-center gap-2 w-fit`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${statusStyles.dot}`}></span>
-          {order.status}
-        </div>
-        <div className="flex items-center gap-2 sm:gap-3">
-          {order.trackAction && (
-            <Link
-              href={`/track-order?id=${order.id}`}
-              onClick={(e) => e.stopPropagation()}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 border border-[#2563eb] text-[#2563eb] bg-blue-50 hover:bg-blue-100 rounded-lg text-[11px] sm:text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5"
-            >
-              <Truck className="w-3.5 h-3.5" /> Track
-            </Link>
-          )}
-          <button className="text-gray-400 p-1 hover:bg-gray-50 rounded-full transition-colors">
-            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-          </button>
+          <div className="text-xl sm:text-lg font-bold text-primary mb-3">
+            {order.price}
+          </div>
+
+          <div className="flex items-center justify-between gap-3 mt-auto">
+            <div className={`${statusStyles.bg} ${statusStyles.text} font-semibold px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[12px] flex items-center gap-1.5 w-fit`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${statusStyles.dot}`}></span>
+              {order.status}
+            </div>
+            
+            {order.trackAction && (
+              <Link
+                href={`/track-order?id=${order.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="px-3 sm:px-4 py-1 sm:py-1.5 border border-[#2563eb] text-[#2563eb] bg-blue-50 hover:bg-blue-100 rounded-lg text-[11px] sm:text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5"
+              >
+                <Truck className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Track
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
@@ -880,11 +882,11 @@ function AccountPageInner() {
 
           {/* Greeting Header */}
           <div className="flex items-start gap-3 px-5 pt-8 pb-6">
-            <div className="w-[50px] h-[50px] rounded-full overflow-hidden shrink-0 border-2 border-white shadow-sm relative">
+            <div className="w-[80px] h-[80px] rounded-full overflow-hidden shrink-0 border-2 border-white shadow-sm relative">
               <Image src="/images/product_placeholder.png" alt="Profile" fill className="object-cover" />
             </div>
             <div className="mt-0.5">
-              <h1 className="font-bold text-gray-900 text-[18px]">Good Morning,<br /> Jenny.</h1>
+              <h1 className="font-bold text-gray-900 text-[18px]">Good Morning, Jenny.</h1>
               <p className="text-[12px] text-gray-500 mt-0.5 leading-snug pr-4">Have a great day with full of productivity and good vibes!</p>
             </div>
           </div>

@@ -176,7 +176,7 @@ export default function ShopPage() {
   };
 
   const renderCategoryFilter = () => (
-    <div className="mb-6">
+    <div className="mb-6 z-50">
       <h3 className="font-bold text-gray-900 text-[18px] mb-4">Categories</h3>
       <div className="border border-[#eaeff5] rounded-[16px] p-5 bg-[#fcfdfe]">
         {[
@@ -237,7 +237,7 @@ export default function ShopPage() {
   );
 
   const renderSidebar = () => (
-    <div className="w-full pr-4 text-sm scroll">
+    <div className="w-full pr-4 text-sm scroll ">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <span className="font-bold text-gray-900 text-sm">Filter by:</span>
@@ -405,12 +405,11 @@ export default function ShopPage() {
     <div className="bg-background min-h-screen pb-12 overflow-x-hidden">
       {/* ── MOBILE LAYOUT ── */}
       <div className="lg:hidden px-5 pt-4 pb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold text-foreground">Product List</h1>
+        <div className="flex items-center justify-between mb-4 fixed bottom-[7%] left-1/2 -translate-x-1/2 bg-primary z-49 rounded-full px-8 py-3 shadow-lg">
           <button
             type="button"
             onClick={() => setFilterOpen(true)}
-            className="flex items-center gap-1.5 text-sm font-medium text-foreground bg-gray-100 px-3 py-1.5 rounded-full"
+            className="flex items-center gap-1.5 text-sm font-medium text-white  "
           >
             <Filter className="w-4 h-4" />
             Filter
@@ -430,7 +429,7 @@ export default function ShopPage() {
             <button
               type="button"
               onClick={() => setSortMenuOpen((v) => !v)}
-              className="flex items-center gap-1 text-[13px] text-gray-500"
+              className="flex items-center gap-1 text-[13px] text-gray-500 bg-white rounded-full py-2 px-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
             >
               Sorted by <span className="font-bold text-gray-900 ml-1">{sortLabel}</span>
             </button>

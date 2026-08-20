@@ -87,11 +87,11 @@ export default function OrderSuccessPage() {
 
           <div className="flex gap-3 mb-8">
             <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-              <Package className="w-5 h-5 text-blue-600" />
+              <Package className="w-5 h-5 text-primary" />
             </div>
             <div className="flex flex-col justify-center">
               <span className="text-[12px] text-gray-500 mb-0.5">Estimated Delivery</span>
-              <span className="text-[14px] font-bold text-blue-600">Saturday, August 15</span>
+              <span className="text-[14px] font-bold text-primary">Saturday, August 15</span>
             </div>
           </div>
 
@@ -117,11 +117,11 @@ export default function OrderSuccessPage() {
 
               {/* Step 2 */}
               <div className="flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center z-10 border-4 border-white shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center z-10 border-4 border-white shadow-sm">
                   <Truck className="w-5 h-5 text-white" />
                 </div>
                 <div className="text-center mt-1">
-                  <span className="text-[12px] font-bold text-blue-600 block mb-0.5">Confirmed</span>
+                  <span className="text-[12px] font-bold text-primary block mb-0.5">Confirmed</span>
                   <span className="text-[10px] text-gray-400 block">12/08/2026</span>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function OrderSuccessPage() {
         <div className="flex flex-col gap-3 max-w-[50%] mx-auto w-full">
           <Link
             href={`/track-order?id=${id}`}
-            className="w-full bg-[#2563eb] hover:bg-blue-700 text-white font-bold h-14 rounded-xl flex items-center justify-center transition-colors"
+            className="w-full bg-primary ho ver:bg-primary/80 text-white font-bold h-14 rounded-xl flex items-center justify-center transition-colors"
           >
             Track Your Order
           </Link>
