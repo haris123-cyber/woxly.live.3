@@ -401,12 +401,12 @@ export default function ProductDetailPage() {
 
   const renderRecentlyViewed = (isDesktop = false) => {
     const containerClasses = isDesktop
-      ? "py-10 mt-6 bg-[#487970] rounded-[32px] px-8 sm:px-12 -mx-6 sm:-mx-12 lg:mx-0"
-      : "bg-[#487970] pt-5 pb-8 px-2";
+      ? "py-10 mt-6 bg-[#F7F5FF] rounded-[32px] px-8 sm:px-12 -mx-6 sm:-mx-12 lg:mx-0"
+      : " bg-[#F7F5FF] pt-5 pb-8 px-2";
 
     const titleClasses = isDesktop
-      ? "text-2xl font-bold text-white mb-8"
-      : "text-[16px] font-bold text-white mb-4";
+      ? "text-2xl font-bold text-black mb-8"
+      : "text-[16px] font-bold text-black mb-4";
 
     const gridClasses = isDesktop
       ? "grid grid-cols-2 md:grid-cols-4 gap-6"
@@ -627,13 +627,22 @@ export default function ProductDetailPage() {
         {/* Product Info */}
         <div className="px-5 pt-6 pb-6">
           {/* Title and Price */}
-          <div className="flex items-start justify-between mb-2">
+          <div className="flex items-start justify-between mb-2 gap-0">
             <h1 className="text-[20px] font-bold text-gray-900 leading-tight">
               {product.name}
-            </h1>
-            <span className="text-[20px] font-bold text-primary leading-none shrink-0 ml-4">
+            </h1>s
+            <span className="text-[25px] font-bold text-primary leading-none shrink-0 ml-10 mr-0">
               $ {product.price.toFixed(0)}
             </span>
+            {/* Green Discount Tag */}
+            {discountPercentage > 0 && (
+              <span
+                className="bg-[#00a859] text-white text-[9px] font-bold pl-3.5 pr-4.5 py-1 mt-1 whitespace-nowrap"
+                style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
+              >
+                {discountPercentage}% OFF
+              </span>
+            )}
           </div>
 
           {/* Description */}
@@ -1063,7 +1072,7 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-3 mb-6 flex-wrap">
-              <span className="text-3xl font-bold text-[#fbbd08]">₹{product.price.toFixed(0)}</span>
+              <span className="text-3xl font-bold text-primary">₹{product.price.toFixed(0)}</span>
               {originalPrice && (
                 <span className="text-lg text-muted-foreground line-through">
                   ₹{originalPrice.toFixed(0)}
@@ -1127,10 +1136,10 @@ export default function ProductDetailPage() {
                   {/* Bundle 1 */}
                   <button
                     onClick={() => { setSelectedBundle(1); setQuantity(1); }}
-                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 1 ? "border-gray-900 bg-gray-50" : "border-gray-200 bg-white"}`}
+                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 1 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
                   >
                     <div className="shrink-0 mt-0.5">
-                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 1 ? "border-[5px] border-gray-900" : "border-gray-300"}`} />
+                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 1 ? "border-[5px] border-primary" : "border-gray-300"}`} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
@@ -1144,10 +1153,10 @@ export default function ProductDetailPage() {
                   {/* Bundle 2 */}
                   <button
                     onClick={() => { setSelectedBundle(2); setQuantity(2); }}
-                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 2 ? "border-gray-900 bg-gray-50" : "border-gray-200 bg-white"}`}
+                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 2 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
                   >
                     <div className="shrink-0 mt-0.5">
-                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 2 ? "border-[5px] border-gray-900" : "border-gray-300"}`} />
+                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 2 ? "border-[5px] border-primary" : "border-gray-300"}`} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
@@ -1165,10 +1174,10 @@ export default function ProductDetailPage() {
                   {/* Bundle 3 */}
                   <button
                     onClick={() => { setSelectedBundle(3); setQuantity(3); }}
-                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 3 ? "border-gray-900 bg-gray-50" : "border-gray-200 bg-white"}`}
+                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 3 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
                   >
                     <div className="shrink-0 mt-0.5">
-                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 3 ? "border-[5px] border-gray-900" : "border-gray-300"}`} />
+                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 3 ? "border-[5px] border-primary" : "border-gray-300"}`} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
@@ -1192,14 +1201,14 @@ export default function ProductDetailPage() {
               <div className="flex items-center gap-5">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-6 h-6 rounded flex items-center justify-center bg-[#fbbd08] text-white"
+                  className="w-6 h-6 rounded flex items-center justify-center bg-primary text-white"
                 >
                   <Minus className="w-4 h-4" strokeWidth={3} />
                 </button>
                 <span className="text-[16px] font-bold text-gray-900 w-6 text-center">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-6 h-6 rounded flex items-center justify-center bg-[#fbbd08] text-white"
+                  className="w-6 h-6 rounded flex items-center justify-center bg-primary text-white"
                 >
                   <Plus className="w-4 h-4" strokeWidth={3} />
                 </button>
@@ -1218,13 +1227,13 @@ export default function ProductDetailPage() {
               <div className="flex gap-4 mb-2">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 h-14 rounded-full bg-[#fbbd08] hover:bg-[#e0a800] text-white font-bold text-[18px] shadow-sm transition-colors"
+                  className="flex-1 h-14 rounded-full bg-primary hover:bg-primary text-white font-bold text-[18px] shadow-sm transition-colors"
                 >
                   Add To Cart
                 </button>
                 <button
                   onClick={() => toggleItem(product)}
-                  className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0"
+                  className="w-14 h-14 rounded-full border border-primary/200 flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0"
                 >
                   <Heart className={`w-6 h-6 ${inWatchlist ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
                 </button>

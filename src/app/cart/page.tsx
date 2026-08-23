@@ -72,10 +72,8 @@ export default function CartPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-6">My Cart</h1>
 
             {/* Free Shipping Progress Box */}
-            <div className="bg-[#f8faf9] hidden lg:block border border-[#e8f0eb] rounded-[16px] p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#166534] flex items-center justify-center shrink-0">
-                <IconTruckDelivery className="w-5 h-5 sm:w-6 sm:h-6 text-white" stroke={1.5} />
-              </div>
+            <div className="bg-[#f8faf9] hidden lg:block  grid grid-cols-2  p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
+              
               <div className="flex-1 flex flex-col gap-1.5 sm:gap-2">
                 <div className="flex justify-between items-center gap-2 text-[11px] sm:text-[13px]">
                   {amountNeeded > 0 ? (
@@ -93,9 +91,9 @@ export default function CartPage() {
                     </span>
                   )}
                 </div>
-                <div className="h-1.5 sm:h-2 w-full bg-[#dcfce7] rounded-full overflow-hidden">
+                <div className="h-1.5 sm:h-2 w-full bg-[#dcfce7]  overflow-hidden">
                   <div
-                    className="h-full bg-[#166534] rounded-full transition-all duration-500 ease-out"
+                    className="h-full bg-[#166534]  transition-all duration-500 ease-out"
                     style={{ width: `${progressPercent}%` }}
                   ></div>
                 </div>
@@ -157,10 +155,8 @@ export default function CartPage() {
           <div className="w-full lg:w-[380px] shrink-0">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 lg:sticky lg:top-24 ">
 
-              <div className="bg-[#f8faf9]  block lg:hidden border border-[#e8f0eb] rounded-[16px] p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#166534] flex items-center justify-center shrink-0">
-                  <IconTruckDelivery className="w-5 h-5 sm:w-6 sm:h-6 text-white" stroke={1.5} />
-                </div>
+              <div className="bg-[#f8faf9]  block lg:hidden  p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
+                
                 <div className="flex-1 flex flex-col gap-1.5 sm:gap-2">
                   <div className="flex justify-between items-center gap-2 text-[11px] sm:text-[13px]">
                     {amountNeeded > 0 ? (
@@ -274,7 +270,7 @@ export default function CartPage() {
               </div>
 
               {/* Total & Checkout Box */}
-              <div className="bg-[#487970] rounded-[24px] p-6 mt-2 shadow-lg -mx-4 sm:mx-0 lg:-mx-2">
+              <div className="bg-primary rounded-[24px] p-6 mt-2 shadow-lg -mx-4 sm:mx-0 lg:-mx-2">
                 {/* Free Shipping Progress Box */}
 
                 <div className="flex justify-between items-center mb-6">
@@ -285,7 +281,7 @@ export default function CartPage() {
                 <Button
                   ref={checkoutBtnRef}
                   onClick={() => router.push("/checkout")}
-                  className="w-full h-14 bg-primary hover:bg-primary/80 text-white font-bold text-[17px] rounded-full transition-colors flex items-center justify-center shadow-md"
+                  className="w-full h-14 bg-white hover:bg-[#009639] text-black font-bold text-[17px] rounded-full transition-colors flex items-center justify-center shadow-md"
                 >
                   Checkout
                 </Button>
@@ -295,10 +291,10 @@ export default function CartPage() {
         </div>
 
         {/* Suggested Products */}
-        <div className="bg-[#487970] rounded-[6px] lg:rounded-[32px] m-1 lg:m-0 mt-8 sm:mt-12 lg:mt-6 pt-5 pb-8 px-2 lg:py-10 lg:px-8 sm:px-12 -mx-6 sm:-mx-12 lg:mx-0">
+        <div className="bg-#F7F5FF rounded-[6px] lg:rounded-[32px] m-1 lg:m-0 mt-8 sm:mt-12 lg:mt-6 pt-5 pb-8 px-2 lg:py-10 lg:px-8 sm:px-12 -mx-6 sm:-mx-12 lg:mx-0">
           <div className="flex ml-2 items-center justify-between mb-4 lg:mb-8">
-            <h2 className="text-[16px] lg:text-2xl font-bold text-white">Related Products</h2>
-            <Link href="/shop" className="text-[12px] sm:text-sm mr-2 font-medium text-white/80 hover:text-white">
+            <h2 className="text-[16px] lg:text-2xl font-bold text-black">Related Products</h2>
+            <Link href="/shop" className="text-[12px] sm:text-sm mr-2 font-medium text-black/80 hover:text-black">
               View all
             </Link>
           </div>

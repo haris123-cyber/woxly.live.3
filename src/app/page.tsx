@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HeroSlider } from "@/components/home/HeroSlider";
 import { PRODUCTS } from "@/lib/mock-data";
-import { ChevronRight, ShieldCheck, Headphones, ArrowRight, Mail, Bell } from "lucide-react";
+import { ChevronRight, ShieldCheck, Headphones, ArrowRight, Mail, Bell, Clock, Star } from "lucide-react";
 import { IconTruck, IconRefresh, IconLock, IconCash } from "@tabler/icons-react";
 import { CategorySlider } from "@/components/home/CategorySlider";
+import { FlashSaleTimer } from "@/components/home/FlashSaleTimer";
+import { PromoBanners } from "@/components/home/PromoBanners";
 
 // Reusable Product Carousel Component
 const ProductCarousel = ({
@@ -91,71 +93,6 @@ export default function Home() {
 
       <CategorySlider />
 
-      {/* Promo Banners */}
-      <section className="container mx-auto px-5 -mt-5 sm:px-6 py-4">
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-2">
-          <div className=" bg-[#dcedcd] text-[#1b4e2b] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Up to 30% OFF</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">on Fresh Vegetables</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100  h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-4 -bottom-4 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_veggies.png" alt="Veggies" fill className="object-cover rounded-full" />
-            </div>
-          </div>
-
-          <div className=" bg-[#fee4c6] text-[#8b4513] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Up to 20% OFF</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">on Beverages</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100  h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-4 -bottom-4 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_drinks.png" alt="Drinks" fill className="object-cover rounded-full" />
-            </div>
-          </div>
-
-          <div className=" bg-[#d8e0ff] text-[#1e3a8a] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Trendy Fashion</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">New Arrivals</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100  h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-2 bottom-0 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_fashion.png" alt="Fashion" fill className="object-cover rounded-full" />
-            </div>
-          </div>
-
-          <div className=" bg-[#ffe4e6] text-[#be123c] p-4 sm:p-6 relative overflow-hidden h-32 sm:h-44 flex flex-col justify-center">
-            <div className="relative z-10 w-2/3">
-              <h3 className="font-bold text-sm sm:text-xl leading-tight mb-1">Daily Essentials</h3>
-              <p className="text-xs sm:text-sm mb-2 sm:mb-4 font-medium">Top picks for you</p>
-              <Button asChild size="sm" variant="outline" className="bg-white border-0 text-black hover:bg-gray-100  h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold group w-fit">
-                <Link href="/shop">
-                  Shop Now <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="absolute -right-4 -bottom-4 w-20 sm:w-32 h-20 sm:h-32">
-              <Image src="/images/promo_electronics.png" alt="Electronics" fill className="object-cover rounded-full" />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Best Sellers */}
       <ProductCarousel
         title="Best Sellers"
@@ -164,6 +101,10 @@ export default function Home() {
         products={bestSellers}
         link="/shop"
       />
+
+      <PromoBanners />
+
+
 
       {/* Specific Category Sections */}
       {fruitsProducts.length > 0 && (
@@ -267,100 +208,83 @@ export default function Home() {
             products={drinkProducts}
             link="/shop"
           />
-
-          {/* ── Stella-Style 3-Panel Banners ── */}
-          <section className="container mx-auto px-5 sm:px-6 mt-5 mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:h-[500px]">
-
-              {/* Left Large Banner — teal text | image split */}
-              <div
-                className="relative rounded-[20px] sm:rounded-[24px] overflow-hidden flex min-h-[280px] sm:min-h-[360px] lg:min-h-full group"
-                style={{ background: "#2dd4bf" }}
-              >
-                <div className="relative z-10 flex flex-col justify-between w-[46%] sm:w-[42%] shrink-0 p-5 sm:p-8 lg:p-10">
-                  <div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-sm flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[#2dd4bf] rounded-[2px]" />
-                      </div>
-                      <span className="text-white font-bold text-base sm:text-xl tracking-tight">woxly</span>
-                    </div>
-
-                    <h2 className="text-xl sm:text-3xl lg:text-5xl font-bold text-white leading-[1.15] tracking-tight">
-                      Your Style,<br />
-                      Delivered.<br />
-                      Exclusively<br />
-                      Online.
-                    </h2>
-                  </div>
-
-                  <Link href="/shop" className="text-white/90 text-xs sm:text-sm font-medium hover:text-white hover:underline transition-colors mt-4">
-                    www.woxly.com
-                  </Link>
-                </div>
-
-                <div className="relative flex-1 min-h-full">
-                  <Image
-                    src="/images/hero_fashion.png"
-                    alt="Style Delivered"
-                    fill
-                    className="object-cover object-center"
-                  />
-                </div>
-              </div>
-
-
-              {/* Right Stacked Banners */}
-              <div className="flex flex-col gap-4 sm:gap-6 h-full">
-
-                {/* Top Right Banner — image left, text right */}
-                <div className="flex-1 relative rounded-[20px] sm:rounded-[24px] overflow-hidden bg-[#fafafa] flex items-center min-h-[180px] sm:min-h-[240px] group border border-zinc-100">
-                  <div className="relative w-[42%] sm:w-[45%] h-full min-h-[180px] sm:min-h-[240px] shrink-0">
-                    <Image
-                      src="/images/promo_electronics.png"
-                      alt="Accessories"
-                      fill
-                      className="object-contain p-3 sm:p-4 drop-shadow-xl"
-                    />
-                  </div>
-                  <div className="relative z-10 flex-1 py-5 pr-5 pl-2 sm:p-8 sm:pl-4">
-                    <p className="text-xs sm:text-sm font-semibold text-zinc-500 mb-1.5 sm:mb-2">Timeless elegance</p>
-                    <h3 className="text-base sm:text-[1.75rem] font-bold text-zinc-900 leading-tight mb-3 sm:mb-6">
-                      Discover our<br />accessories collection
-                    </h3>
-                    <Button asChild style={{ background: "#8b5cf6", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
-                      <Link href="/shop?category=electronics">Shop Now</Link>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Bottom Right Banner — text left, image right */}
-                <div className="flex-1 relative rounded-[20px] sm:rounded-[24px] overflow-hidden bg-[#fafafa] flex items-center min-h-[180px] sm:min-h-[240px] group border border-zinc-100">
-                  <div className="relative z-10 flex-1 py-5 pl-5 pr-2 sm:p-8 sm:pr-4">
-                    <p className="text-xs sm:text-sm font-semibold text-zinc-500 mb-1.5 sm:mb-2">Find your perfect pair</p>
-                    <h3 className="text-base sm:text-[1.75rem] font-bold text-zinc-900 leading-tight mb-3 sm:mb-6">
-                      Explore our shoes<br />collection
-                    </h3>
-                    <Button asChild style={{ background: "#8b5cf6", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "0 16px" }} className="hover:opacity-90 transition-opacity border-0 h-8 sm:h-10 text-xs sm:text-sm">
-                      <Link href="/shop?category=fashion ">Shop Now</Link>
-                    </Button>
-                  </div>
-                  <div className="relative w-[42%] sm:w-[45%] h-full min-h-[180px] sm:min-h-[240px] shrink-0">
-                    <Image
-                      src="/images/promo_fashion.png"
-                      alt="Shoes"
-                      fill
-                      className="object-contain p-3 sm:p-4 drop-shadow-xl"
-                    />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </section>
         </>
       )}
 
+      {/* Primary Color Empty Section */}
+      <section className="container mx-auto px-5 sm:px-6 mt-8 mb-5">
+        <div className="bg-primary rounded-[24px] sm:rounded-[32px] p-5 sm:p-8 pb-16 sm:pb-20 min-h-[200px] shadow-md flex flex-col">
+
+          {/* Flash Sale Header */}
+          <div className="flex justify-between items-center mb-4 sm:mb-6 w-full">
+            <h2 className="text-white font-bold text-lg sm:text-2xl">Flash Sale</h2>
+            <FlashSaleTimer />
+          </div>
+
+          {/* Flash Sale Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 w-full">
+            {PRODUCTS.slice(0, 6).map((product) => {
+              const originalPrice = product.originalPrice || Math.round(product.price * 1.25);
+              const discount = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+
+              return (
+                <Link href={`/products/${product.slug}`} key={product.id} className="relative rounded-xl sm:rounded-2xl bg-white p-1.5 sm:p-2 cursor-pointer group shadow-sm flex flex-col gap-2">
+                  <div className="relative w-full aspect-square rounded-lg sm:rounded-xl overflow-hidden shrink-0">
+                    <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-0 right-0 bg-[#ff2d55] text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-bl-lg z-10">
+                      -{discount}%
+                    </div>
+                  </div>
+                  <div className="px-1 pb-1 flex flex-col justify-between flex-1">
+                    <h3 className="text-[11px] sm:text-xs font-medium text-zinc-800 line-clamp-2 leading-tight mb-1.5">{product.name}</h3>
+                    <div className="flex items-center gap-1.5 mt-auto">
+                      <span className="text-xs sm:text-sm font-bold text-zinc-900">₹{product.price.toFixed(0)}</span>
+                      <span className="text-[9px] sm:text-[10px] text-zinc-400 line-through">₹{originalPrice.toFixed(0)}</span>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* Top Products Header */}
+          <h2 className="text-white font-bold text-base sm:text-lg mb-4 mt-8">Top Products</h2>
+
+          {/* Top Products Carousel */}
+          <div className="flex gap-4 sm:gap-5 overflow-x-auto hide-scrollbar snap-x snap-mandatory pb-2 items-center">
+            {PRODUCTS.slice(10, 18).map((product) => (
+              <Link href={`/products/${product.slug}`} key={product.id} className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden shrink-0 snap-start border-[3px] sm:border-[4px] border-white shadow-[0_4px_10px_rgba(0,0,0,0.15)] cursor-pointer group">
+                <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Just For You Section */}
+          <div className="bg-white rounded-[24px] sm:rounded-t-[32px] p-5 sm:ml-1 sm:mr-1 px-5 sm:p-8 mt-8 ml-1 mr-1 -mx-5 sm:-mx-8 -mb-5 sm:-mb-8 flex-1">
+            <div className="flex items-center gap-2 mb-5 sm:mb-6">
+              <h2 className="text-zinc-900 font-bold text-lg sm:text-xl">Just For You</h2>
+              <Star className="w-5 h-5 text-blue-600 fill-blue-600" />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {PRODUCTS.slice(20, 24).map((product) => (
+                <Link href={`/products/${product.slug}`} key={product.id} className="flex flex-col group cursor-pointer">
+                  <div className="relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-white mb-2 shadow-[0_2px_10px_rgba(0,0,0,0.08)] border border-zinc-100 p-1">
+                    <div className="relative w-full h-full rounded-lg overflow-hidden">
+                      <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                  </div>
+                  <h3 className="text-[10px] sm:text-xs text-zinc-600 line-clamp-1 leading-tight mb-1 px-1">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm font-bold text-zinc-900 px-1">₹{product.price.toFixed(0)}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
       {/* Bottom Banner Slots */}
       <section className="container mx-auto px-2 sm:px-6 py-6 sm:py-8">
         <div className="flex flex-col gap-2 sm:gap-2">

@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Truck, MapPin, Search, Clock,
-  ArrowLeft, MessageCircle, ChevronRight, Check, HeadphonesIcon, Home, Calendar
+  ArrowLeft, MessageCircle, ChevronRight, Check, HeadphonesIcon, Home, Calendar, Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -35,8 +35,8 @@ const getMockTracking = (orderId: string) => ({
     { label: "Order Confirmed", date: "May 20, 2025 • 10:30 AM", desc: "Your order has been placed successfully.", completed: true, icon: Check },
     { label: "Packed", date: "May 20, 2025 • 11:15 AM", desc: "Your items are being packed.", completed: true, icon: Check },
     { label: "In Transit", date: "May 20, 2025 • 12:40 PM", desc: "Your order is on the way.", completed: true, icon: Truck, isCurrent: true },
-    { label: "Out for Delivery", date: "", desc: "Your order is out for delivery.", completed: false, icon: null },
-    { label: "Delivered", date: "", desc: "Your order will be delivered soon.", completed: false, icon: null },
+    { label: "Out for Delivery", date: "", desc: "Your order is out for delivery.", completed: false, icon: Package },
+    { label: "Delivered", date: "", desc: "Your order will be delivered soon.", completed: false, icon: Home },
   ]
 });
 
@@ -176,11 +176,16 @@ function TrackOrderInner() {
                               )}
 
                               {/* Circle */}
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors mt-0.5 ${isCurrent ? 'bg-[#16a34a] text-white shadow-md shadow-green-600/20 ring-4 ring-[#f0fdf4]' :
-                                isCompleted ? 'bg-[#16a34a] text-white' :
-                                  'bg-white border-2 border-gray-300 text-transparent'
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors mt-0.5 ${isCurrent ? "bg-[#16a34a] text-white shadow-md shadow-green-600/20 ring-4 ring-[#f0fdf4]" :
+                                isCompleted ? "bg-[#16a34a] text-white" :
+                                  "bg-white border border-gray-200 text-gray-400"
                                 }`}>
-                                {Icon && <Icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} strokeWidth={3} />}
+                                {Icon && (
+                                  <Icon
+                                    className={`w-4 h-4 ${isCurrent ? "animate-pulse" : ""}`}
+                                    strokeWidth={isCompleted || isCurrent ? 2.5 : 1.8}
+                                  />
+                                )}
                               </div>
 
                               <div className="pb-2 flex-1">

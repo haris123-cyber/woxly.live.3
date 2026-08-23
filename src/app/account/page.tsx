@@ -156,10 +156,10 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
   const statusStyles = getStatusStyles(order.statusColor);
 
   return (
-    <div className="bg-white p-3 rounded-3xl shadow-sm transition-all hover:shadow-md cursor-pointer mb-4" onClick={() => setIsExpanded(!isExpanded)}>
+    <div className="p-3   border-b border-gray-200 transition-all hover:shadow-md cursor-pointer mb-4" onClick={() => setIsExpanded(!isExpanded)}>
       <div className="flex gap-4 sm:gap-6">
         {/* Left: Product Image Box */}
-        <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
+        <div className="relative w-38 h-38 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
           <Image src={order.image} alt={order.title} fill className="object-cover" />
         </div>
 
@@ -978,7 +978,7 @@ function AccountPageInner() {
 
         {/* ── Main Content panel ── */}
         <div className={`flex-1 px-4 lg:px-0 ${showMobileMenu ? 'hidden lg:block' : 'block'}`}>
-          <div className="bg-white border border-gray-100 rounded-[24px] shadow-sm overflow-hidden p-4 sm:p-6 min-h-[600px] mt-4 lg:mt-0">
+          <div className="overflow-hidden p-4 sm:p-6 min-h-[600px] mt-4 lg:mt-0">
             {/* Back button for mobile */}
             <button
               onClick={() => setShowMobileMenu(true)}

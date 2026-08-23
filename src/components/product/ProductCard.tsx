@@ -162,12 +162,12 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-out z-10"
           />
-
+          absolute top-0 right-0 bg-[#ff2d55] text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-bl-lg z-10
           {/* Badges */}
-          <div className="absolute top-4 left-0 z-20 flex flex-col gap-1.5 items-start pointer-events-none">
-            {isHotSale && <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[8px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">HOT</div>}
-            {isNewArrived && <div className="bg-emerald-600 text-white text-[8px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">NEW</div>}
-            {isLimited && <div className="bg-zinc-900 text-white text-[8px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">LTD</div>}
+          <div className="absolute top-0 left-0 z-20 flex flex-col gap-1.5 items-start pointer-events-none">
+            {isHotSale && <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">HOT</div>}
+            {isNewArrived && <div className="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">NEW</div>}
+            {isLimited && <div className="bg-primary text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">LTD</div>}
           </div>
         </div>
 

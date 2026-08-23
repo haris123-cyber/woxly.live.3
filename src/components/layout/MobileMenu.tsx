@@ -63,7 +63,7 @@ export function MobileMenu() {
 
           {/* Logo Section */}
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg">
               {/* Approximating the triangle 'A' logo with a 'W' for Woxly */}
               <span className="text-white font-extrabold text-[22px] tracking-tighter leading-none">W</span>
             </div>
@@ -99,10 +99,10 @@ export function MobileMenu() {
                 >
                   <div className="flex items-center gap-5">
                     <Icon
-                      className={`w-[20px] h-[20px] transition-colors ${isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-600'}`}
+                      className={`w-[20px] h-[20px] transition-colors ${isActive ? 'text-primary' : 'text-gray-400 group-hover:text-gray-600'}`}
                       strokeWidth={isActive ? 2.5 : 2}
                     />
-                    <span className={`text-[14px] capitalize transition-colors ${isActive ? 'font-bold text-black' : 'font-semibold text-gray-500 group-hover:text-gray-700'}`}>
+                    <span className={`text-[14px] capitalize transition-colors ${isActive ? 'font-bold text-primary' : 'font-semibold text-gray-500 group-hover:text-gray-700'}`}>
                       {link.name.toLowerCase()}
                     </span>
                   </div>

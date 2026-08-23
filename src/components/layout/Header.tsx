@@ -164,7 +164,7 @@ function MobileBottomNav() {
           strokeWidth={isActive('/watchlist') ? 2.5 : 1.8}
         />
         {isMounted && watchlistCount > 0 && (
-          <span className="absolute -top-2 -right-2 flex h-[15px] min-w-[15px] px-0.5 items-center justify-center rounded-full bg-zinc-900 text-[8px] font-bold text-white">
+          <span className="absolute -top-2 -right-2 flex h-[15px] min-w-[15px] px-0.5 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-white">
             {watchlistCount > 9 ? '9+' : watchlistCount}
           </span>
         )}
