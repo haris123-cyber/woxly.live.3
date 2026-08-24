@@ -41,6 +41,8 @@ import {
   Flag,
   X,
   User,
+  Clock,
+  ChevronDown,
 } from "lucide-react";
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -105,6 +107,8 @@ export default function ProductDetailPage() {
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fullscreenReview, setFullscreenReview] = useState<{ review: any, index: number } | null>(null);
+  const [showCombo, setShowCombo] = useState(true);
+  const [isComboSelected, setIsComboSelected] = useState(false);
 
   const [emblaRefMobile, emblaApiMobile] = useEmblaCarousel({ loop: true });
   const [emblaRefDesktop, emblaApiDesktop] = useEmblaCarousel({ loop: true });
@@ -219,7 +223,38 @@ export default function ProductDetailPage() {
     "/images/product_placeholder.png",
   ];
   const originalPrice = product.originalPrice;
-  const discountPercentage = originalPrice ? Math.round(((originalPrice - product.price) / originalPrice) * 100) : 0;
+
+  const relatedProducts = PRODUCTS.filter(
+    (p) => p.category === product.category && p.id !== product.id
+  ).slice(0, 8);
+
+  const comboProduct2 = relatedProducts[0] || {
+    id: "combo-orange-juice",
+    name: "Fresh Orange Juice",
+    price: 119,
+    originalPrice: 119,
+    image: "/images/product_placeholder.png",
+    slug: "combo-orange-juice"
+  };
+
+  const comboProduct3 = relatedProducts[1] || {
+    id: "combo-sparkling-water",
+    name: "Sparkling Water 1L",
+    price: 95,
+    originalPrice: 95,
+    image: "/images/product_placeholder.png",
+    slug: "combo-sparkling-water"
+  };
+
+  const comboExtraItemsTotal = comboProduct2.price + comboProduct3.price;
+  const comboOriginalTotal = product.price + comboExtraItemsTotal;
+  const comboDiscountedTotal = Math.round(comboOriginalTotal * 0.85);
+
+  const currentPrice = isComboSelected ? comboDiscountedTotal : product.price;
+  const currentOriginalPrice = isComboSelected ? comboOriginalTotal : originalPrice;
+  const discountPercentage = currentOriginalPrice
+    ? Math.round(((currentOriginalPrice - currentPrice) / currentOriginalPrice) * 100)
+    : 0;
 
   const handleAddToCart = () => {
     // If quantity was missing (though state defaults to 1)
@@ -227,10 +262,38 @@ export default function ProductDetailPage() {
       toast.error("Please select a quantity");
       return;
     }
-    addItem(product, quantity, selectedColor, product.sizes?.[0]);
-    toast.success("Added to cart", {
-      description: "Product added successfully.",
-    });
+
+    if (isComboSelected) {
+      const mainComboItem = {
+        ...product,
+        price: Math.round(product.price * 0.85),
+        originalPrice: product.price,
+      };
+      addItem(mainComboItem, quantity, selectedColor, product.sizes?.[0]);
+
+      const item2: any = {
+        ...comboProduct2,
+        price: Math.round(comboProduct2.price * 0.85),
+        originalPrice: comboProduct2.price,
+      };
+      addItem(item2, quantity);
+
+      const item3: any = {
+        ...comboProduct3,
+        price: Math.round(comboProduct3.price * 0.85),
+        originalPrice: comboProduct3.price,
+      };
+      addItem(item3, quantity);
+
+      toast.success("Combo added to cart", {
+        description: `${quantity}x Frequently Bought Together Combo added successfully.`,
+      });
+    } else {
+      addItem(product, quantity, selectedColor, product.sizes?.[0]);
+      toast.success("Added to cart", {
+        description: "Product added successfully.",
+      });
+    }
   };
 
   const handleBuyNow = () => {
@@ -241,10 +304,6 @@ export default function ProductDetailPage() {
     addItem(product, quantity, selectedColor, product.sizes?.[0]);
     router.push("/cart");
   };
-
-  const relatedProducts = PRODUCTS.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  ).slice(0, 8);
 
   const reviews = [
     {
@@ -463,7 +522,7 @@ export default function ProductDetailPage() {
   };
 
   const renderDeliveryDetails = () => (
-    <div className="mb-6 rounded-sm border border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
+    <div className="mb-6 rounded-sm border  border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
       <div className="px-4 py-2 border-b border-[#f3f4f6]">
         <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
         <p className="text-[10px] text-gray-700 font-small">Enter pincode to check delivery availability</p>
@@ -516,62 +575,171 @@ export default function ProductDetailPage() {
     </div>
   );
 
+  const renderFrequentlyBoughtTogether = () => {
+    if (!showCombo) return null;
+
+    return (
+      <div className="relative border border-gray-100 rounded-[4px] bg-white p-5 lg:p-6 mt-4 mb-6 shadow-sm drop-shadow-[0_2px_8px_rgba(0,0,0,0.04)] mx-2 sm:mx-0">
+        <button
+          onClick={() => setShowCombo(false)}
+          className="absolute top-4 right-4 lg:top-5 lg:right-5 p-1.5 rounded-full hover:bg-gray-100 transition-colors z-10"
+        >
+          <X className="w-4 h-4 text-gray-400" strokeWidth={2.5} />
+        </button>
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-5 lg:mb-6 gap-4 pr-8">
+          <div className="flex items-start lg:items-center gap-2">
+            <Flame className="w-5 h-5 text-[#ff2e55] shrink-0 lg:mt-0 mt-0.5" strokeWidth={2.5} />
+            <h3 className="text-[15px] lg:text-[18px] font-extrabold text-gray-900 leading-tight lg:leading-normal">
+              Frequently Bought Together
+            </h3>
+          </div>
+          <span className="bg-[#e8fbf3] text-[#059669] text-[11px] lg:text-[13px] font-bold px-3 py-1.5  leading-tight w-fit shrink-0">
+            Save 15% on Combo
+          </span>
+        </div>
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5 w-full lg:w-auto">
+            <div className="flex items-center gap-3 lg:gap-2">
+              <div className="w-[85%] lg:w-auto lg:min-w-[200px] flex items-center gap-3 p-3">
+                <div className="w-22 h-22 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 p-1">
+                  {product.image ? (
+                    <img src={product.image} alt="Product" className="w-full h-full object-contain mix-blend-multiply" />
+                  ) : (
+                    <Package className="w-6 h-6 text-gray-300" />
+                  )}
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-[13px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate">{product.name}</span>
+                  <span className="text-[13px] font-medium text-gray-500 mt-1">₹{Math.round(product.price * 0.85).toFixed(0)}</span>
+                </div>
+              </div>
+              <Plus className="w-4 h-4 text-gray-400 shrink-0" strokeWidth={2.5} />
+            </div>
+
+            <div className="flex items-center gap-3 lg:gap-5">
+              <div className="w-[85%] lg:w-auto lg:min-w-[200px] flex items-center gap-3 p-3">
+                <div className="w-22 h-22 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 p-1">
+                  {comboProduct2.image ? (
+                    <img src={comboProduct2.image} alt={comboProduct2.name} className="w-full h-full object-contain mix-blend-multiply" />
+                  ) : (
+                    <Package className="w-6 h-6 text-orange-200" />
+                  )}
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-[13px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate">{comboProduct2.name}</span>
+                  <span className="text-[13px] font-medium text-gray-500 mt-1">₹{Math.round(comboProduct2.price * 0.85).toFixed(0)}</span>
+                </div>
+              </div>
+              <Plus className="w-4 h-4 text-gray-400 shrink-0" strokeWidth={2.5} />
+            </div>
+
+            <div className="flex items-center gap-3 lg:gap-5">
+              <div className="w-[85%] lg:w-auto lg:min-w-[200px] flex items-center gap-3 p-3">
+                <div className="w-22 h-22 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 p-1">
+                  {comboProduct3.image ? (
+                    <img src={comboProduct3.image} alt={comboProduct3.name} className="w-full h-full object-contain mix-blend-multiply" />
+                  ) : (
+                    <Package className="w-6 h-6 text-green-200" />
+                  )}
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-[13px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate">{comboProduct3.name}</span>
+                  <span className="text-[13px] font-medium text-gray-500 mt-1">₹{Math.round(comboProduct3.price * 0.85).toFixed(0)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-auto border-t lg:border-t-0 grid lg:grid-cols-1 grid-cols-2 lg:border-l border-gray-100 mt-6 pt-5 lg:mt-0 lg:pt-0 lg:pl-6 flex items-center justify-between lg:justify-end gap-6 lg:gap-8 shrink-0">
+            <div className="flex flex-col items-start lg:items-start">
+              <span className="text-[12px] lg:text-[13px] text-gray-500 mb-0.5 ">Combo Total</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[18px] lg:text-[22px] font-extrabold text-gray-900 leading-none">₹{comboDiscountedTotal}</span>
+                <span className="text-[13px] lg:text-[15px] font-medium text-gray-400 line-through">₹{comboOriginalTotal.toFixed(0)}</span>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsComboSelected(!isComboSelected)}
+              className={`${isComboSelected ? "bg-white text-black border-2 border-black" : "bg-primary text-white hover:bg-black border-2 border-white"} px-6 lg:px-8 py-3.5 lg:py-4 rounded-[12px] lg:rounded-[14px] font-bold text-[13px] lg:text-[15px] transition-all shadow-md whitespace-nowrap min-w-[180px] text-center`}
+            >
+              {isComboSelected ? "Combo Selected ✓" : "Select Combo"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderOfferTickets = () => {
     const tickets = [
-      { id: 1, title: "Online payment offer", discount: "10% OFF", subtitle: "On all products", color: "bg-[#dc2626]" },
-      { id: 2, title: "First order offer", discount: "15% OFF", subtitle: "For new users", color: "bg-[#dc2626]" },
-      { id: 3, title: "Special weekend sale", discount: "20% OFF", subtitle: "On select items", color: "bg-[#dc2626]" },
+      {
+        id: 1,
+        type: "Voucher",
+        expiry: "Valid Until 5.16.20",
+        icon: ShoppingBag,
+        title: "First Purchase",
+        subtitle: "5% off for your next order",
+      },
+      {
+        id: 2,
+        type: "Voucher",
+        expiry: "Valid Until 6.20.20",
+        icon: Package,
+        title: "Gift From Customer Care",
+        subtitle: "15% off your next purchase",
+      },
     ];
 
     return (
-      <div className="relative ml-2 mr-1 -mx-4 sm:mx-0">
-        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pl-5 sm:pl-0 mt-2 mb-2 after:content-[''] after:w-6 sm:after:w-0 after:shrink-0 scrollbar-hide">
-          {tickets.map((ticket) => (
-            <div key={ticket.id} className="flex items-stretch w-[300px] sm:w-[320px] shrink-0 h-[62px] sm:h-[68px] snap-start">
-              {/* LEFT TICKET TAB */}
-              <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-l-lg flex flex-col items-center justify-center overflow-hidden`}>
-                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-                <span className="text-white text-[7px] font-bold tracking-widest mt-1" style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
-                  DISCOUNT %
-                </span>
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 mt-2 mb-6 ml-2 mr-1 sm:mx-0 after:content-[''] after:w-6 sm:after:w-0 after:shrink-0 scrollbar-hide">
+        {tickets.map((ticket) => (
+          <div key={ticket.id} className="relative w-[300px] sm:w-[320px] shrink-0 snap-start flex flex-col drop-shadow-sm">
+            {/* Top Section */}
+            <div className="shrink-0 border-[1.5px] border-[#0d4cf9] border-b-0 rounded-t-[10px] bg-white px-4 py-2 flex justify-between items-center">
+              <span className="text-[#0d4cf9] font-bold text-[16px]">{ticket.type}</span>
+              <span className="bg-[#ffedea] text-gray-900 text-[10px] font-medium px-2.5 py-1 rounded-md">{ticket.expiry}</span>
+            </div>
+
+            {/* Divider Row */}
+            <div className="shrink-0 relative flex items-center h-5 z-10">
+              {/* White background filler */}
+              <div className="absolute inset-y-0 left-2.5 right-2.5 bg-white" />
+
+              {/* Dashed Line */}
+              <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 border-t-[1.5px] border-dashed border-[#0d4cf9]" />
+
+              {/* Left Cutout */}
+              <div className="absolute left-0 top-0 bottom-0 w-2.5 overflow-hidden">
+                <div className="absolute right-0 top-0 bottom-0 w-5 h-5 rounded-full bg-transparent shadow-[0_0_0_20px_white]" />
+                <div className="absolute right-0 top-0 bottom-0 w-5 h-5 border-[1.5px] border-[#0d4cf9] rounded-full" />
               </div>
 
-              {/* DASHED SEPARATOR */}
-              <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
-
-              {/* CENTER SECTION */}
-              <div className={`relative flex-1 ${ticket.color} flex items-center px-3 sm:px-5 py-2 overflow-hidden`}>
-                <div className="flex items-center gap-2 sm:gap-3 w-full">
-                  <BadgePercent className="w-8 h-8 sm:w-9 sm:h-9 text-white shrink-0" strokeWidth={2.5} />
-                  <div className="flex flex-col ml-1 sm:ml-2 min-w-0">
-                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
-                      {ticket.title}
-                    </span>
-                    <span className="text-white font-bold text-[18px] sm:text-[22px] leading-none mb-1 whitespace-nowrap">
-                      {ticket.discount}
-                    </span>
-                    <span className="text-white font-light italic text-[10px] sm:text-[11px] leading-none mb-1 truncate">
-                      {ticket.subtitle}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* DASHED SEPARATOR */}
-              <div className={`relative w-0 border-l-[2px] border-dashed border-white ${ticket.color} z-10`} />
-
-              {/* RIGHT TICKET TAB */}
-              <div className={`relative w-[48px] sm:w-[56px] shrink-0 ${ticket.color} rounded-r-lg flex items-center justify-center overflow-hidden`}>
-                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full" />
-                <span className="text-white text-[8px] font-bold tracking-widest" style={{ writingMode: "vertical-rl" }}>
-                  SAVE
-                </span>
+              {/* Right Cutout */}
+              <div className="absolute right-0 top-0 bottom-0 w-2.5 overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-5 h-5 rounded-full bg-transparent shadow-[0_0_0_20px_white]" />
+                <div className="absolute left-0 top-0 bottom-0 w-5 h-5 border-[1.5px] border-[#0d4cf9] rounded-full" />
               </div>
             </div>
-          ))}
-        </div>
-        {/* Right Blur/Fade Effect */}
-        <div className="absolute top-0 right-0 bottom-0 w-6 sm:w-7 bg-gradient-to-l from-white to-transparent pointer-events-none z-20" />
+
+            {/* Bottom Section */}
+            <div className="flex-1 border-[1.5px] border-[#0d4cf9] border-t-0 rounded-b-[10px] bg-white px-4 pb-3 pt-1.5 flex justify-between items-center">
+              <div className="flex gap-3 items-start">
+                <div className="text-[#0d4cf9] mt-0.5">
+                  <ticket.icon className="w-4 h-4 fill-current" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-black text-[15px] leading-tight mb-0.5">{ticket.title}</span>
+                  <span className="text-gray-800 text-[11px] leading-tight">{ticket.subtitle}</span>
+                </div>
+              </div>
+              <button className="bg-[#0d4cf9] hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-medium text-[13px] transition-colors shrink-0 ml-2">
+                Apply
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     );
   };
@@ -625,30 +793,39 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Product Info */}
-        <div className="px-5 pt-6 pb-6">
+        <div className="px-5 pt-4 pb-6">
+          <div className="w-fit ml-auto flex items-center bg-primary/10 rounded-sm gap-1.5 px-2.5 py-1 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-[11px] font-bold text-primary uppercase tracking-wider">In Stock</span>
+          </div>
           {/* Title and Price */}
-          <div className="flex items-start justify-between mb-2 gap-0">
+          <div className="flex items-start justify-between mb-2 gap-4">
             <h1 className="text-[20px] font-bold text-gray-900 leading-tight">
               {product.name}
-            </h1>s
-            <span className="text-[25px] font-bold text-primary leading-none shrink-0 ml-10 mr-0">
-              $ {product.price.toFixed(0)}
-            </span>
-            {/* Green Discount Tag */}
-            {discountPercentage > 0 && (
-              <span
-                className="bg-[#00a859] text-white text-[9px] font-bold pl-3.5 pr-4.5 py-1 mt-1 whitespace-nowrap"
-                style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
-              >
-                {discountPercentage}% OFF
+            </h1>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[30px] font-bold text-primary leading-none">
+                ₹{currentPrice.toFixed(0)}
               </span>
-            )}
+              {/* Green Discount Tag */}
+              {discountPercentage > 0 && (
+                <span
+                  className="bg-[#00a859] text-white text-[9px] font-bold pl-3.5 pr-4.5 py-1 whitespace-nowrap"
+                  style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
+                >
+                  {discountPercentage}% OFF
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Description */}
           <p className="text-[12px] text-gray-400 leading-snug mb-3 max-w-[85%]">
             {product.description || "Lorem ipsum dolor sit amet, consectetuer."}
+
           </p>
+
 
           {/* Rating */}
           <div className="flex items-center gap-1.5 mb-6">
@@ -705,65 +882,71 @@ export default function ProductDetailPage() {
 
           {/* Purchase options - Conditional */}
           {["oats", "oil", "rice", "pasta", "tea", "coffee"].some(k => product.name.toLowerCase().includes(k)) && (
-            <div className="mb-6">
-              <h3 className="text-[15px] font-bold text-gray-900 mb-4">Purchase options</h3>
-              <div className="flex flex-col gap-3">
+            <div className="mb-8 mt-2">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-[12px] font-bold text-gray-900 uppercase tracking-wider">Select Size & Pack</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 {/* Bundle 1 */}
                 <button
                   onClick={() => { setSelectedBundle(1); setQuantity(1); }}
-                  className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 1 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
+                  className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 1 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                 >
-                  <div className="shrink-0 mt-0.5">
-                    <div className={`w-4 h-4 rounded-full border ${selectedBundle === 1 ? "border-[5px] border-primary" : "border-gray-300"}`} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-900 text-[14px]">One</span>
-                      <span className="bg-[#fef3c7] text-[#92400e] text-[10px] font-bold px-1.5 py-0.5 rounded">CHOICE</span>
+                  {selectedBundle === 1 && (
+                    <div className="absolute top-3 right-3">
+                      <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
                     </div>
-                    <div className="font-bold text-gray-900 text-[15px]">₹{product.price.toFixed(0)}</div>
+                  )}
+                  <div className="flex flex-col h-full">
+                    <span className={`font-semibold text-[13px] ${selectedBundle === 1 ? "text-white" : "text-gray-900"}`}>1 Unit</span>
+                    <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 1 ? "text-[#fde047]" : "text-gray-900"}`}>
+                      ₹{product.price.toFixed(0)}
+                    </span>
+                    <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 1 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                      Standard pack
+                    </span>
                   </div>
                 </button>
 
                 {/* Bundle 2 */}
                 <button
                   onClick={() => { setSelectedBundle(2); setQuantity(2); }}
-                  className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 2 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
+                  className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 2 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                 >
-                  <div className="shrink-0 mt-0.5">
-                    <div className={`w-4 h-4 rounded-full border ${selectedBundle === 2 ? "border-[5px] border-primary" : "border-gray-300"}`} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-900 text-[14px]">Pack of 2</span>
-                      <span className="text-gray-500 text-[12px]">Save 10%</span>
+                  {selectedBundle === 2 && (
+                    <div className="absolute top-3 right-3">
+                      <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-900 text-[15px]">₹{Math.round(product.price * 2 * 0.9)}</span>
-                      <span className="text-gray-400 text-[13px] line-through">₹{(product.price * 2).toFixed(0)}</span>
-                      <span className="text-gray-400 text-[12px] ml-1">· 2 units</span>
-                    </div>
+                  )}
+                  <div className="flex flex-col h-full">
+                    <span className={`font-semibold text-[13px] ${selectedBundle === 2 ? "text-white" : "text-gray-900"}`}>Pack of 2</span>
+                    <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 2 ? "text-[#fde047]" : "text-gray-900"}`}>
+                      ₹{Math.round(product.price * 2 * 0.9)}
+                    </span>
+                    <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 2 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                      Save 10%
+                    </span>
                   </div>
                 </button>
 
                 {/* Bundle 3 */}
                 <button
                   onClick={() => { setSelectedBundle(3); setQuantity(3); }}
-                  className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 3 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
+                  className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 3 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                 >
-                  <div className="shrink-0 mt-0.5">
-                    <div className={`w-4 h-4 rounded-full border ${selectedBundle === 3 ? "border-[5px] border-primary" : "border-gray-300"}`} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-900 text-[14px]">Pack of 3</span>
-                      <span className="text-gray-500 text-[12px]">Save 10%</span>
+                  {selectedBundle === 3 && (
+                    <div className="absolute top-3 right-3">
+                      <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-900 text-[15px]">₹{Math.round(product.price * 3 * 0.9)}</span>
-                      <span className="text-gray-400 text-[13px] line-through">₹{(product.price * 3).toFixed(0)}</span>
-                      <span className="text-gray-400 text-[12px] ml-1">· 3 units</span>
-                    </div>
+                  )}
+                  <div className="flex flex-col h-full">
+                    <span className={`font-semibold text-[13px] ${selectedBundle === 3 ? "text-white" : "text-gray-900"}`}>Pack of 3</span>
+                    <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 3 ? "text-[#fde047]" : "text-gray-900"}`}>
+                      ₹{Math.round(product.price * 3 * 0.9)}
+                    </span>
+                    <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 3 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                      Save 10%
+                    </span>
                   </div>
                 </button>
               </div>
@@ -832,97 +1015,98 @@ export default function ProductDetailPage() {
           {/* Delivery Details Section */}
           {renderDeliveryDetails()}
 
-          {/* Offers & Discounts */}
-          <div className="mb-6 mt-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
-                Offers & Discounts
-              </h3>
 
-            </div>
 
-            {renderOfferTickets()}
-
-            <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4">
-              <div className="flex items-center justify-center gap-1.5 px-1">
-                <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                  <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
-                  <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">On all orders</span>
-                </div>
+          <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4 ">
+            <div className="flex items-center justify-center gap-1.5 px-1">
+              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
               </div>
-
-              <div className="flex items-center justify-center gap-1.5 px-1">
-                <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                  <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
-                  <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Check policy</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-center gap-1.5 px-1">
-                <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                  <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
-                  <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Premium material</span>
-                </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">On all orders</span>
               </div>
             </div>
 
-
-            <div >
-              <div className="flex flex-col border-t border-gray-100">
-                <button
-                  onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
-                  className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
-                >
-                  <div className="flex items-center gap-3">
-                    <ShieldAlert className="w-4 h-4 text-foreground" />
-                    <span className="text-[12px] font-bold tracking-wider uppercase">WARRANTY</span>
-                  </div>
-                  {isWarrantyOpen ? (
-                    <Minus className="w-4 h-4 text-muted-foreground" />
-                  ) : (
-                    <Plus className="w-4 h-4 text-muted-foreground" />
-                  )}
-                </button>
-                {isWarrantyOpen && (
-                  <div className="pb-4 text-sm text-black/70 leading-relaxed">
-                    All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
-                  </div>
-                )}
+            <div className="flex items-center justify-center gap-1.5 px-1">
+              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
               </div>
-              <div className="flex flex-col  border-t border-gray-100 border-b">
-                <button
-                  onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
-                  className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
-                >
-                  <div className="flex items-center gap-3">
-                    <Truck className="w-4 h-4 text-foreground" />
-                    <span className="text-[12px] font-bold tracking-wider uppercase">DELIVERY</span>
-                  </div>
-                  {isDeliveryOpen ? (
-                    <Minus className="w-4 h-4 text-muted-foreground" />
-                  ) : (
-                    <Plus className="w-4 h-4 text-muted-foreground" />
-                  )}
-                </button>
-                {isDeliveryOpen && (
-                  <div className="pb-4 text-sm text-black/70 leading-relaxed">
-                    Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
-                  </div>
-                )}
+              <div className="flex flex-col text-left">
+                <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Check policy</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-1.5 px-1">
+              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Premium material</span>
               </div>
             </div>
           </div>
 
 
+          <div className="border border-gray-200 rounded-[16px] bg-white flex flex-col mt-2">
+            <div className="flex flex-col">
+              <button
+                onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
+                className="flex items-center justify-between px-4 py-4 w-full hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="w-5 h-5 text-[#00a859]" strokeWidth={1.5} />
+                  <span className="text-[12px] font-bold text-black uppercase tracking-wide">WARRANTY & AUTHENTICITY GUARANTEE</span>
+                </div>
+                <ChevronDown className={`w-4 h-4 text-black transition-transform duration-300 ${isWarrantyOpen ? "rotate-180" : ""}`} strokeWidth={1.5} />
+              </button>
+              {isWarrantyOpen && (
+                <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
+                  All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
+                </div>
+              )}
+            </div>
+            <div className="w-full border-t border-gray-100" />
+            <div className="flex flex-col">
+              <button
+                onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
+                className="flex items-center justify-between px-4 py-4 w-full hover:bg-gray-50 transition-colors rounded-b-[16px]"
+              >
+                <div className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-[#ff2e55]" strokeWidth={1.5} />
+                  <span className="text-[12px] font-bold text-black uppercase tracking-wide">DELIVERY & STORAGE INFORMATION</span>
+                </div>
+                <ChevronDown className={`w-4 h-4 text-black transition-transform duration-300 ${isDeliveryOpen ? "rotate-180" : ""}`} strokeWidth={1.5} />
+              </button>
+              {isDeliveryOpen && (
+                <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
+                  Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+
+
+        {/* Offers & Discounts */}
+        <div className="mb-6 mt-6 ml-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
+              Offers & Discounts
+            </h3>
+
+          </div>
+
+          {renderOfferTickets()}
+
+
+          {/* Frequently Bought Together */}
+          <div className="ml-0 mr-3  lg:ml-0">
+            {renderFrequentlyBoughtTogether()}
+          </div>
 
           {/* Tabs: Description / Reviews */}
           <div className="mb-6">
@@ -976,7 +1160,7 @@ export default function ProductDetailPage() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <span className="text-[22px] font-extrabold text-gray-900 leading-none">
-                    ₹{(product.price * quantity).toFixed(0)}
+                    ₹{(currentPrice * quantity).toFixed(0)}
                   </span>
                   {discountPercentage > 0 && (
                     <span className="bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded">
@@ -984,13 +1168,13 @@ export default function ProductDetailPage() {
                     </span>
                   )}
                 </div>
-                {originalPrice && (
+                {currentOriginalPrice && (
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className="text-[13px] text-gray-400 line-through font-medium leading-none">
-                      ₹{(originalPrice * quantity).toFixed(0)}
+                      ₹{(currentOriginalPrice * quantity).toFixed(0)}
                     </span>
                     <span className="text-[12px] text-[#00a859] font-bold leading-none">
-                      You save ₹{((originalPrice - product.price) * quantity).toFixed(0)}
+                      You save ₹{((currentOriginalPrice - currentPrice) * quantity).toFixed(0)}
                     </span>
                   </div>
                 )}
@@ -1009,34 +1193,55 @@ export default function ProductDetailPage() {
       {/* ── DESKTOP LAYOUT ── */}
       <div className="hidden lg:block container mx-auto px-6 py-8 max-w-7xl">
         <div className="flex flex-row gap-12 mb-10">
-          <div className="w-[60%] flex gap-4 h-[560px] min-w-0">
-            <div className="w-20 flex flex-col gap-3 h-full overflow-y-auto pr-1 shrink-0">
-              {gallery.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setImageIndex(i)}
-                  className={`relative w-full aspect-square rounded-lg overflow-hidden bg-[#f4f4f9] shrink-0 ${imageIndex === i ? "border-2 border-primary opacity-100" : "opacity-60"
-                    }`}
-                >
-                  <Image src={img} alt="" fill className="object-cover" sizes="80px" />
-                </button>
-              ))}
-            </div>
-            <div className="relative flex-1 min-w-0 bg-[#f4f4f9] rounded-xl overflow-hidden" ref={emblaRefDesktop}>
-              <div className="flex h-full w-full cursor-grab active:cursor-grabbing">
-                {gallery.map((img, idx) => (
-                  <div key={idx} className="relative flex-[0_0_100%] min-w-0 h-full">
-                    <Image
-                      src={img}
-                      alt={`${product.name} ${idx + 1}`}
-                      fill
-                      className="object-cover pointer-events-none"
-                      priority={idx === 0}
-                      sizes="50vw"
-                      draggable={false}
-                    />
-                  </div>
+          <div className="w-[60%] flex flex-col min-w-0">
+            <div className="flex gap-4 h-[560px] w-full mb-8">
+              <div className="w-20 flex flex-col gap-3 h-full overflow-y-auto pr-1 shrink-0">
+                {gallery.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setImageIndex(i)}
+                    className={`relative w-full aspect-square rounded-lg overflow-hidden bg-[#f4f4f9] shrink-0 ${imageIndex === i ? "border-2 border-primary opacity-100" : "opacity-60"
+                      }`}
+                  >
+                    <Image src={img} alt="" fill className="object-cover" sizes="80px" />
+                  </button>
                 ))}
+              </div>
+              <div className="relative flex-1 min-w-0 bg-[#f4f4f9] rounded-xl overflow-hidden" ref={emblaRefDesktop}>
+                <div className="flex h-full w-full cursor-grab active:cursor-grabbing">
+                  {gallery.map((img, idx) => (
+                    <div key={idx} className="relative flex-[0_0_100%] min-w-0 h-full">
+                      <Image
+                        src={img}
+                        alt={`${product.name} ${idx + 1}`}
+                        fill
+                        className="object-cover pointer-events-none"
+                        priority={idx === 0}
+                        sizes="50vw"
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 4 Sections moved to Left Column */}
+            <div className="flex flex-col gap-8 w-full pr-12 mt-30 ">
+
+
+              {/* Offers & Discounts Desktop */}
+              <div className="w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
+                    Offers & Discounts
+                  </h3>
+                </div>
+
+                {renderOfferTickets()}
+
+
+
               </div>
             </div>
           </div>
@@ -1072,10 +1277,10 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-3 mb-6 flex-wrap">
-              <span className="text-3xl font-bold text-primary">₹{product.price.toFixed(0)}</span>
-              {originalPrice && (
+              <span className="text-3xl font-bold text-primary">₹{currentPrice.toFixed(0)}</span>
+              {currentOriginalPrice && (
                 <span className="text-lg text-muted-foreground line-through">
-                  ₹{originalPrice.toFixed(0)}
+                  ₹{currentOriginalPrice.toFixed(0)}
                 </span>
               )}
               {/* Green Discount Tag */}
@@ -1130,65 +1335,71 @@ export default function ProductDetailPage() {
 
             {/* Purchase options - Conditional */}
             {["oats", "oil", "rice", "pasta", "tea", "coffee"].some(k => product.name.toLowerCase().includes(k)) && (
-              <div className="mb-8">
-                <h3 className="text-[16px] font-bold text-gray-900 mb-4">Purchase options</h3>
-                <div className="flex flex-col gap-3">
+              <div className="mb-8 mt-2">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-[12px] font-bold text-gray-900 uppercase tracking-wider">Select Size & Pack</h3>
+                </div>
+                <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
                   {/* Bundle 1 */}
                   <button
                     onClick={() => { setSelectedBundle(1); setQuantity(1); }}
-                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 1 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
+                    className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 1 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                   >
-                    <div className="shrink-0 mt-0.5">
-                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 1 ? "border-[5px] border-primary" : "border-gray-300"}`} />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-gray-900 text-[14px]">One</span>
-                        <span className="bg-[#fef3c7] text-[#92400e] text-[10px] font-bold px-1.5 py-0.5 rounded">CHOICE</span>
+                    {selectedBundle === 1 && (
+                      <div className="absolute top-3 right-3">
+                        <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
                       </div>
-                      <div className="font-bold text-gray-900 text-[15px]">₹{product.price.toFixed(0)}</div>
+                    )}
+                    <div className="flex flex-col h-full">
+                      <span className={`font-semibold text-[13px] ${selectedBundle === 1 ? "text-white" : "text-gray-900"}`}>1 Unit</span>
+                      <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 1 ? "text-[#fde047]" : "text-gray-900"}`}>
+                        ₹{product.price.toFixed(0)}
+                      </span>
+                      <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 1 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                        Standard pack
+                      </span>
                     </div>
                   </button>
 
                   {/* Bundle 2 */}
                   <button
                     onClick={() => { setSelectedBundle(2); setQuantity(2); }}
-                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 2 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
+                    className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 2 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                   >
-                    <div className="shrink-0 mt-0.5">
-                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 2 ? "border-[5px] border-primary" : "border-gray-300"}`} />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-gray-900 text-[14px]">Pack of 2</span>
-                        <span className="text-gray-500 text-[12px]">Save 10%</span>
+                    {selectedBundle === 2 && (
+                      <div className="absolute top-3 right-3">
+                        <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-gray-900 text-[15px]">₹{Math.round(product.price * 2 * 0.9)}</span>
-                        <span className="text-gray-400 text-[13px] line-through">₹{(product.price * 2).toFixed(0)}</span>
-                        <span className="text-gray-400 text-[12px] ml-1">· 2 units</span>
-                      </div>
+                    )}
+                    <div className="flex flex-col h-full">
+                      <span className={`font-semibold text-[13px] ${selectedBundle === 2 ? "text-white" : "text-gray-900"}`}>Pack of 2</span>
+                      <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 2 ? "text-[#fde047]" : "text-gray-900"}`}>
+                        ₹{Math.round(product.price * 2 * 0.9)}
+                      </span>
+                      <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 2 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                        Save 10%
+                      </span>
                     </div>
                   </button>
 
                   {/* Bundle 3 */}
                   <button
                     onClick={() => { setSelectedBundle(3); setQuantity(3); }}
-                    className={`w-full text-left p-4 rounded-xl border flex gap-3 transition-colors ${selectedBundle === 3 ? "border-primary bg-gray-50" : "border-gray-200 bg-white"}`}
+                    className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 3 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                   >
-                    <div className="shrink-0 mt-0.5">
-                      <div className={`w-4 h-4 rounded-full border ${selectedBundle === 3 ? "border-[5px] border-primary" : "border-gray-300"}`} />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-gray-900 text-[14px]">Pack of 3</span>
-                        <span className="text-gray-500 text-[12px]">Save 10%</span>
+                    {selectedBundle === 3 && (
+                      <div className="absolute top-3 right-3">
+                        <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-gray-900 text-[15px]">₹{Math.round(product.price * 3 * 0.9)}</span>
-                        <span className="text-gray-400 text-[13px] line-through">₹{(product.price * 3).toFixed(0)}</span>
-                        <span className="text-gray-400 text-[12px] ml-1">· 3 units</span>
-                      </div>
+                    )}
+                    <div className="flex flex-col h-full">
+                      <span className={`font-semibold text-[13px] ${selectedBundle === 3 ? "text-white" : "text-gray-900"}`}>Pack of 3</span>
+                      <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 3 ? "text-[#fde047]" : "text-gray-900"}`}>
+                        ₹{Math.round(product.price * 3 * 0.9)}
+                      </span>
+                      <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 3 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                        Save 10%
+                      </span>
                     </div>
                   </button>
                 </div>
@@ -1266,8 +1477,10 @@ export default function ProductDetailPage() {
             {/* Delivery Details Section (Desktop) */}
             {renderDeliveryDetails()}
 
+
+
             {/* Offers & Discounts Desktop */}
-            <div className="mb-6 mt-6">
+            <div className="mb-6 mt-6 hidden block">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-semibold">
                   Offers & Discounts
@@ -1282,85 +1495,86 @@ export default function ProductDetailPage() {
 
               {renderOfferTickets()}
 
-              <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4 ">
-                <div className="flex items-center justify-center gap-2 px-1">
-                  <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                    <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
-                    <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">On all orders</span>
-                  </div>
-                </div>
+            </div>
+          </div>
+        </div>
 
-                <div className="flex items-center justify-center gap-2 px-1">
-                  <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                    <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
-                    <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Check policy</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center gap-2 px-1">
-                  <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                    <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-[10px] sm:text-[11px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
-                    <span className="text-[9px] sm:text-[10px] text-gray-500 leading-tight">Premium material</span>
-                  </div>
-                </div>
+        {/* Badges & Warranty (Full Width on Desktop) */}
+        <div className="mt-8 mb-6 w-full">
+          <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4 bg-white shadow-sm">
+            <div className="flex items-center justify-center gap-2 px-1">
+              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckDelivery stroke={1.5} className="w-8 h-8 text-[#1e1b4b]" />
               </div>
-
-              <div className="border-t border-b border-border">
-                <div className="flex flex-col border-b border-border">
-                  <button
-                    onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
-                    className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
-                  >
-                    <div className="flex items-center gap-3">
-                      <ShieldAlert className="w-4 h-4 text-foreground" />
-                      <span className="text-[12px] font-bold tracking-wider uppercase">WARRANTY</span>
-                    </div>
-                    {isWarrantyOpen ? (
-                      <Minus className="w-4 h-4 text-muted-foreground" />
-                    ) : (
-                      <Plus className="w-4 h-4 text-muted-foreground" />
-                    )}
-                  </button>
-                  {isWarrantyOpen && (
-                    <div className="pb-4 text-sm text-black leading-relaxed">
-                      All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <button
-                    onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
-                    className="flex items-center justify-between py-4 w-full hover:opacity-80 transition-opacity"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Truck className="w-4 h-4 text-foreground" />
-                      <span className="text-[12px] font-bold tracking-wider uppercase">DELIVERY</span>
-                    </div>
-                    {isDeliveryOpen ? (
-                      <Minus className="w-4 h-4 text-muted-foreground" />
-                    ) : (
-                      <Plus className="w-4 h-4 text-muted-foreground" />
-                    )}
-                  </button>
-                  {isDeliveryOpen && (
-                    <div className="pb-4 text-sm text-black/70 leading-relaxed">
-                      Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
-                    </div>
-                  )}
-                </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] sm:text-[16px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
+                <span className="text-[9px] sm:text-[12px] text-gray-500 leading-tight">On all orders</span>
               </div>
             </div>
 
+            <div className="flex items-center justify-center gap-2 px-1">
+              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckReturn stroke={1.5} className="w-8 h-8 text-[#1e1b4b]" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] sm:text-[16px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
+                <span className="text-[9px] sm:text-[12px] text-gray-500 leading-tight">Check policy</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 px-1">
+              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconShieldCheck stroke={1.5} className="w-8 h-8 text-[#1e1b4b]" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] sm:text-[16px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
+                <span className="text-[9px] sm:text-[12px] text-gray-500 leading-tight">Premium material</span>
+              </div>
+            </div>
           </div>
+
+          <div className="border border-gray-200 rounded-[16px] bg-white flex flex-col mt-2">
+            <div className="flex flex-col">
+              <button
+                onClick={() => setIsWarrantyOpen(!isWarrantyOpen)}
+                className="flex items-center justify-between px-4 py-4 w-full hover:bg-gray-50 transition-colors rounded-t-[16px]"
+              >
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="w-5 h-5 text-[#00a859]" strokeWidth={1.5} />
+                  <span className="text-[12px] font-bold text-black uppercase tracking-wide">WARRANTY & AUTHENTICITY GUARANTEE</span>
+                </div>
+                <ChevronDown className={`w-4 h-4 text-black transition-transform duration-300 ${isWarrantyOpen ? "rotate-180" : ""}`} strokeWidth={1.5} />
+              </button>
+              {isWarrantyOpen && (
+                <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
+                  All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
+                </div>
+              )}
+            </div>
+            <div className="w-full border-t border-gray-100" />
+            <div className="flex flex-col">
+              <button
+                onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}
+                className="flex items-center justify-between px-4 py-4 w-full hover:bg-gray-50 transition-colors rounded-b-[16px]"
+              >
+                <div className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-[#ff2e55]" strokeWidth={1.5} />
+                  <span className="text-[12px] font-bold text-black uppercase tracking-wide">DELIVERY & STORAGE INFORMATION</span>
+                </div>
+                <ChevronDown className={`w-4 h-4 text-black transition-transform duration-300 ${isDeliveryOpen ? "rotate-180" : ""}`} strokeWidth={1.5} />
+              </button>
+              {isDeliveryOpen && (
+                <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
+                  Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Frequently Bought Together Desktop (Full Width) */}
+        <div className="mb-10 w-full mt-6">
+          {renderFrequentlyBoughtTogether()}
         </div>
 
         {/* Tabs: Description / Reviews (Full Width on Desktop) */}
@@ -1607,6 +1821,6 @@ export default function ProductDetailPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   );
 }
