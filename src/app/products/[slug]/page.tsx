@@ -652,17 +652,17 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <div className="w-full lg:w-auto border-t lg:border-t-0 grid lg:grid-cols-1 grid-cols-2 lg:border-l border-gray-100 mt-6 pt-5 lg:mt-0 lg:pt-0 lg:pl-6 flex items-center justify-between lg:justify-end gap-6 lg:gap-8 shrink-0">
-            <div className="flex flex-col items-start lg:items-start">
+          <div className="w-full lg:w-auto border-t lg:border-t-0 lg:border-l border-gray-100 mt-6 pt-5 lg:mt-0 lg:pt-0 lg:pl-6 flex items-center justify-between lg:justify-end gap-3 sm:gap-6 lg:gap-8 shrink-0">
+            <div className="flex flex-col items-start lg:items-start shrink-0">
               <span className="text-[12px] lg:text-[13px] text-gray-500 mb-0.5 ">Combo Total</span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <span className="text-[18px] lg:text-[22px] font-extrabold text-gray-900 leading-none">₹{comboDiscountedTotal}</span>
                 <span className="text-[13px] lg:text-[15px] font-medium text-gray-400 line-through">₹{comboOriginalTotal.toFixed(0)}</span>
               </div>
             </div>
             <button
               onClick={() => setIsComboSelected(!isComboSelected)}
-              className={`${isComboSelected ? "bg-white text-black border-2 border-black" : "bg-primary text-white hover:bg-black border-2 border-white"} px-6 lg:px-8 py-3.5 lg:py-4 rounded-[12px] lg:rounded-[14px] font-bold text-[13px] lg:text-[15px] transition-all shadow-md whitespace-nowrap min-w-[180px] text-center`}
+              className={`${isComboSelected ? "bg-white text-black border-2 border-black" : "bg-primary text-white hover:bg-black border-2 border-white"} px-3 sm:px-6 lg:px-8 py-3.5 lg:py-4 rounded-[12px] lg:rounded-[14px] font-bold text-[13px] lg:text-[15px] transition-all shadow-md whitespace-nowrap text-center flex-1 sm:flex-none sm:min-w-[180px] ml-2`}
             >
               {isComboSelected ? "Combo Selected ✓" : "Select Combo"}
             </button>
