@@ -156,10 +156,10 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
   const statusStyles = getStatusStyles(order.statusColor);
 
   return (
-    <div className="p-1 bg-white rounded-sm  border-b border-gray-200 transition-all hover:shadow-md cursor-pointer mb-1" onClick={() => setIsExpanded(!isExpanded)}>
-      <div className="flex gap-4 sm:gap-6 p-1">
+    <div className="border-b border-gray-200 pb-4 pt-2 transition-all cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="flex gap-4 sm:gap-6">
         {/* Left: Product Image Box */}
-        <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
+        <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-md overflow-hidden bg-gray-100 shrink-0">
           <Image src={order.image} alt={order.title} fill className="object-cover" />
         </div>
 
@@ -265,7 +265,7 @@ function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCa
         <p className="text-[14px] text-gray-500 mt-1">Track and view all your past orders</p>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-4 sm:p-6 bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
         {orders.map((order) => (
           <OrderCard key={order.id} order={order} showCancelBtn={true} onCancel={onCancel} onReturn={onReturn} />
         ))}
