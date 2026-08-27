@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { Button } from "@/components/ui/button";
-import { ProductCard } from "@/components/product/ProductCard";
+
 import { IconTruckReturn, IconShieldCheck, IconTruckDelivery } from "@tabler/icons-react";
 import {
   Star,
@@ -25,6 +25,7 @@ import {
   ChevronLeft,
   ArrowLeft,
   ArrowRight,
+  ArrowDown,
   Percent,
   BadgePercent,
   ShieldCheck,
@@ -256,8 +257,36 @@ export default function ProductDetailPage() {
     ? Math.round(((currentOriginalPrice - currentPrice) / currentOriginalPrice) * 100)
     : 0;
 
+  const CustomToast = ({ t, title, subtitle, image, buttonText, onClick }: { t: any, title: React.ReactNode, subtitle: string, image: string, buttonText: string, onClick: () => void }) => (
+    <div className="flex ml-auto mr-2 sm:mr-0 w-[320px] sm:w-[350px] items-center gap-3 p-2 bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 font-sans">
+      <button
+        onClick={() => toast.dismiss(t)}
+        className="absolute -top-2 w-[26px] h-[26px] bg-[#007aff] hover:bg-blue-600 rounded-full flex items-center justify-center border-[2.5px] border-white shadow-sm transition-colors cursor-pointer z-10"
+      >
+        <X className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+      </button>
+      <div className="relative shrink-0 w-[64px] h-[64px] bg-[#f4f4f5] rounded-[14px] flex items-center justify-center p-1.5">
+        <img src={image} alt="Product" className="w-full h-full object-contain mix-blend-multiply" />
+
+      </div>
+      <div className="flex-1 min-w-0 py-0.5">
+        <p className="text-[13.5px] text-gray-900 leading-[1.3] pr-1">
+          {title}
+        </p>
+        <div className="flex items-center justify-between mt-1.5">
+          <span className="text-[11.5px] text-gray-400 font-medium">{subtitle}</span>
+          <button
+            onClick={onClick}
+            className="px-3.5 py-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-[12px] font-bold rounded-full transition-colors whitespace-nowrap shadow-sm"
+          >
+            {buttonText}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   const handleAddToCart = () => {
-    // If quantity was missing (though state defaults to 1)
     if (!quantity || quantity < 1) {
       toast.error("Please select a quantity");
       return;
@@ -285,14 +314,28 @@ export default function ProductDetailPage() {
       };
       addItem(item3, quantity);
 
-      toast.success("Combo added to cart", {
-        description: `${quantity}x Frequently Bought Together Combo added successfully.`,
-      });
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          title={<><strong>You</strong> just <strong>added</strong> a combo to cart</>}
+          subtitle="Just now"
+          image={product.image}
+          buttonText="View Cart"
+          onClick={() => { toast.dismiss(t); router.push('/cart'); }}
+        />
+      ), { unstyled: true, className: "!bg-transparent !border-0 !shadow-none !p-0 !w-auto" });
     } else {
       addItem(product, quantity, selectedColor, product.sizes?.[0]);
-      toast.success("Added to cart", {
-        description: "Product added successfully.",
-      });
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          title={<><strong>You</strong> just <strong>added</strong> a {product.name.split(" ")[0]} to cart</>}
+          subtitle="Just now"
+          image={product.image}
+          buttonText="View Cart"
+          onClick={() => { toast.dismiss(t); router.push('/cart'); }}
+        />
+      ), { unstyled: true, className: "!bg-transparent !border-0 !shadow-none !p-0 !w-auto" });
     }
   };
 
@@ -522,35 +565,33 @@ export default function ProductDetailPage() {
   };
 
   const renderDeliveryDetails = () => (
-    <div className="mb-6 rounded-sm border  border-[#e5e7eb] shadow-sm bg-white overflow-hidden">
-      <div className="px-4 py-2 border-b border-[#f3f4f6]">
-        <h3 className="font-semibold text-[15px] text-gray-900">Delivery details</h3>
-        <p className="text-[10px] text-gray-700 font-small">Enter pincode to check delivery availability</p>
-      </div>
+    <div className="mb-6 mt-4 bg-gray-200 p-1 rounded-sm py-3">
+      <h3 className="text-[14px] sm:text-[15px] font-medium text-center text-gray-800 mb-2">
+        Check delivery at your pincode
+      </h3>
 
       {!checkedPincode ? (
-        <div className="p-4">
-          <p className="text-[13px] text-gray-900 font-medium mb-1">Enter pincode</p>
-          <div className="flex gap-2">
+        <div className="bg-[#f4f4f5] p-3 sm:p-4 rounded-sm mx-1 sm:mx-0">
+          <div className="flex bg-white border border-gray-400 rounded-sm overflow-hidden p-1">
             <input
               type="text"
               maxLength={6}
-              placeholder="6-digit PIN"
+              placeholder="Enter Pincode"
               value={pincode}
               onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
-              className="flex-1 h-[42px] px-3 border border-[#e5e7eb] rounded-lg text-[14px] focus:outline-none focus:border-[#a78bfa] focus:ring-1 focus:ring-[#a78bfa] transition-all"
+              className="flex-1 h-[34px] px-3 text-[14px] text-gray-700 focus:outline-none placeholder:text-gray-500"
             />
             <button
               onClick={handleCheckPincode}
               disabled={isCheckingPin || pincode.length !== 6}
-              className="h-[42px] px-6 bg-primary hover:bg-primary/90 text-white rounded-lg text-[14px] font-bold transition-colors "
+              className="h-[34px] px-4 bg-[#3f3f46] hover:bg-[#27272a] text-white rounded-sm text-[12px] font-medium transition-colors flex items-center justify-center tracking-wider"
             >
-              {isCheckingPin ? "..." : "Check"}
+              {isCheckingPin ? "..." : "submit ▶"}
             </button>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col border border-gray-200 rounded-md overflow-hidden shadow-sm mx-1 sm:mx-0">
           <div className="p-4 bg-[#faf5ff] flex items-start gap-3">
             <MapPin className="w-5 h-5 text-[#8b5cf6] shrink-0 mt-0.5" />
             <div>
@@ -563,7 +604,7 @@ export default function ProductDetailPage() {
               </button>
             </div>
           </div>
-          <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3">
+          <div className="p-4 border-t border-[#f3f4f6] flex items-start gap-3 bg-white">
             <Truck className="w-5 h-5 text-gray-800 shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="font-bold text-[14px] text-gray-900 leading-tight">Delivery by Aug 14, 2026</p>
@@ -599,55 +640,51 @@ export default function ProductDetailPage() {
           </span>
         </div>
 
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-5 w-full lg:w-auto">
-            <div className="flex items-center gap-3 lg:gap-2">
-              <div className="w-[85%] lg:w-auto lg:min-w-[200px] flex items-center gap-3 p-3">
-                <div className="w-22 h-22 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 p-1">
-                  {product.image ? (
-                    <img src={product.image} alt="Product" className="w-full h-full object-contain mix-blend-multiply" />
-                  ) : (
-                    <Package className="w-6 h-6 text-gray-300" />
-                  )}
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[13px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate">{product.name}</span>
-                  <span className="text-[13px] font-medium text-gray-500 mt-1">₹{Math.round(product.price * 0.85).toFixed(0)}</span>
-                </div>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-1">
+          <div className="flex items-center justify-between w-full lg:w-auto pb-2 gap-1 sm:gap-2">
+            <div className="flex-1 lg:flex-none lg:min-w-[200px] flex flex-col lg:flex-row items-center gap-1.5 lg:gap-3 p-1.5 sm:p-2 bg-gray-50/50 rounded-xl lg:bg-transparent lg:p-3 lg:rounded-none text-center lg:text-left overflow-hidden">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-22 lg:h-22 rounded-lg bg-white lg:bg-gray-50 flex items-center justify-center shrink-0 p-1 border border-gray-100 lg:border-none shadow-sm lg:shadow-none">
+                {product.image ? (
+                  <img src={product.image} alt="Product" className="w-full h-full object-contain mix-blend-multiply" />
+                ) : (
+                  <Package className="w-6 h-6 text-gray-300" />
+                )}
               </div>
-              <Plus className="w-4 h-4 text-gray-400 shrink-0" strokeWidth={2.5} />
+              <div className="flex flex-col overflow-hidden w-full">
+                <span className="text-[10px] sm:text-[12px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate w-full">{product.name}</span>
+                <span className="text-[11px] sm:text-[12px] lg:text-[13px] font-medium text-gray-500 mt-0.5 lg:mt-1 w-full truncate">₹{Math.round(product.price * 0.85).toFixed(0)}</span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 lg:gap-5">
-              <div className="w-[85%] lg:w-auto lg:min-w-[200px] flex items-center gap-3 p-3">
-                <div className="w-22 h-22 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 p-1">
-                  {comboProduct2.image ? (
-                    <img src={comboProduct2.image} alt={comboProduct2.name} className="w-full h-full object-contain mix-blend-multiply" />
-                  ) : (
-                    <Package className="w-6 h-6 text-orange-200" />
-                  )}
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[13px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate">{comboProduct2.name}</span>
-                  <span className="text-[13px] font-medium text-gray-500 mt-1">₹{Math.round(comboProduct2.price * 0.85).toFixed(0)}</span>
-                </div>
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 shrink-0" strokeWidth={2.5} />
+
+            <div className="flex-1 lg:flex-none lg:min-w-[200px] flex flex-col lg:flex-row items-center gap-1.5 lg:gap-3 p-1.5 sm:p-2 bg-gray-50/50 rounded-xl lg:bg-transparent lg:p-3 lg:rounded-none text-center lg:text-left overflow-hidden">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-22 lg:h-22 rounded-lg bg-white lg:bg-gray-50 flex items-center justify-center shrink-0 p-1 border border-gray-100 lg:border-none shadow-sm lg:shadow-none">
+                {comboProduct2.image ? (
+                  <img src={comboProduct2.image} alt={comboProduct2.name} className="w-full h-full object-contain mix-blend-multiply" />
+                ) : (
+                  <Package className="w-6 h-6 text-orange-200" />
+                )}
               </div>
-              <Plus className="w-4 h-4 text-gray-400 shrink-0" strokeWidth={2.5} />
+              <div className="flex flex-col overflow-hidden w-full">
+                <span className="text-[10px] sm:text-[12px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate w-full">{comboProduct2.name}</span>
+                <span className="text-[11px] sm:text-[12px] lg:text-[13px] font-medium text-gray-500 mt-0.5 lg:mt-1 w-full truncate">₹{Math.round(comboProduct2.price * 0.85).toFixed(0)}</span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 lg:gap-5">
-              <div className="w-[85%] lg:w-auto lg:min-w-[200px] flex items-center gap-3 p-3">
-                <div className="w-22 h-22 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 p-1">
-                  {comboProduct3.image ? (
-                    <img src={comboProduct3.image} alt={comboProduct3.name} className="w-full h-full object-contain mix-blend-multiply" />
-                  ) : (
-                    <Package className="w-6 h-6 text-green-200" />
-                  )}
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[13px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate">{comboProduct3.name}</span>
-                  <span className="text-[13px] font-medium text-gray-500 mt-1">₹{Math.round(comboProduct3.price * 0.85).toFixed(0)}</span>
-                </div>
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 shrink-0" strokeWidth={2.5} />
+
+            <div className="flex-1 lg:flex-none lg:min-w-[200px] flex flex-col lg:flex-row items-center gap-1.5 lg:gap-3 p-1.5 sm:p-2 bg-gray-50/50 rounded-xl lg:bg-transparent lg:p-3 lg:rounded-none text-center lg:text-left overflow-hidden">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-22 lg:h-22 rounded-lg bg-white lg:bg-gray-50 flex items-center justify-center shrink-0 p-1 border border-gray-100 lg:border-none shadow-sm lg:shadow-none">
+                {comboProduct3.image ? (
+                  <img src={comboProduct3.image} alt={comboProduct3.name} className="w-full h-full object-contain mix-blend-multiply" />
+                ) : (
+                  <Package className="w-6 h-6 text-green-200" />
+                )}
+              </div>
+              <div className="flex flex-col overflow-hidden w-full">
+                <span className="text-[10px] sm:text-[12px] lg:text-[14px] font-bold text-gray-900 leading-tight truncate w-full">{comboProduct3.name}</span>
+                <span className="text-[11px] sm:text-[12px] lg:text-[13px] font-medium text-gray-500 mt-0.5 lg:mt-1 w-full truncate">₹{Math.round(comboProduct3.price * 0.85).toFixed(0)}</span>
               </div>
             </div>
           </div>
@@ -794,9 +831,9 @@ export default function ProductDetailPage() {
 
         {/* Product Info */}
         <div className="px-5 pt-4 pb-6">
-          <div className="w-fit ml-auto flex items-center bg-primary/10 rounded-sm gap-1.5 px-2.5 py-1 mb-2">
+          <div className="w-fit ml-auto flex items-center bg-primary/10 rounded-sm gap-1.5 p-1 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-[11px] font-bold text-primary uppercase tracking-wider">In Stock</span>
+            <span className="text-[9px] font-bold text-primary uppercase tracking-wider">In Stock</span>
           </div>
           {/* Title and Price */}
           <div className="flex items-start justify-between mb-2 gap-4">
@@ -804,19 +841,20 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-[30px] font-bold text-primary leading-none">
-                ₹{currentPrice.toFixed(0)}
-              </span>
-              {/* Green Discount Tag */}
+            <div className="flex gap-2 shrink-0">
+
               {discountPercentage > 0 && (
                 <span
-                  className="bg-[#00a859] text-white text-[9px] font-bold pl-3.5 pr-4.5 py-1 whitespace-nowrap"
-                  style={{ clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%)" }}
-                >
-                  {discountPercentage}% OFF
+                  className=" text-[#14a800] text-[12px] flex items-center gap-0.5 font-bold ">
+                  <ArrowDown className="w-4 h-4" />
+                  {discountPercentage}%
                 </span>
               )}
+
+              <span className="text-[20px] font-bold text-primary leading-none">
+                ₹{currentPrice.toFixed(0)}
+              </span>
+
             </div>
           </div>
 
@@ -886,23 +924,23 @@ export default function ProductDetailPage() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[12px] font-bold text-gray-900 uppercase tracking-wider">Select Size & Pack</h3>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-1 w-full">
                 {/* Bundle 1 */}
                 <button
                   onClick={() => { setSelectedBundle(1); setQuantity(1); }}
-                  className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 1 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
+                  className={`relative p-3 shrink-0 min-w-[130px] rounded-[12px] border text-left transition-all ${selectedBundle === 1 ? "border-primary border-2 bg-gray-200 shadow-md" : "border-gray-300 bg-white  border-2 hover:border-gray-300"}`}
                 >
                   {selectedBundle === 1 && (
-                    <div className="absolute top-3 right-3">
-                      <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
+                    <div className="absolute top-2.5 right-2.5">
+                      <CheckCircle2 className="w-[18px] h-[18px] text-white fill-primary" strokeWidth={2.5} />
                     </div>
                   )}
-                  <div className="flex flex-col h-full">
-                    <span className={`font-semibold text-[13px] ${selectedBundle === 1 ? "text-white" : "text-gray-900"}`}>1 Unit</span>
-                    <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 1 ? "text-[#fde047]" : "text-gray-900"}`}>
+                  <div className="flex flex-col">
+                    <span className={`font-semibold text-[13px] leading-none  "text-gray-900"}`}>1 Unit</span>
+                    <span className={`font-extrabold text-[17px] mt-1.5 leading-none tracking-tight`}>
                       ₹{product.price.toFixed(0)}
                     </span>
-                    <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 1 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                    <span className={`text-[11px] font-medium mt-1.5 leading-none text-[#e11d48]`}>
                       Standard pack
                     </span>
                   </div>
@@ -911,19 +949,19 @@ export default function ProductDetailPage() {
                 {/* Bundle 2 */}
                 <button
                   onClick={() => { setSelectedBundle(2); setQuantity(2); }}
-                  className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 2 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
+                  className={`relative p-3 shrink-0 min-w-[130px] rounded-[12px] border text-left transition-all ${selectedBundle === 2 ? "border-primary border-2 bg-gray-200 shadow-md" : "border-gray-300 bg-white  border-2 hover:border-gray-300"}`}
                 >
                   {selectedBundle === 2 && (
-                    <div className="absolute top-3 right-3">
-                      <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
+                    <div className="absolute top-2.5 right-2.5">
+                      <CheckCircle2 className="w-[18px] h-[18px] text-white fill-primary" strokeWidth={2.5} />
                     </div>
                   )}
-                  <div className="flex flex-col h-full">
-                    <span className={`font-semibold text-[13px] ${selectedBundle === 2 ? "text-white" : "text-gray-900"}`}>Pack of 2</span>
-                    <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 2 ? "text-[#fde047]" : "text-gray-900"}`}>
+                  <div className="flex flex-col">
+                    <span className={`font-semibold text-[13px] leading-none ${selectedBundle === 2 ? "text-gray-900" : "text-gray-900"}`}>Pack of 2</span>
+                    <span className={`font-extrabold text-[17px] mt-1.5 leading-none tracking-tight`}>
                       ₹{Math.round(product.price * 2 * 0.9)}
                     </span>
-                    <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 2 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                    <span className={`text-[11px] font-medium mt-1.5 leading-none text-[#e11d48]`}>
                       Save 10%
                     </span>
                   </div>
@@ -932,19 +970,19 @@ export default function ProductDetailPage() {
                 {/* Bundle 3 */}
                 <button
                   onClick={() => { setSelectedBundle(3); setQuantity(3); }}
-                  className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 3 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
+                  className={`relative p-3 shrink-0 min-w-[130px] rounded-[12px] border text-left transition-all ${selectedBundle === 3 ? "border-primary border-2 bg-gray-200 shadow-md" : "border-gray-300 bg-white  border-2 hover:border-gray-300"}`}
                 >
                   {selectedBundle === 3 && (
-                    <div className="absolute top-3 right-3">
-                      <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
+                    <div className="absolute top-2.5 right-2.5">
+                      <CheckCircle2 className="w-[18px] h-[18px] text-white fill-primary" strokeWidth={2.5} />
                     </div>
                   )}
-                  <div className="flex flex-col h-full">
-                    <span className={`font-semibold text-[13px] ${selectedBundle === 3 ? "text-white" : "text-gray-900"}`}>Pack of 3</span>
-                    <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 3 ? "text-[#fde047]" : "text-gray-900"}`}>
+                  <div className="flex flex-col">
+                    <span className={`font-semibold text-[13px] leading-none ${selectedBundle === 3 ? "text-gray-900" : "text-gray-900"}`}>Pack of 3</span>
+                    <span className={`font-extrabold text-[17px] mt-1.5 leading-none tracking-tight`}>
                       ₹{Math.round(product.price * 3 * 0.9)}
                     </span>
-                    <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 3 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                    <span className={`text-[11px] font-medium mt-1.5 leading-none text-[#e11d48]`}>
                       Save 10%
                     </span>
                   </div>
@@ -953,41 +991,37 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Quantity */}
-          <div className="flex items-center gap-8 mb-8">
-            <span className="text-[15px] font-bold text-gray-900 w-16">Quantity</span>
-            <div className="flex items-center gap-4">
+          <div ref={inPageCTARef} className="flex flex-col gap-3 mb-6 mt-4">
+            <div className="flex gap-2 w-full ">
+              {/* Quantity */}
+              <div className="flex items-center justify-between  shrink-0 w-[120px] ">
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-9 h-9 flex items-center justify-center bg-[#3f3f46] text-white rounded-[4px] hover:bg-[#27272a] transition-colors">
+                  <Minus className="w-4 h-4" strokeWidth={3} />
+                </button>
+                <span className="text-[16px] font-bold text-gray-900 w-8 text-center  ">{quantity}</span>
+                <button onClick={() => setQuantity(quantity + 1)} className="w-9 h-9 flex items-center justify-center bg-[#3f3f46] text-white rounded-[4px] hover:bg-[#27272a] transition-colors">
+                  <Plus className="w-4 h-4" strokeWidth={3} />
+                </button>
+              </div>
+
+              {/* Add to Cart */}
               <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-5 h-5 rounded flex items-center justify-center bg-primary text-white"
+                onClick={handleAddToCart}
+                className="w-full flex items-center ml-2 justify-center gap-2 py-3 border-2 border-gray-500 rounded-sm bg-white hover:bg-gray-50 transition-colors"
               >
-                <Minus className="w-3.5 h-3.5" strokeWidth={3} />
-              </button>
-              <span className="text-[15px] font-bold text-gray-900 w-4 text-center">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="w-5 h-5 rounded flex items-center justify-center bg-primary text-white"
-              >
-                <Plus className="w-3.5 h-3.5" strokeWidth={3} />
+                <ShoppingBag className="w-4 h-4 text-black" strokeWidth={2.5} />
+                <span className="font-bold text-[14px] sm:text-[16px] text-black">Add to cart — ₹{(currentPrice * quantity).toFixed(0)}</span>
               </button>
             </div>
-          </div>
 
-          {/* Add to cart */}
-          <div ref={inPageCTARef} className="mb-1 flex justify-center gap-1">
-            <button
-              onClick={handleAddToCart}
-              className="w-[70%] max-w-[280px] py-3 rounded-xl bg-transperent hover:bg-[#e0a800] text-black font-bold text-[16px] shadow-sm transition-colors border-2 border-primary"
-            >
-              Add To Cart
-            </button>
+            {/* Buy Now */}
             <button
               onClick={handleBuyNow}
-              className="w-[70%] max-w-[280px] py-3 rounded-full bg-primary hover:bg-[#e0a800] text-white font-bold text-[16px] shadow-sm transition-colors"
+              className="relative w-full h-[64px] rounded-sm bg-[#8b5cf6] hover:bg-[#7c3aed] text-white border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98] shadow-sm"
             >
-
-              <span className="text-[16px]">Buy Now</span>
-
+              <span className="text-[17px] font-bold leading-tight">Buy Now</span>
+              <span className="text-[12px] font-medium text-white/90 mt-0.5 leading-tight">Get it faster</span>
+              <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
             </button>
           </div>
         </div>
@@ -999,17 +1033,21 @@ export default function ProductDetailPage() {
         <div className="px-5 pt-0 bg-white -mt-3">
           <div className="flex flex-col gap-3 mb-6">
 
-            <button
-              onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-              className="relative w-full h-[64px] rounded-full bg-[#e8f5e9] text-[#166534] font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-2">
-                <WhatsAppIcon className="w-5 h-5 fill-[#22c55e]" />
-                <span className="text-[16px]">Enquire on WhatsApp</span>
-              </div>
-              <span className="text-[11px] font-medium text-[#166534]/80 mt-0.5">Chat with us for more details</span>
-              <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
-            </button>
+            <div className="pl-6 w-full">
+              <button
+                onClick={() => window.open("https://wa.me/1234567890", "_blank")}
+                className="relative w-full h-[56px] rounded-br-4xl rounded-tl-4xl border border-rounded-md bg-[#f4f4f5] border border-gray-200 flex flex-col items-center justify-center transition-transform active:scale-[0.98] shadow-sm"
+              >
+                <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-[54px] h-[54px] rounded-full bg-white flex items-center justify-center shadow-md">
+                  <div className="w-[38px] h-[38px] bg-white rounded-full absolute" />
+                  <WhatsAppIcon className="w-[36px] h-[36px] text-[#25D366] relative z-10" />
+                </div>
+                <div className="flex flex-col items-center justify-center pl-6">
+                  <span className="text-[15px] font-bold text-gray-900 leading-tight">Enquire on WhatsApp</span>
+                  <span className="text-[11px] font-medium text-gray-500 leading-tight mt-0.5">Chat with us for details</span>
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* Delivery Details Section */}
@@ -1017,34 +1055,44 @@ export default function ProductDetailPage() {
 
 
 
-          <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4 ">
-            <div className="flex items-center justify-center gap-1.5 px-1">
-              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                <IconTruckDelivery stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+          <div className="flex overflow-x-auto hide-scrollbar  py-3 divide-x divide-gray-100 mb-6 mt-4  w-full">
+            <div className="flex items-center justify-center gap-2.5 px-4 sm:px-6 shrink-0 min-w-[140px]">
+              <div className="w-9 h-9 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckDelivery stroke={1.5} className="w-5 h-5 text-[#1e1b4b]" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
+                <span className="text-[12px] sm:text-[14px] font-bold text-[#1e1b4b] leading-tight mb-0.5">Free Delivery</span>
                 <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">On all orders</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-1.5 px-1">
-              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                <IconTruckReturn stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+            <div className="flex items-center justify-center gap-2.5 px-4 sm:px-6 shrink-0 min-w-[140px]">
+              <div className="w-9 h-9 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckReturn stroke={1.5} className="w-5 h-5 text-[#1e1b4b]" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
+                <span className="text-[12px] sm:text-[14px] font-bold text-[#1e1b4b] leading-tight mb-0.5">No Return</span>
                 <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Check policy</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-1.5 px-1">
-              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                <IconShieldCheck stroke={1.5} className="w-4 h-4 text-[#1e1b4b]" />
+            <div className="flex items-center justify-center gap-2.5 px-4 sm:px-6 shrink-0 min-w-[140px]">
+              <div className="w-9 h-9 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconShieldCheck stroke={1.5} className="w-5 h-5 text-[#1e1b4b]" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[11px] sm:text-[12px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
+                <span className="text-[12px] sm:text-[14px] font-bold text-[#1e1b4b] leading-tight mb-0.5">High Quality</span>
                 <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">Premium material</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2.5 px-4 sm:px-6 shrink-0 min-w-[140px]">
+              <div className="w-9 h-9 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <BadgeCheck strokeWidth={1.5} className="w-5 h-5 text-[#1e1b4b]" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[12px] sm:text-[14px] font-bold text-[#1e1b4b] leading-tight mb-0.5">Top Brand</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-500 leading-tight">100% Original</span>
               </div>
             </div>
           </div>
@@ -1339,23 +1387,23 @@ export default function ProductDetailPage() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-[12px] font-bold text-gray-900 uppercase tracking-wider">Select Size & Pack</h3>
                 </div>
-                <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
+                <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-1 w-full">
                   {/* Bundle 1 */}
                   <button
                     onClick={() => { setSelectedBundle(1); setQuantity(1); }}
-                    className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 1 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
+                    className={`relative p-3 shrink-0 min-w-[130px] rounded-[12px] border text-left transition-all ${selectedBundle === 1 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                   >
                     {selectedBundle === 1 && (
-                      <div className="absolute top-3 right-3">
-                        <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
+                      <div className="absolute top-2.5 right-2.5">
+                        <CheckCircle2 className="w-[18px] h-[18px] text-white fill-primary" strokeWidth={2.5} />
                       </div>
                     )}
-                    <div className="flex flex-col h-full">
-                      <span className={`font-semibold text-[13px] ${selectedBundle === 1 ? "text-white" : "text-gray-900"}`}>1 Unit</span>
-                      <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 1 ? "text-[#fde047]" : "text-gray-900"}`}>
+                    <div className="flex flex-col">
+                      <span className={`font-semibold text-[13px] leading-none ${selectedBundle === 1 ? "text-white" : "text-gray-900"}`}>1 Unit</span>
+                      <span className={`font-extrabold text-[17px] mt-1.5 leading-none tracking-tight ${selectedBundle === 1 ? "text-[#fde047]" : "text-gray-900"}`}>
                         ₹{product.price.toFixed(0)}
                       </span>
-                      <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 1 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                      <span className={`text-[11px] font-medium mt-1.5 leading-none ${selectedBundle === 1 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
                         Standard pack
                       </span>
                     </div>
@@ -1364,19 +1412,19 @@ export default function ProductDetailPage() {
                   {/* Bundle 2 */}
                   <button
                     onClick={() => { setSelectedBundle(2); setQuantity(2); }}
-                    className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 2 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
+                    className={`relative p-3 shrink-0 min-w-[130px] rounded-[12px] border text-left transition-all ${selectedBundle === 2 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                   >
                     {selectedBundle === 2 && (
-                      <div className="absolute top-3 right-3">
-                        <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
+                      <div className="absolute top-2.5 right-2.5">
+                        <CheckCircle2 className="w-[18px] h-[18px] text-white fill-primary" strokeWidth={2.5} />
                       </div>
                     )}
-                    <div className="flex flex-col h-full">
-                      <span className={`font-semibold text-[13px] ${selectedBundle === 2 ? "text-white" : "text-gray-900"}`}>Pack of 2</span>
-                      <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 2 ? "text-[#fde047]" : "text-gray-900"}`}>
+                    <div className="flex flex-col">
+                      <span className={`font-semibold text-[13px] leading-none ${selectedBundle === 2 ? "text-white" : "text-gray-900"}`}>Pack of 2</span>
+                      <span className={`font-extrabold text-[17px] mt-1.5 leading-none tracking-tight ${selectedBundle === 2 ? "text-[#fde047]" : "text-gray-900"}`}>
                         ₹{Math.round(product.price * 2 * 0.9)}
                       </span>
-                      <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 2 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                      <span className={`text-[11px] font-medium mt-1.5 leading-none ${selectedBundle === 2 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
                         Save 10%
                       </span>
                     </div>
@@ -1385,19 +1433,19 @@ export default function ProductDetailPage() {
                   {/* Bundle 3 */}
                   <button
                     onClick={() => { setSelectedBundle(3); setQuantity(3); }}
-                    className={`relative p-4 rounded-[14px] border text-left transition-all ${selectedBundle === 3 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
+                    className={`relative p-3 shrink-0 min-w-[130px] rounded-[12px] border text-left transition-all ${selectedBundle === 3 ? "border-white bg-primary/100 shadow-md" : "border-primary bg-white  border-2 hover:border-gray-300"}`}
                   >
                     {selectedBundle === 3 && (
-                      <div className="absolute top-3 right-3">
-                        <CheckCircle2 className="w-[22px] h-[22px] text-white fill-primary" strokeWidth={2.5} />
+                      <div className="absolute top-2.5 right-2.5">
+                        <CheckCircle2 className="w-[18px] h-[18px] text-white fill-primary" strokeWidth={2.5} />
                       </div>
                     )}
-                    <div className="flex flex-col h-full">
-                      <span className={`font-semibold text-[13px] ${selectedBundle === 3 ? "text-white" : "text-gray-900"}`}>Pack of 3</span>
-                      <span className={`font-extrabold text-[18px] mt-1 tracking-tight ${selectedBundle === 3 ? "text-[#fde047]" : "text-gray-900"}`}>
+                    <div className="flex flex-col">
+                      <span className={`font-semibold text-[13px] leading-none ${selectedBundle === 3 ? "text-white" : "text-gray-900"}`}>Pack of 3</span>
+                      <span className={`font-extrabold text-[17px] mt-1.5 leading-none tracking-tight ${selectedBundle === 3 ? "text-[#fde047]" : "text-gray-900"}`}>
                         ₹{Math.round(product.price * 3 * 0.9)}
                       </span>
-                      <span className={`text-[11px] font-medium mt-2 ${selectedBundle === 3 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
+                      <span className={`text-[11px] font-medium mt-1.5 leading-none ${selectedBundle === 3 ? "text-[#fde047]" : "text-[#e11d48]"}`}>
                         Save 10%
                       </span>
                     </div>
@@ -1405,26 +1453,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             )}
-
-            {/* Quantity */}
-            <div className="flex items-center gap-8 mb-10">
-              <span className="text-[16px] font-bold text-gray-900 w-20">Quantity</span>
-              <div className="flex items-center gap-5">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-6 h-6 rounded flex items-center justify-center bg-primary text-white"
-                >
-                  <Minus className="w-4 h-4" strokeWidth={3} />
-                </button>
-                <span className="text-[16px] font-bold text-gray-900 w-6 text-center">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-6 h-6 rounded flex items-center justify-center bg-primary text-white"
-                >
-                  <Plus className="w-4 h-4" strokeWidth={3} />
-                </button>
-              </div>
-            </div>
 
             <div className="flex flex-col gap-4 mb-10">
               {product.isLimited && (
@@ -1435,43 +1463,61 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              <div className="flex gap-4 mb-2">
+              <div className="flex gap-3 w-full">
+                {/* Quantity */}
+                <div className="flex items-center justify-between p-1.5 border border-gray-200 rounded-[6px] bg-white shrink-0 w-[120px] shadow-sm">
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-9 h-9 flex items-center justify-center bg-[#3f3f46] text-white rounded-[4px] hover:bg-[#27272a] transition-colors">
+                    <Minus className="w-4 h-4" strokeWidth={3} />
+                  </button>
+                  <span className="text-[16px] font-bold text-gray-900 w-8 text-center">{quantity}</span>
+                  <button onClick={() => setQuantity(quantity + 1)} className="w-9 h-9 flex items-center justify-center bg-[#3f3f46] text-white rounded-[4px] hover:bg-[#27272a] transition-colors">
+                    <Plus className="w-4 h-4" strokeWidth={3} />
+                  </button>
+                </div>
+
+                {/* Add to Cart */}
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 h-14 rounded-full bg-primary hover:bg-primary text-white font-bold text-[18px] shadow-sm transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 border-2 border-black rounded-[14px] bg-white hover:bg-gray-50 transition-colors"
                 >
-                  Add To Cart
+                  <ShoppingBag className="w-4 h-4 text-black" strokeWidth={2.5} />
+                  <span className="font-bold text-[16px] text-black">Add to cart — ₹{(currentPrice * quantity).toFixed(0)}</span>
                 </button>
+
+                {/* Watchlist */}
                 <button
                   onClick={() => toggleItem(product)}
-                  className="w-14 h-14 rounded-full border border-primary/200 flex items-center justify-center hover:bg-gray-50 transition-colors shrink-0"
+                  className="w-[56px] shrink-0 rounded-[14px] border-2 border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
                 >
-                  <Heart className={`w-6 h-6 ${inWatchlist ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
+                  <Heart className={`w-5 h-5 ${inWatchlist ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
                 </button>
               </div>
 
+              {/* Buy Now */}
               <button
                 onClick={handleBuyNow}
-                className="relative w-full h-[64px] rounded-2xl bg-gradient-to-r from-[#2563eb] to-[#4f46e5] text-white font-bold border-0 flex flex-col items-center justify-center transition-all active:scale-[0.98] hover:shadow-lg"
+                className="relative w-full h-[64px] rounded-[14px] bg-[#8b5cf6] hover:bg-[#7c3aed] text-white border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98] shadow-sm"
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-[17px]">Buy Now</span>
-                </div>
-                <span className="text-[12px] font-medium text-white/80 mt-0.5">Get it faster</span>
+                <span className="text-[17px] font-bold leading-tight">Buy Now</span>
+                <span className="text-[12px] font-medium text-white/90 mt-0.5 leading-tight">Get it faster</span>
                 <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
               </button>
 
-              <button
-                onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-                className="relative w-full h-[64px] rounded-2xl bg-[#e8f5e9] text-[#166534] font-bold border-0 flex flex-col items-center justify-center transition-transform active:scale-[0.98]"
-              >
-                <div className="flex items-center gap-2">
-                  <WhatsAppIcon className="w-5 h-5 fill-[#22c55e]" />
-                  <span className="text-[17px]">Enquire on WhatsApp</span>
-                </div>
-                <span className="text-[12px] font-medium text-[#166534]/80 mt-0.5">Chat with us for more details</span>
-                <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#166534]" />
-              </button>
+              <div className="pl-6 w-full mt-2">
+                <button
+                  onClick={() => window.open("https://wa.me/1234567890", "_blank")}
+                  className="relative w-full h-[60px] rounded-r-full rounded-l-full bg-[#f4f4f5] border border-gray-200 flex flex-col items-center justify-center transition-transform active:scale-[0.98] shadow-sm"
+                >
+                  <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-[68px] h-[68px] rounded-full bg-[#2a2a2a] flex items-center justify-center shadow-md">
+                    <div className="w-[42px] h-[42px] bg-white rounded-full absolute" />
+                    <WhatsAppIcon className="w-[50px] h-[50px] text-[#25D366] relative z-10" />
+                  </div>
+                  <div className="flex flex-col items-center justify-center pl-6">
+                    <span className="text-[16px] font-bold text-gray-900 leading-tight">Enquire on WhatsApp</span>
+                    <span className="text-[12px] font-medium text-gray-500 leading-tight mt-0.5">Chat with us for details</span>
+                  </div>
+                </button>
+              </div>
             </div>
 
             {/* Delivery Details Section (Desktop) */}
@@ -1501,34 +1547,44 @@ export default function ProductDetailPage() {
 
         {/* Badges & Warranty (Full Width on Desktop) */}
         <div className="mt-8 mb-6 w-full">
-          <div className="grid grid-cols-3 border border-gray-100 rounded-sm py-3 divide-x divide-gray-100 mb-6 mt-4 bg-white shadow-sm">
-            <div className="flex items-center justify-center gap-2 px-1">
-              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                <IconTruckDelivery stroke={1.5} className="w-8 h-8 text-[#1e1b4b]" />
+          <div className="flex overflow-x-auto hide-scrollbar border border-gray-100 rounded-xl py-3 divide-x divide-gray-100 mb-6 mt-4 bg-white shadow-sm w-full">
+            <div className="flex items-center justify-center gap-3 px-6 shrink-0 min-w-[160px]">
+              <div className="w-10 h-10 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckDelivery stroke={1.5} className="w-5 h-5 text-[#1e1b4b]" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] sm:text-[16px] font-bold text-[#1e1b4b] leading-tight">Free Delivery</span>
-                <span className="text-[9px] sm:text-[12px] text-gray-500 leading-tight">On all orders</span>
+                <span className="text-[14px] sm:text-[15px] font-bold text-[#1e1b4b] leading-tight mb-0.5">Free Delivery</span>
+                <span className="text-[11px] sm:text-[12px] text-gray-500 leading-tight">On all orders</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 px-1">
-              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                <IconTruckReturn stroke={1.5} className="w-8 h-8 text-[#1e1b4b]" />
+            <div className="flex items-center justify-center gap-3 px-6 shrink-0 min-w-[160px]">
+              <div className="w-10 h-10 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconTruckReturn stroke={1.5} className="w-5 h-5 text-[#1e1b4b]" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] sm:text-[16px] font-bold text-[#1e1b4b] leading-tight">No Return</span>
-                <span className="text-[9px] sm:text-[12px] text-gray-500 leading-tight">Check policy</span>
+                <span className="text-[14px] sm:text-[15px] font-bold text-[#1e1b4b] leading-tight mb-0.5">No Return</span>
+                <span className="text-[11px] sm:text-[12px] text-gray-500 leading-tight">Check policy</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 px-1">
-              <div className="w-8 h-8 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
-                <IconShieldCheck stroke={1.5} className="w-8 h-8 text-[#1e1b4b]" />
+            <div className="flex items-center justify-center gap-3 px-6 shrink-0 min-w-[160px]">
+              <div className="w-10 h-10 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <IconShieldCheck stroke={1.5} className="w-5 h-5 text-[#1e1b4b]" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] sm:text-[16px] font-bold text-[#1e1b4b] leading-tight">High Quality</span>
-                <span className="text-[9px] sm:text-[12px] text-gray-500 leading-tight">Premium material</span>
+                <span className="text-[14px] sm:text-[15px] font-bold text-[#1e1b4b] leading-tight mb-0.5">High Quality</span>
+                <span className="text-[11px] sm:text-[12px] text-gray-500 leading-tight">Premium material</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-3 px-6 shrink-0 min-w-[160px]">
+              <div className="w-10 h-10 rounded-full bg-[#f4f4f9] flex items-center justify-center shrink-0">
+                <BadgeCheck strokeWidth={1.5} className="w-5 h-5 text-[#1e1b4b]" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[14px] sm:text-[15px] font-bold text-[#1e1b4b] leading-tight mb-0.5">Top Brand</span>
+                <span className="text-[11px] sm:text-[12px] text-gray-500 leading-tight">100% Original</span>
               </div>
             </div>
           </div>
@@ -1620,9 +1676,9 @@ export default function ProductDetailPage() {
       </div>
 
       {/* ── MANUFACTURER BANNERS ── */}
-      <div className=" py-10 lg:py-12 border-t  border-gray-200">
+      <div className=" py-10 lg:py-12 bg-white">
         <div className="container mx-auto px-1 lg:px-6 max-w-7xl">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-0">
             {/* Banner 1 */}
             <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
               <Image

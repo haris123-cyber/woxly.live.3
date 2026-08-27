@@ -24,8 +24,11 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       toastOptions={{
         classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-white group-[.toaster]:text-gray-900 group-[.toaster]:border group-[.toaster]:border-gray-100 group-[.toaster]:shadow-xl group-[.toaster]:shadow-black/5 group-[.toaster]:rounded-xl font-sans",
+          toast: "group toast font-sans",
+          success: "group-[.toaster]:bg-white group-[.toaster]:text-gray-900 group-[.toaster]:border group-[.toaster]:border-gray-100 group-[.toaster]:shadow-xl group-[.toaster]:shadow-black/5 group-[.toaster]:rounded-xl w-[300px]",
+          error: "group-[.toaster]:bg-white group-[.toaster]:text-gray-900 group-[.toaster]:border group-[.toaster]:border-gray-100 group-[.toaster]:shadow-xl group-[.toaster]:shadow-black/5 group-[.toaster]:rounded-xl w-[300px]",
+          warning: "group-[.toaster]:bg-white group-[.toaster]:text-gray-900 group-[.toaster]:border group-[.toaster]:border-gray-100 group-[.toaster]:shadow-xl group-[.toaster]:shadow-black/5 group-[.toaster]:rounded-xl w-[300px]",
+          info: "group-[.toaster]:bg-white group-[.toaster]:text-gray-900 group-[.toaster]:border group-[.toaster]:border-gray-100 group-[.toaster]:shadow-xl group-[.toaster]:shadow-black/5 group-[.toaster]:rounded-xl w-[300px]",
           description: "group-[.toast]:text-gray-500 group-[.toast]:text-[13px] font-medium",
           title: "group-[.toast]:text-[14px] font-bold tracking-tight",
           actionButton:
@@ -34,6 +37,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group-[.toast]:bg-gray-100 group-[.toast]:text-gray-600",
           closeButton:
             "group-[.toast]:bg-white group-[.toast]:text-gray-400 group-[.toast]:border-gray-100 hover:group-[.toast]:text-gray-900 hover:group-[.toast]:bg-gray-50 transition-colors shadow-sm",
+
         },
       }}
       {...props}

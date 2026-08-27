@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -167,12 +167,12 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
         <div className="flex flex-col flex-1 min-w-0 py-1 relative mt-1 sm:mt-2">
           <div className="flex justify-between items-start mb-1 gap-2 pr-1">
             <h3 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 leading-tight">{order.title}</h3>
-            
+
             <button className="text-gray-400 p-1 hover:text-primary transition-colors shrink-0">
               {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
           </div>
-          
+
           <p className="text-[11px] sm:text-[13px] text-gray-400 mb-2 truncate max-w-[85%] leading-tight">
             Size: {order.size} • #{order.id.replace('WOXLY-', '')} • {order.date.split('•')[0].trim()}
           </p>
@@ -186,7 +186,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
               <span className={`w-1.5 h-1.5 rounded-full ${statusStyles.dot}`}></span>
               {order.status}
             </div>
-            
+
             {order.trackAction && (
               <Link
                 href={`/track-order?id=${order.id}`}
@@ -789,6 +789,49 @@ function RewardPanel() {
   );
 }
 
+function BannerSlider() {
+  const banners = ['/images/sb1.png', '/images/sb2.png'];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % banners.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [banners.length]);
+
+  return (
+    <div className="mx-5 mb-8 relative rounded-sm overflow-hidden shadow-sm aspect-[21/9]">
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(e, { offset }) => {
+          if (offset.x < -50) {
+            setCurrentIndex((prev) => (prev + 1) % banners.length);
+          } else if (offset.x > 50) {
+            setCurrentIndex((prev) => (prev - 1 + banners.length) % banners.length);
+          }
+        }}
+        animate={{ x: `-${currentIndex * 100}%` }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="flex w-full h-full cursor-grab active:cursor-grabbing"
+      >
+        {banners.map((src, i) => (
+          <div key={i} className="w-full h-full shrink-0 relative pointer-events-none">
+            <Image src={src} alt={`Banner ${i + 1}`} fill className="object-cover" />
+          </div>
+        ))}
+      </motion.div>
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 pointer-events-none">
+        {banners.map((_, i) => (
+          <div key={i} className={`h-1.5 rounded-sm transition-all ${i === currentIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────
 function AccountPageInner() {
   const searchParams = useSearchParams();
@@ -870,7 +913,7 @@ function AccountPageInner() {
     { label: "Address", icon: MapPin, id: "address", color: "text-primary" },
     { label: "Rewards", icon: Gift, id: "rewards", color: "text-primary" },
     { label: "Support", icon: MessageSquare, id: "support", color: "text-primary" },
-    { label: "Logout", icon: LogOut, id: "logout", color: "text-primary" },
+    { label: "Logout", icon: LogOut, id: "logout", color: "text-[#E50914]" },
   ];
 
   return (
@@ -887,24 +930,12 @@ function AccountPageInner() {
             </div>
             <div className="mt-0.5">
               <h1 className="font-bold text-gray-900 text-[18px]">Good Morning, Jenny.</h1>
-              <p className="text-[12px] text-gray-500 mt-0.5 leading-snug pr-4">Have a great day with full of productivity and good vibes!</p>
+              <p className="text-[12px] text-gray-500 mt-0.5 leading-snug pr-4">Great deals are waiting for you.</p>
             </div>
           </div>
 
-          {/* Overview Card */}
-          <div className="mx-5 bg-[#eef1ff] rounded-[24px] p-5 mb-8 shadow-sm">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-[12px] text-gray-600 font-medium">Today's Overview</span>
-              <span className="text-gray-800 font-bold tracking-widest leading-none mb-2">...</span>
-            </div>
-            <h2 className="text-[20px] font-bold text-gray-900 mb-5">{today}</h2>
-            <button
-              onClick={() => { setActiveNav('rewards'); setShowMobileMenu(false); }}
-              className="w-full bg-[#6d28d9] hover:bg-[#5b21b6] text-white py-3.5 rounded-[16px] font-bold text-[14px] transition-colors"
-            >
-              View Rewards
-            </button>
-          </div>
+          {/* Overview Card / Banners */}
+          <BannerSlider />
 
           {/* Quick Actions Grid */}
           <div className="px-5 mb-8">
@@ -938,35 +969,35 @@ function AccountPageInner() {
           </div>
 
           {/* Bottom Promo Cards */}
-          <div className="px-5 grid grid-cols-2 gap-4 mb-4">
-            <div className="bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col">
+          <div className="px-2 grid grid-cols-2 gap-2 mb-2">
+            <div className="bg-white rounded-sm p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col">
               <div className="mb-3">
                 <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
                   <Sparkles className="w-[20px] h-[20px] text-orange-500" strokeWidth={2} />
                 </div>
               </div>
-              <h3 className="font-bold text-[13px] text-gray-900 mt-1 mb-4 leading-snug">Have you checked new arrivals?</h3>
-              <div className="mt-auto">
+              <h3 className="font-bold text-[13px] text-gray-900 mt-1 mb-1 leading-snug ">Have you checked new arrivals?</h3>
+              <div className="mt-auto ">
                 <button
                   onClick={() => window.location.href = '/shop'}
-                  className="bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors text-[11px] font-bold px-4 py-2 rounded-full"
+                  className="bg-gray-100  text-gray-800 hover:bg-gray-200 transition-colors text-[11px] font-bold px-4 py-2 rounded-sm"
                 >
                   Shop Now
                 </button>
               </div>
             </div>
 
-            <div className="bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col">
+            <div className="bg-white rounded-sm p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col">
               <div className="mb-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
                   <Truck className="w-[20px] h-[20px] text-blue-600" strokeWidth={2} />
                 </div>
               </div>
-              <h3 className="font-bold text-[13px] text-gray-900 mt-1 mb-4 leading-snug">Your order is on the way!</h3>
+              <h3 className="font-bold text-[13px] text-gray-900 mt-1 mb-1 leading-snug"> Track your order </h3>
               <div className="mt-auto">
                 <button
                   onClick={() => { setActiveNav('orders'); setShowMobileMenu(false); }}
-                  className="bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors text-[11px] font-bold px-4 py-2 rounded-full"
+                  className="bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors text-[11px] font-bold px-4 py-2 rounded-sm"
                 >
                   Track Now
                 </button>

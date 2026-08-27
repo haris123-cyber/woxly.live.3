@@ -23,7 +23,7 @@ export default function CartPage() {
   const { items, removeItem, updateQuantity, getCartTotal, couponApplied, setCouponApplied } = useCartStore();
 
   const [coupon, setCoupon] = useState("");
-  const [showMobileSummary, setShowMobileSummary] = useState(false);
+  const [showMobileSummary, setShowMobileSummary] = useState(true);
 
   const subtotal = getCartTotal();
   const discount = couponApplied ? subtotal * 0.1 : 0;
@@ -73,7 +73,7 @@ export default function CartPage() {
 
             {/* Free Shipping Progress Box */}
             <div className="bg-[#f8faf9] hidden lg:block  grid grid-cols-2  p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
-              
+
               <div className="flex-1 flex flex-col gap-1.5 sm:gap-2">
                 <div className="flex justify-between items-center gap-2 text-[11px] sm:text-[13px]">
                   {amountNeeded > 0 ? (
@@ -100,10 +100,10 @@ export default function CartPage() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 sm:p-6 bg-white p-2  rounded-md   hover:shadow-md transition-shadow relative group">
               {items.map((item) => (
-                <div key={item.cartItemId} className="flex gap-4 sm:gap-6 ">
-                  <div className="relative w-42 h-42 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
+                <div key={item.cartItemId} className="flex gap-4 sm:gap-6 border-b border-gray-200 pb-2">
+                  <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-md overflow-hidden bg-gray-100 shrink-0">
                     <Image src={item.image} alt={item.name} fill className="object-cover" />
                   </div>
 
@@ -153,10 +153,10 @@ export default function CartPage() {
 
           {/* ── Right: Order Summary ──────────────────── */}
           <div className="w-full lg:w-[380px] shrink-0">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 lg:sticky lg:top-24 ">
+            <div className="bg-white rounded-sm p-3 shadow-sm border border-gray-100 lg:sticky lg:top-24 ">
 
               <div className="bg-[#f8faf9]  block lg:hidden  p-3 sm:p-4 mb-6 flex items-center gap-3 sm:gap-4 shadow-sm">
-                
+
                 <div className="flex-1 flex flex-col gap-1.5 sm:gap-2">
                   <div className="flex justify-between items-center gap-2 text-[11px] sm:text-[13px]">
                     {amountNeeded > 0 ? (
@@ -186,7 +186,7 @@ export default function CartPage() {
               {/* Mobile Summary Toggle */}
               <button
                 onClick={() => setShowMobileSummary(!showMobileSummary)}
-                className="w-full flex justify-between items-center lg:hidden bg-gray-100/80 hover:bg-gray-100 text-gray-800 font-bold text-[15px] py-4 px-5 rounded-2xl mb-4 transition-colors"
+                className="w-full flex justify-between items-center lg:hidden bg-gray-100/80 hover:bg-gray-100 text-gray-800 font-bold text-[15px] py-4 px-5 rounded-sm mb-4 transition-colors"
               >
                 <span>Order Summary</span>
                 <span>{showMobileSummary ? <ChevronUp className="w-5 h-5" /> : < ChevronDown className="w-5 h-5" />}</span>
@@ -236,20 +236,18 @@ export default function CartPage() {
 
 
                 <div className="block ">
-                  <div className="flex items-center gap-3 py-5 border-y border-gray-100 mb-6">
+                  <div className="flex items-center gap-3 py-5   mb-6 px-4">
 
-                    <span className="text-gray-900 font-medium whitespace-nowrap mr-2 text-[15px]">
-                      Promo code
-                    </span>
 
-                    <div className="flex items-center flex-1 border border-gray-200 rounded-lg overflow-hidden bg-[#fafafa]">
+
+                    <div className="flex items-center flex-1  overflow-hidden bg-[#fafafa] gap-1 border border-gray-200 rounded-sm  p-1 ">
 
                       <input
                         type="text"
-                        placeholder="Type here..."
+                        placeholder="Promo code"
                         value={coupon}
                         onChange={(e) => setCoupon(e.target.value)}
-                        className="w-full bg-transparent border-none outline-none px-3 py-2 text-sm text-gray-700 placeholder:text-gray-300"
+                        className="w-full bg-transparent   outline-none px-1 py-1 text-sm text-gray-700 placeholder:text-gray-300"
                       />
 
                       <button
@@ -258,7 +256,7 @@ export default function CartPage() {
                             setCouponApplied(true);
                           }
                         }}
-                        className="bg-[#e5e5e5] hover:bg-[#d4d4d4] text-gray-600 hover:text-gray-900 text-xs font-semibold px-4 py-2 transition-colors h-full"
+                        className="bg-[#e5e5e5] hover:bg-[#d4d4d4] text-primary hover:text-gray-900 rounded-sm text-xs font-semibold px-4 py-2 transition-colors h-full"
                       >
                         Apply
                       </button>
@@ -270,7 +268,7 @@ export default function CartPage() {
               </div>
 
               {/* Total & Checkout Box */}
-              <div className="bg-primary rounded-[24px] p-6 mt-2 shadow-lg -mx-4 sm:mx-0 lg:-mx-2">
+              <div className="bg-primary rounded-sm p-6 mt-2 shadow-lg  sm:mx-0 lg:-mx-2">
                 {/* Free Shipping Progress Box */}
 
                 <div className="flex justify-between items-center mb-6">

@@ -36,6 +36,8 @@ import {
   LayoutGrid,
   ArrowLeft,
   AlignJustify,
+  ArrowUpDown,
+  SlidersHorizontal,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
@@ -326,10 +328,10 @@ export default function ShopPage() {
           {/* Dual-thumb slider */}
           <div className="relative h-5 flex items-center mb-4">
             {/* Background track */}
-            <div className="absolute inset-x-0 h-[3px] bg-gray-200 rounded-full pointer-events-none" />
+            <div className="absolute inset-x-0 h-[3px] bg-gray-200 rounded-sm pointer-events-none" />
             {/* Active fill between thumbs */}
             <div
-              className="absolute h-[3px] bg-primary rounded-full pointer-events-none"
+              className="absolute h-[3px] bg-primary rounded-sm pointer-events-none"
               style={{
                 left: `${((priceRange[0] - priceBounds.min) / (priceBounds.max - priceBounds.min)) * 100}%`,
                 right: `${100 - ((priceRange[1] - priceBounds.min) / (priceBounds.max - priceBounds.min)) * 100}%`,
@@ -337,7 +339,7 @@ export default function ShopPage() {
             />
             {/* Visual thumb for min */}
             <div
-              className="absolute w-4 h-4 rounded-full bg-primary border-2 border-white shadow pointer-events-none"
+              className="absolute w-4 h-4 rounded-sm bg-primary border-2 border-white shadow pointer-events-none"
               style={{
                 left: `calc(${((priceRange[0] - priceBounds.min) / (priceBounds.max - priceBounds.min)) * 100}% - 8px)`,
                 zIndex: 2,
@@ -345,7 +347,7 @@ export default function ShopPage() {
             />
             {/* Visual thumb for max */}
             <div
-              className="absolute w-4 h-4 rounded-full bg-primary border-2 border-white shadow pointer-events-none"
+              className="absolute w-4 h-4 rounded-sm bg-primary border-2 border-white shadow pointer-events-none"
               style={{
                 left: `calc(${((priceRange[1] - priceBounds.min) / (priceBounds.max - priceBounds.min)) * 100}% - 8px)`,
                 zIndex: 2,
@@ -385,14 +387,35 @@ export default function ShopPage() {
 
           {/* Min / Max value boxes */}
           <div className="flex items-center gap-2">
-            <div className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-center bg-gray-50">
-              <span className="text-[10px] text-gray-400 block mb-0.5">Min</span>
-              <span className="text-xs font-bold text-gray-900">₹{priceRange[0]}</span>
+            <div className="flex-1 relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">₹</span>
+              <input
+                type="number"
+                value={priceRange[0]}
+                min={priceBounds.min}
+                max={priceRange[1]}
+                onChange={(e) => {
+                  let val = Number(e.target.value);
+                  if (val > priceRange[1]) val = priceRange[1];
+                  setPriceRange([val, priceRange[1]]);
+                }}
+                className="w-full rounded-lg border border-gray-200 pl-6 pr-2 py-2 text-xs font-bold text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+              />
             </div>
             <span className="text-gray-300 text-sm">—</span>
-            <div className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-center bg-gray-50">
-              <span className="text-[10px] text-gray-400 block mb-0.5">Max</span>
-              <span className="text-xs font-bold text-gray-900">₹{priceRange[1]}</span>
+            <div className="flex-1 relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">₹</span>
+              <input
+                type="number"
+                value={priceRange[1]}
+                min={priceRange[0]}
+                max={priceBounds.max}
+                onChange={(e) => {
+                  let val = Number(e.target.value);
+                  setPriceRange([priceRange[0], val]);
+                }}
+                className="w-full rounded-lg border border-gray-200 pl-6 pr-2 py-2 text-xs font-bold text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+              />
             </div>
           </div>
         </div>
@@ -404,52 +427,34 @@ export default function ShopPage() {
   return (
     <div className="bg-background min-h-screen pb-12 overflow-x-hidden">
       {/* ── MOBILE LAYOUT ── */}
-      <div className="lg:hidden px-5 pt-4 pb-8">
-        <div className="flex items-center justify-between mb-4 fixed bottom-[7%] left-1/2 -translate-x-1/2 bg-primary z-49 rounded-full px-8 py-3 shadow-lg">
-          <button
-            type="button"
-            onClick={() => setFilterOpen(true)}
-            className="flex items-center gap-1.5 text-sm font-medium text-white  "
-          >
-            <Filter className="w-4 h-4" />
-            Filter
-            {activeFiltersCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
-                {activeFiltersCount}
-              </span>
-            )}
-          </button>
-        </div>
-
-
-
+      <div className="lg:hidden px-5 pt-0 pb-8">
         {/* Sort / Filter bar */}
-        <div className="relative mb-4">
-          <div className="flex items-center justify-between gap-2 p-2 pl-4 bg-primary/5 rounded-2xl">
+        <div className="relative mb-4 -mx-4">
+          <div className="flex items-center justify-center bg-white py-3 border-y border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
             <button
               type="button"
               onClick={() => setSortMenuOpen((v) => !v)}
-              className="flex items-center gap-1 text-[13px] text-gray-500 bg-white rounded-full py-2 px-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
+              className="flex-1 flex items-center justify-center gap-2 text-[14px] font-semibold text-gray-700"
             >
-              Sorted by <span className="font-bold text-gray-900 ml-1">{sortLabel}</span>
+              <ArrowUpDown className="w-4 h-4 text-gray-400" />
+              Sort
             </button>
 
-            <div className="flex items-center bg-white rounded-full p-1 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-              <button
-                type="button"
-                onClick={() => setViewMode("grid")}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${viewMode === 'grid' ? 'bg-primary/10 text-primary' : 'text-gray-400 hover:text-gray-600'}`}
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("list")}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${viewMode === 'list' ? 'bg-primary/10 text-primary' : 'text-gray-400 hover:text-gray-600'}`}
-              >
-                <AlignJustify className="w-4 h-4" />
-              </button>
-            </div>
+            <div className="w-[1px] h-[20px] bg-gray-200" />
+
+            <button
+              type="button"
+              onClick={() => setFilterOpen(true)}
+              className="flex-1 flex items-center justify-center gap-2 text-[14px] font-semibold text-gray-700"
+            >
+              <SlidersHorizontal className="w-4 h-4 text-gray-400" />
+              Filter
+              {activeFiltersCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center ml-1">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
           </div>
 
           {/* Sort panel — slides in from top */}
@@ -521,14 +526,14 @@ export default function ShopPage() {
           )}
         </div>
 
-        {/* Mobile Filter bottom sheet */}
+        {/* Mobile Filter right sheet */}
         <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
           <SheetContent
-            side="bottom"
+            side="right"
             showCloseButton={false}
-            className="max-h-[90vh] rounded-t-2xl p-0 gap-0 overflow-hidden"
+            className="!max-w-[100vw] !w-[100vw] sm:!w-[400px] h-[100dvh] p-0 gap-0 overflow-hidden flex flex-col"
           >
-            <div className="flex items-center px-4 py-3 border-b border-border">
+            <div className="flex items-center px-4 py-3 border-b border-border bg-background z-10">
               <button
                 type="button"
                 onClick={() => setFilterOpen(false)}
@@ -540,7 +545,7 @@ export default function ShopPage() {
               <h2 className="flex-1 text-center font-bold text-base pr-7">Filter by</h2>
             </div>
 
-            <div className="overflow-y-auto px-5 py-4 pb-28 max-h-[calc(90vh-120px)]">
+            <div className="flex-1 overflow-y-auto px-5 py-4 pb-28">
 
 
               {/* Category filter */}
@@ -552,9 +557,38 @@ export default function ShopPage() {
                 <span className="font-bold text-sm text-foreground">Price</span>
 
                 <div>
-                  <p className="text-sm font-medium text-foreground mb-3">
-                    ₹{priceRange[0].toFixed(2).replace(/\.00$/, '')} - ₹{priceRange[1].toFixed(2).replace(/\.00$/, '')}
-                  </p>
+                  <div className="flex items-center gap-2 mb-4 mt-2 w-[75%]">
+                    <div className="flex-1 relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">₹</span>
+                      <input
+                        type="number"
+                        value={priceRange[0]}
+                        min={priceBounds.min}
+                        max={priceRange[1]}
+                        onChange={(e) => {
+                          let val = Number(e.target.value);
+                          if (val > priceRange[1]) val = priceRange[1];
+                          setPriceRange([val, priceRange[1]]);
+                        }}
+                        className="w-full rounded-sm border border-gray-200 pl-7 pr-2 py-2 text-sm font-bold text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      />
+                    </div>
+                    <span className="text-gray-300 text-sm">—</span>
+                    <div className="flex-1 relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">₹</span>
+                      <input
+                        type="number"
+                        value={priceRange[1]}
+                        min={priceRange[0]}
+                        max={priceBounds.max}
+                        onChange={(e) => {
+                          let val = Number(e.target.value);
+                          setPriceRange([priceRange[0], val]);
+                        }}
+                        className="w-full rounded-sm border border-gray-200 pl-7 pr-2 py-2 text-sm font-bold text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                      />
+                    </div>
+                  </div>
                   <div className="relative h-6 flex items-center mb-1 px-0.5">
                     <div className="absolute inset-x-0 h-1.5 rounded-full bg-zinc-200" />
                     <div

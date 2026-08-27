@@ -127,7 +127,7 @@ export default function OrderSuccessPage() {
           </p>
         </div>
 
-        <div className="bg-white rounded-[28px] shadow-[0_8px_30px_rgba(15,23,42,0.06)] border border-gray-100 p-5 sm:p-8">
+        <div className="bg-white rounded-sm shadow-[0_8px_30px_rgba(15,23,42,0.06)] border border-gray-100 p-5 sm:p-8">
           <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
             <div className="flex items-center gap-3 rounded-2xl bg-white">
               <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#e8f8ee] flex items-center justify-center shrink-0">
@@ -161,7 +161,7 @@ export default function OrderSuccessPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl bg-[#f3eefe] px-3.5 sm:px-4 py-3.5 sm:py-4 mb-6">
+          <div className="flex items-center gap-3 rounded-sm bg-[#f3eefe] px-3.5 sm:px-4 py-3.5 sm:py-4 mb-6">
             <div className="w-11 h-11 rounded-2xl bg-[#e7dcff] flex items-center justify-center shrink-0">
               <Package className="w-5 h-5 text-[#7c3aed]" strokeWidth={2} />
             </div>
@@ -190,21 +190,17 @@ export default function OrderSuccessPage() {
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white px-2 sm:px-6 py-5 sm:py-6">
+          <div className="rounded-sm border border-gray-200 bg-white px-2 sm:px-6 py-5 sm:py-6">
             <div className="relative">
               <div className="absolute top-5 left-[12%] right-[12%] h-[2px] flex">
                 {STEPS.slice(0, -1).map((step, index) => (
                   <div
                     key={step.key}
                     className="flex-1"
-                    style={
-                      index < currentStep
-                        ? { backgroundColor: "#22c55e" }
-                        : {
-                            backgroundImage:
-                              "repeating-linear-gradient(to right, #e5e7eb 0, #e5e7eb 5px, transparent 5px, transparent 10px)",
-                          }
-                    }
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(to right, #e5e7eb 0, #e5e7eb 5px, transparent 5px, transparent 10px)",
+                    }}
                   />
                 ))}
               </div>
@@ -219,20 +215,18 @@ export default function OrderSuccessPage() {
                   return (
                     <div key={step.key} className="flex flex-col items-center text-center">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          completed
-                            ? "bg-[#22c55e] text-white"
-                            : active
-                              ? "bg-[#7c3aed] text-white shadow-[0_6px_16px_rgba(124,58,237,0.28)]"
-                              : "bg-white border-[1.5px] border-gray-200 text-gray-400"
-                        }`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${completed
+                          ? "bg-[#22c55e] text-white"
+                          : active
+                            ? "bg-white text-gray-400 shadow-[0_6px_16px_rgba(124,58,237,0.28)]"
+                            : "bg-white border-[1.5px] border-gray-200 text-gray-400"
+                          }`}
                       >
                         <Icon className="w-4 h-4" strokeWidth={active || completed ? 2.4 : 2} />
                       </div>
                       <p
-                        className={`mt-2.5 text-[12px] sm:text-[13px] font-bold ${
-                          completed ? "text-[#16a34a]" : active ? "text-[#7c3aed]" : "text-gray-900"
-                        }`}
+                        className={`mt-2.5 text-[12px] sm:text-[13px] font-bold ${completed ? "text-[#16a34a]" : "text-gray-500"
+                          }`}
                       >
                         {step.label}
                       </p>

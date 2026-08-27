@@ -84,7 +84,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           <h3 className="text-[15px] font-bold text-zinc-900 mb-1 mt-2 leading-tight">
             {product.name}
           </h3>
-          <p className="text-[11px] text-zinc-400 leading-snug mb-3">
+          <p className="text-[11px]  text-zinc-400 leading-snug mb-3">
             {product.description || "Lorem ipsum dolor sit amet, consectetuer."}
           </p>
 
@@ -152,7 +152,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
       <div className="w-full relative aspect-[1/1] mb-3 sm:mb-4 group">
         {/* Background Shape */}
         <div
-          className={`absolute inset-0 rounded-[16px] sm:rounded-[20px] sm:rounded-br-[50px] border-t-[4px] border-l-[4px] sm:border-t-[3px] sm:border-l-[3px] border-rgba(255, 255, 255, 1) hover:shadow-[0_8px_25px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden ${bgColor}`}
+          className={`absolute inset-0 rounded-[16px] sm:rounded-[20px]  border-t-[4px] border-l-[4px] sm:border-t-[3px] sm:border-l-[3px] border-rgba(255, 255, 255, 1) hover:shadow-[0_8px_25px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden ${bgColor}`}
         >
           {/* The Image */}
           <Image
@@ -172,17 +172,8 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
         </div>
 
         {/* Buttons in the cutout */}
-        <div className="absolute bottom-1 right-0 sm:bottom-0 -mb-2 sm:right-0 bg-[#f4f3fc] flex p-1 sm:p-2 items-center gap-1 sm:gap-2 z-20 rounded-l-full rounded-r-none">
-          <button
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            className="flex items-center bg-white rounded-full p-0.5 pr-2 sm:p-1 sm:pr-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#7034ff] rounded-full flex items-center justify-center text-white shrink-0">
-              <ShoppingCart className="w-4 h-4 sm:w-4 sm:h-4" />
-            </div>
-            <span className="text-[11px] sm:text-[13px] font-semibold text-zinc-800 ml-2 mr-2 sm:ml-2">Shop</span>
-          </button>
+        <div className="absolute bottom-2 right-0 sm:bottom-0 -mb-2 sm:right-0  flex p-1 sm:p-2 items-center gap-1 sm:gap-2 z-20 ">
+
 
           <button
             onClick={(e) => {
@@ -190,7 +181,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
               toggleItem(product);
               toast.success(inWatchlist ? "Removed from wishlist" : "Added to wishlist");
             }}
-            className={`w-9 h-9 sm:w-12 mr-0 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all shrink-0 ${inWatchlist ? 'text-red-500' : 'text-zinc-800'}`}
+            className={`w-9 h-9 sm:w-12 mr-0 mb-2 mr-2 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all shrink-0 ${inWatchlist ? 'text-red-500' : 'text-zinc-800'}`}
           >
             <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${inWatchlist ? 'fill-current' : ''}`} />
           </button>
@@ -200,29 +191,31 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
       {/* Product Info */}
       <div className="px-1 sm:px-2 mt-1">
         {/* Name */}
-        <h3 className="text-xs sm:text-[13px] font-semibold text-zinc-800 leading-tight truncate mb-1">
+        <h3 className="text-[13px] sm:text-[15px] font-bold text-zinc-800 leading-tight truncate mb-1">
           {product.name}
         </h3>
 
         {/* Price + Discount + Rating — all on one line */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[15px] sm:text-sm font-black text-zinc-900 tracking-tight">
+
+          {discountPercentage > 0 && (
+            <span className="text-[13px] sm:text-[15px] font-bold text-[#439651]">
+              ↓{discountPercentage}%
+            </span>
+          )}
+          <span className="text-[13px] sm:text-[18px] font-black text-zinc-900 tracking-tight">
             ₹{product.price.toFixed(2).replace(/\.00$/, '')}
           </span>
           {originalPrice && (
-            <span className="text-[11px] sm:text-[10px] text-zinc-400 font-medium line-through">
+            <span className="text-[13px] sm:text-[18px] text-zinc-400 font-medium line-through">
               ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
             </span>
           )}
-          {discountPercentage > 0 && (
-            <span className="text-[10px] sm:text-[9px] font-bold text-[#e3000f] bg-red-50 px-1 py-0.5 rounded">
-              -{discountPercentage}%
-            </span>
-          )}
+
           <span className="ml-auto flex items-center gap-0.5">
             <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-            <span className="text-[10px] sm:text-[10px] font-bold text-zinc-600">{product.rating || "4.8"}</span>
-            <span className="text-[9px] sm:text-[9px] text-zinc-400">({product.reviews || 0})</span>
+            <span className="text-[10px] sm:text-[16px] font-bold text-zinc-600">{product.rating || "4.8"}</span>
+            <span className="text-[9px] sm:text-[16px] text-zinc-400">({product.reviews || 0})</span>
           </span>
         </div>
       </div>

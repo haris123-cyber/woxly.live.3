@@ -13,13 +13,13 @@ export function Header() {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const itemCount = useCartStore((state) => state.getItemCount());
-  const { toggleMobileMenu, isSearchOpen, openSearch, closeSearch } = useUIStore();
+  const { toggleMobileMenu } = useUIStore();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  if (pathname === '/login' || pathname === '/signup') return null;
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/search') return null;
 
   return (
     <>
@@ -60,40 +60,17 @@ export function Header() {
           {/* Right Actions */}
           <div className="flex flex-1 justify-end items-center gap-1 sm:gap-2">
             {/* Search */}
-            <div className="relative flex items-center justify-end h-9 w-9 sm:h-10 sm:w-10 z-50">
-              <div
-                className={`absolute right-0 flex items-center transition-all duration-300 ease-in-out overflow-hidden rounded-full ${isSearchOpen
-                  ? 'w-[200px] sm:w-[500px] bg-background border border-border shadow-sm'
-                  : 'w-9 sm:w-10 bg-transparent border-transparent'
-                  }`}
+            <div className="flex items-center justify-end h-9 w-9 sm:h-10 sm:w-10 z-50">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground hover:text-primary rounded-full shrink-0 w-9 h-9 sm:w-10 sm:h-10 hover:bg-muted/50"
+                asChild
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={`text-foreground hover:text-primary rounded-full shrink-0 ${isSearchOpen ? 'w-9 h-9 sm:w-10 sm:h-10 hover:bg-transparent' : 'w-9 h-9 sm:w-10 sm:h-10 hover:bg-muted/50'}`}
-                  onClick={isSearchOpen ? undefined : openSearch}
-                >
+                <Link href="/search">
                   <Search className="w-5 h-5 sm:w-6 sm:h-6" />
-                </Button>
-
-                <input
-                  autoFocus={isSearchOpen}
-                  type="text"
-                  placeholder="Search..."
-                  className={`h-9 sm:h-10 bg-transparent focus:outline-none text-sm transition-opacity duration-300 ${isSearchOpen ? 'w-full opacity-100 pr-1' : 'w-0 opacity-0 px-0 pointer-events-none'}`}
-                />
-
-                {isSearchOpen && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full shrink-0 text-muted-foreground hover:text-foreground"
-                    onClick={closeSearch}
-                  >
-                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </Button>
-                )}
-              </div>
+                </Link>
+              </Button>
             </div>
 
             {/* Cart */}
@@ -146,49 +123,58 @@ function MobileBottomNav() {
   };
 
   return (
-    <div className="sm:hidden fixed bottom-0 left-0 pl-10 pr-10  right-0  z-50 flex items-center justify-between px-5 h-[62px] bg-white  shadow-[0_4px_24px_rgba(0,0,0,0.10)] border border-gray-100">
+    <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-[68px] bg-white border-t border-r rounded-tr-2xl border-t border-l rounded-tl-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-gray-100">
 
       {/* Home */}
-      <Link href="/" className="relative flex flex-col items-center justify-center">
+      <Link href="/" className="relative flex flex-col items-center justify-center gap-1 w-12">
         <Home
-          className={`w-[22px] h-[22px] transition-all ${isActive('/') ? 'text-primary' : 'text-zinc-400'}`}
-          strokeWidth={isActive('/') ? 2.5 : 1.8}
+          className={`w-[22px] h-[22px] transition-all ${isActive('/') ? 'text-primary' : 'text-gray-400'}`}
+          strokeWidth={isActive('/') ? 2.5 : 2}
         />
-        {isActive('/') && <span className="absolute -bottom-2 w-4 h-[2px] rounded-full bg-primary" />}
+        <span className={`text-[10px] font-medium transition-colors ${isActive('/') ? 'text-primary' : 'text-gray-400'}`}>Home</span>
       </Link>
 
       {/* Wishlist */}
-      <Link href="/watchlist" className="relative flex flex-col items-center justify-center">
+      <Link href="/watchlist" className="relative flex flex-col items-center justify-center gap-1 w-12 mr-6">
         <Heart
-          className={`w-[22px] h-[22px] transition-all ${isActive('/watchlist') ? 'text-primary' : 'text-zinc-400'}`}
-          strokeWidth={isActive('/watchlist') ? 2.5 : 1.8}
+          className={`w-[22px] h-[22px] transition-all ${isActive('/watchlist') ? 'text-primary' : 'text-gray-400'}`}
+          strokeWidth={isActive('/watchlist') ? 2.5 : 2}
         />
+        <span className={`text-[10px] font-medium transition-colors ${isActive('/watchlist') ? 'text-primary' : 'text-gray-400'}`}>Saved</span>
         {isMounted && watchlistCount > 0 && (
-          <span className="absolute -top-2 -right-2 flex h-[15px] min-w-[15px] px-0.5 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-white">
+          <span className="absolute -top-1 -right-1 flex h-[16px] min-w-[16px] px-1 items-center justify-center rounded-full bg-[#ff4d4f] text-[9px] font-bold text-white border-2 border-white">
             {watchlistCount > 9 ? '9+' : watchlistCount}
           </span>
         )}
-        {isActive('/watchlist') && <span className="absolute -bottom-2 w-4 h-[2px] rounded-full bg-primary" />}
       </Link>
 
+      {/* Center Action Button ↗ */}
+      <button
+        onClick={toggleCart}
+        className="absolute left-1/2 -top-5 -translate-x-1/2 flex items-center justify-center w-[58px] h-[58px] rounded-full bg-primary text-white shadow-lg border-[5px] border-[#f4f4f5] transition-transform active:scale-95 z-50"
+      >
+        <Link href={'/shop'}>
 
+          <span className="text-4xl mb-2">↗</span>
+        </Link>
+      </button>
 
       {/* Orders */}
-      <Link href="/account?tab=orders" className="relative flex flex-col items-center justify-center">
+      <Link href="/account?tab=orders" className="relative flex flex-col items-center justify-center gap-1 w-12 ml-6">
         <Package
-          className={`w-[22px] h-[22px] transition-all ${isActive('/account', 'orders') ? 'text-primary' : 'text-zinc-400'}`}
-          strokeWidth={isActive('/account', 'orders') ? 2.5 : 1.8}
+          className={`w-[22px] h-[22px] transition-all ${isActive('/account', 'orders') ? 'text-primary' : 'text-gray-400'}`}
+          strokeWidth={isActive('/account', 'orders') ? 2.5 : 2}
         />
-        {isActive('/account', 'orders') && <span className="absolute -bottom-2 w-4 h-[2px] rounded-full bg-primary" />}
+        <span className={`text-[10px] font-medium transition-colors ${isActive('/account', 'orders') ? 'text-primary' : 'text-gray-400'}`}>Orders</span>
       </Link>
 
       {/* Account */}
-      <Link href="/account" className="relative flex flex-col items-center justify-center">
+      <Link href="/account" className="relative flex flex-col items-center justify-center gap-1 w-12">
         <User
-          className={`w-[22px] h-[22px] transition-all ${isActive('/account') ? 'text-primary' : 'text-zinc-400'}`}
-          strokeWidth={isActive('/account') ? 2.5 : 1.8}
+          className={`w-[22px] h-[22px] transition-all ${isActive('/account') ? 'text-primary' : 'text-gray-400'}`}
+          strokeWidth={isActive('/account') ? 2.5 : 2}
         />
-        {isActive('/account') && <span className="absolute -bottom-2 w-4 h-[2px] rounded-full bg-primary" />}
+        <span className={`text-[10px] font-medium transition-colors ${isActive('/account') ? 'text-primary' : 'text-gray-400'}`}>Profile</span>
       </Link>
 
     </div>
