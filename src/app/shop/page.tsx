@@ -429,7 +429,7 @@ export default function ShopPage() {
       {/* ── MOBILE LAYOUT ── */}
       <div className="lg:hidden px-5 pt-0 pb-8">
         {/* Sort / Filter bar */}
-        <div className="relative mb-4 -mx-4">
+        <div className="relative mb-1 -mx-4">
           <div className="flex items-center justify-center bg-white py-3 border-y border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
             <button
               type="button"
@@ -455,6 +455,9 @@ export default function ShopPage() {
                 </span>
               )}
             </button>
+
+            <div className="w-[1px] h-[20px] bg-gray-200" />
+
           </div>
 
           {/* Sort panel — slides in from top */}
@@ -677,8 +680,37 @@ export default function ShopPage() {
             </div>
           </SheetContent>
         </Sheet>
+        <div className="flex items-center w-full">
+          {/* Other content */}
 
+          <div className="bg-white p-1 mr-1 mb-2 ml-auto rounded-sm flex items-center gap-1">
 
+            {/* Grid View */}
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`p-2 rounded-sm ${viewMode === 'grid'
+                ? 'bg-gray-100 text-gray-700'
+                : 'text-gray-400'
+                }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+
+            {/* List View */}
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={`p-2 rounded-sm ${viewMode === 'list'
+                ? 'bg-gray-100 text-gray-700'
+                : 'text-gray-400'
+                }`}
+            >
+              <AlignJustify className="w-4 h-4" />
+            </button>
+
+          </div>
+        </div>
 
         {/* Product grid — 2 columns or list */}
         <div className={viewMode === 'grid' ? "grid grid-cols-2 gap-3 sm:gap-4" : "flex flex-col"}>
@@ -720,26 +752,45 @@ export default function ShopPage() {
                 <p className="text-sm text-zinc-500 mt-1">{filteredProducts.length} products found</p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-zinc-500">Sort by:</span>
-                <Select value={sortBy} onValueChange={(val) => setSortBy(val || "popular")}>
-                  <SelectTrigger className="w-[140px] bg-white h-9">
-                    <SelectValue placeholder="Popular" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="popular">Popular</SelectItem>
-                    <SelectItem value="newest">Newest Arrivals</SelectItem>
-                    <SelectItem value="price-low">Price: Low to High</SelectItem>
-                    <SelectItem value="price-high">Price: High to Low</SelectItem>
-                    <SelectItem value="rating">Top Rated</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-zinc-500">Sort by:</span>
+                  <Select value={sortBy} onValueChange={(val) => setSortBy(val || "popular")}>
+                    <SelectTrigger className="w-[140px] bg-white h-9">
+                      <SelectValue placeholder="Popular" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="popular">Popular</SelectItem>
+                      <SelectItem value="newest">Newest Arrivals</SelectItem>
+                      <SelectItem value="price-low">Price: Low to High</SelectItem>
+                      <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      <SelectItem value="rating">Top Rated</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-1.5 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:text-gray-900'}`}
+                    title="Grid View"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:text-gray-900'}`}
+                    title="List View"
+                  >
+                    <AlignJustify className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-x-6 gap-y-10">
+            <div className={viewMode === 'grid' ? "grid grid-cols-3 gap-x-6 gap-y-10" : "flex flex-col gap-4"}>
               {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} layout={viewMode} />
               ))}
             </div>
 

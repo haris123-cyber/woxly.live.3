@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Search, ShoppingBag, Menu, Heart, User, Home, Package, X } from "lucide-react";
+import { Search, ShoppingBag, Heart, User, Home, Package, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -46,7 +46,11 @@ export function Header() {
               className="shrink-0 hover:bg-muted/50 rounded-full w-9 h-9 sm:w-10 sm:h-10 -ml-2"
               onClick={toggleMobileMenu}
             >
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
+              <div className="flex flex-col items-center gap-[3px]">
+                <span className="w-4 h-[2.5px] rounded-full bg-[#4F46E5]" />
+                <span className="w-2.5 h-[2.5px] rounded-full bg-[#4F46E5]" />
+                <span className="w-4 h-[2.5px] rounded-full bg-[#4F46E5]" />
+              </div>
             </Button>
           </div>
 

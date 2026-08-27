@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, ChevronLeft, Trash2, ShieldCheck, MoreVertical, ArrowDown, Star, StarHalf } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
+import { showCustomToast } from "@/components/ui/custom-toast";
 export default function WatchlistPage() {
   const router = useRouter();
   const { items, clearWatchlist, toggleItem } = useWatchlistStore();
@@ -106,8 +106,11 @@ export default function WatchlistPage() {
                         variant="ghost"
                         onClick={() => {
                           addItem(item, 1);
-                          toast.success("Added to cart", {
-                            description: "Product added successfully.",
+                          showCustomToast({
+                            title: <><strong>You</strong> just <strong>added</strong> a {item.name.split(" ")[0]} to cart</>,
+                            image: item.image,
+                            buttonText: "View Cart",
+                            onClick: () => router.push("/cart"),
                           });
                         }}
                         className="w-full text-primary hover:text-blue-700 hover:bg-blue-50 h-8 text-[13px] font-semibold"

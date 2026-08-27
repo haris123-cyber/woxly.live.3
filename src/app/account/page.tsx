@@ -156,10 +156,10 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
   const statusStyles = getStatusStyles(order.statusColor);
 
   return (
-    <div className="p-3   border-b border-gray-200 transition-all hover:shadow-md cursor-pointer mb-4" onClick={() => setIsExpanded(!isExpanded)}>
-      <div className="flex gap-4 sm:gap-6">
+    <div className="p-1 bg-white rounded-sm  border-b border-gray-200 transition-all hover:shadow-md cursor-pointer mb-1" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className="flex gap-4 sm:gap-6 p-1">
         {/* Left: Product Image Box */}
-        <div className="relative w-38 h-38 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
+        <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
           <Image src={order.image} alt={order.title} fill className="object-cover" />
         </div>
 

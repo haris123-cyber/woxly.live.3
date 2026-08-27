@@ -8,6 +8,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { useParams, useRouter } from "next/navigation";
 import { PRODUCTS } from "@/lib/mock-data";
 import { toast } from "sonner";
+import { showCustomToast } from "@/components/ui/custom-toast";
 import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { Button } from "@/components/ui/button";
@@ -257,35 +258,6 @@ export default function ProductDetailPage() {
     ? Math.round(((currentOriginalPrice - currentPrice) / currentOriginalPrice) * 100)
     : 0;
 
-  const CustomToast = ({ t, title, subtitle, image, buttonText, onClick }: { t: any, title: React.ReactNode, subtitle: string, image: string, buttonText: string, onClick: () => void }) => (
-    <div className="flex ml-auto mr-2 sm:mr-0 w-[320px] sm:w-[350px] items-center gap-3 p-2 bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 font-sans">
-      <button
-        onClick={() => toast.dismiss(t)}
-        className="absolute -top-2 w-[26px] h-[26px] bg-[#007aff] hover:bg-blue-600 rounded-full flex items-center justify-center border-[2.5px] border-white shadow-sm transition-colors cursor-pointer z-10"
-      >
-        <X className="w-3.5 h-3.5 text-white" strokeWidth={3} />
-      </button>
-      <div className="relative shrink-0 w-[64px] h-[64px] bg-[#f4f4f5] rounded-[14px] flex items-center justify-center p-1.5">
-        <img src={image} alt="Product" className="w-full h-full object-contain mix-blend-multiply" />
-
-      </div>
-      <div className="flex-1 min-w-0 py-0.5">
-        <p className="text-[13.5px] text-gray-900 leading-[1.3] pr-1">
-          {title}
-        </p>
-        <div className="flex items-center justify-between mt-1.5">
-          <span className="text-[11.5px] text-gray-400 font-medium">{subtitle}</span>
-          <button
-            onClick={onClick}
-            className="px-3.5 py-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-[12px] font-bold rounded-full transition-colors whitespace-nowrap shadow-sm"
-          >
-            {buttonText}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
   const handleAddToCart = () => {
     if (!quantity || quantity < 1) {
       toast.error("Please select a quantity");
@@ -314,28 +286,20 @@ export default function ProductDetailPage() {
       };
       addItem(item3, quantity);
 
-      toast.custom((t) => (
-        <CustomToast
-          t={t}
-          title={<><strong>You</strong> just <strong>added</strong> a combo to cart</>}
-          subtitle="Just now"
-          image={product.image}
-          buttonText="View Cart"
-          onClick={() => { toast.dismiss(t); router.push('/cart'); }}
-        />
-      ), { unstyled: true, className: "!bg-transparent !border-0 !shadow-none !p-0 !w-auto" });
+      showCustomToast({
+        title: <><strong>You</strong> just <strong>added</strong> a combo to cart</>,
+        image: product.image,
+        buttonText: "View Cart",
+        onClick: () => router.push('/cart'),
+      });
     } else {
       addItem(product, quantity, selectedColor, product.sizes?.[0]);
-      toast.custom((t) => (
-        <CustomToast
-          t={t}
-          title={<><strong>You</strong> just <strong>added</strong> a {product.name.split(" ")[0]} to cart</>}
-          subtitle="Just now"
-          image={product.image}
-          buttonText="View Cart"
-          onClick={() => { toast.dismiss(t); router.push('/cart'); }}
-        />
-      ), { unstyled: true, className: "!bg-transparent !border-0 !shadow-none !p-0 !w-auto" });
+      showCustomToast({
+        title: <><strong>You</strong> just <strong>added</strong> a {product.name.split(" ")[0]} to cart</>,
+        image: product.image,
+        buttonText: "View Cart",
+        onClick: () => router.push('/cart'),
+      });
     }
   };
 

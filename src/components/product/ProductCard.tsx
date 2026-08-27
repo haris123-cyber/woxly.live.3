@@ -8,7 +8,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
+import { showCustomToast } from "@/components/ui/custom-toast";
 interface ProductCardProps {
   product: Product;
   layout?: "grid" | "list";
@@ -49,6 +49,7 @@ function OfferLabel({ discountPercentage, originalPrice, price }: { discountPerc
 }
 
 export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
+  const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const { toggleItem, isInWatchlist } = useWatchlistStore();
   const inWatchlist = isInWatchlist(product.id);
@@ -58,7 +59,12 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
     const defaultColor = product.colors?.[0];
     const defaultSize = product.sizes?.[0];
     addItem(product, 1, defaultColor, defaultSize);
-    toast.success("Added to cart");
+    showCustomToast({
+      title: <><strong>You</strong> just <strong>added</strong> a {product.name.split(" ")[0]} to cart</>,
+      image: product.image,
+      buttonText: "View Cart",
+      onClick: () => router.push("/cart"),
+    });
   };
 
   const originalPrice = product.originalPrice;
@@ -77,10 +83,21 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
     return (
       <Link
         href={`/products/${product.slug}`}
-        className="flex flex-row  mb-2 w-full justify-between items-center"
-      >
-        {/* Left Side: Info */}
-        <div className="flex-1 py-1 pr-4 flex flex-col justify-center">
+        className="flex flex-row  mb-2 w-full justify-between items-center" >
+        {/* left Side: Image */}
+        <div className="w-[150px] min-[375px]:w-[210px] sm:w-[180px] md:w-[220px] shrink-0 -ml-5">
+          <div className="relative w-full aspect-[4/3] rounded-[12px] sm:rounded-[16px] overflow-hidden bg-gray-100">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 374px) 150px, (max-width: 640px) 210px, (max-width: 768px) 180px, 220px"
+            />
+          </div>
+        </div>
+        {/* right Side: Info */}
+        <div className="flex-1  py-1 pr-4 flex flex-col ml-2 justify-center">
           <h3 className="text-[15px] font-bold text-zinc-900 mb-1 mt-2 leading-tight">
             {product.name}
           </h3>
@@ -118,8 +135,14 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             <button
               onClick={(e) => {
                 e.preventDefault();
+                const isNowInWatchlist = !inWatchlist;
                 toggleItem(product);
-                toast.success(inWatchlist ? "Removed from wishlist" : "Added to wishlist");
+                showCustomToast({
+                  title: <><strong>You</strong> just <strong>{isNowInWatchlist ? "added" : "removed"}</strong> a {product.name.split(" ")[0]} {isNowInWatchlist ? "to" : "from"} wishlist</>,
+                  image: product.image,
+                  buttonText: "View Wishlist",
+                  onClick: () => router.push("/watchlist"),
+                });
               }}
               className="flex items-center justify-center"
             >
@@ -128,18 +151,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           </div>
         </div>
 
-        {/* Right Side: Image */}
-        <div className="w-[220px] sm:w-[240px] shrink-0 ml-2">
-          <div className="relative w-full aspect-[4/3] rounded-[16px] overflow-hidden bg-gray-100">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 140px, 160px"
-            />
-          </div>
-        </div>
+
       </Link>
     );
   }
@@ -178,8 +190,14 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
           <button
             onClick={(e) => {
               e.preventDefault();
+              const isNowInWatchlist = !inWatchlist;
               toggleItem(product);
-              toast.success(inWatchlist ? "Removed from wishlist" : "Added to wishlist");
+              showCustomToast({
+                title: <><strong>You</strong> just <strong>{isNowInWatchlist ? "added" : "removed"}</strong> a {product.name.split(" ")[0]} {isNowInWatchlist ? "to" : "from"} wishlist</>,
+                image: product.image,
+                buttonText: "View Wishlist",
+                onClick: () => router.push("/watchlist"),
+              });
             }}
             className={`w-9 h-9 sm:w-12 mr-0 mb-2 mr-2 sm:h-12 bg-white rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all shrink-0 ${inWatchlist ? 'text-red-500' : 'text-zinc-800'}`}
           >

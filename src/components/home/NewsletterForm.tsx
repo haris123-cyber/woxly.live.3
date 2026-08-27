@@ -12,9 +12,9 @@ export function NewsletterForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email address"
-        className="flex-1 px-5 py-3.5 text-[14px] font-medium text-gray-900 bg-white outline-none"
+        className="flex-1 min-w-0 px-4 sm:px-5 py-3.5 text-[14px] font-medium text-gray-900 bg-white outline-none"
       />
-      <button className="bg-[#4f46e5] hover:bg-[#4338ca] text-white font-bold px-6 py-3.5 text-[13px] transition-colors whitespace-nowrap">
+      <button className="bg-[#4f46e5] hover:bg-[#4338ca] text-white font-bold px-4 sm:px-6 py-3.5 text-[13px] transition-colors whitespace-nowrap shrink-0">
         Subscribe
       </button>
     </div>
