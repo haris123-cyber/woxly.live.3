@@ -3,11 +3,13 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Search, ShoppingBag, Heart, User, Home, Package, X } from "lucide-react";
+import { Search, ShoppingBag, Heart, User, Home, Package, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useUIStore } from "@/store/useUIStore";
 import { useWatchlistStore } from "@/store/useWatchlistStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 
 export function Header() {
   const pathname = usePathname();
@@ -135,7 +137,6 @@ function MobileBottomNav() {
           className={`w-[22px] h-[22px] transition-all ${isActive('/') ? 'text-primary' : 'text-gray-400'}`}
           strokeWidth={isActive('/') ? 2.5 : 2}
         />
-        <span className={`text-[10px] font-medium transition-colors ${isActive('/') ? 'text-primary' : 'text-gray-400'}`}>Home</span>
       </Link>
 
       {/* Wishlist */}
@@ -144,7 +145,6 @@ function MobileBottomNav() {
           className={`w-[22px] h-[22px] transition-all ${isActive('/watchlist') ? 'text-primary' : 'text-gray-400'}`}
           strokeWidth={isActive('/watchlist') ? 2.5 : 2}
         />
-        <span className={`text-[10px] font-medium transition-colors ${isActive('/watchlist') ? 'text-primary' : 'text-gray-400'}`}>Saved</span>
         {isMounted && watchlistCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-[16px] min-w-[16px] px-1 items-center justify-center rounded-full bg-[#ff4d4f] text-[9px] font-bold text-white border-2 border-white">
             {watchlistCount > 9 ? '9+' : watchlistCount}
@@ -158,8 +158,11 @@ function MobileBottomNav() {
         className="absolute left-1/2 -top-5 -translate-x-1/2 flex items-center justify-center w-[58px] h-[58px] rounded-full bg-primary text-white shadow-lg border-[5px] border-[#f4f4f5] transition-transform active:scale-95 z-50"
       >
         <Link href={'/shop'}>
-
-          <span className="text-4xl mb-2">↗</span>
+          <FontAwesomeIcon
+            icon={faArrowRightLong}
+            className="text-white text-xl rotate-[-45deg]"
+            strokeWidth={2}
+          />
         </Link>
       </button>
 
@@ -169,7 +172,6 @@ function MobileBottomNav() {
           className={`w-[22px] h-[22px] transition-all ${isActive('/account', 'orders') ? 'text-primary' : 'text-gray-400'}`}
           strokeWidth={isActive('/account', 'orders') ? 2.5 : 2}
         />
-        <span className={`text-[10px] font-medium transition-colors ${isActive('/account', 'orders') ? 'text-primary' : 'text-gray-400'}`}>Orders</span>
       </Link>
 
       {/* Account */}
@@ -178,7 +180,6 @@ function MobileBottomNav() {
           className={`w-[22px] h-[22px] transition-all ${isActive('/account') ? 'text-primary' : 'text-gray-400'}`}
           strokeWidth={isActive('/account') ? 2.5 : 2}
         />
-        <span className={`text-[10px] font-medium transition-colors ${isActive('/account') ? 'text-primary' : 'text-gray-400'}`}>Profile</span>
       </Link>
 
     </div>

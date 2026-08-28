@@ -20,7 +20,7 @@ export const PRODUCTS: Product[] = [
     id: '1', name: 'Quaker Oats 1kg', slug: 'quaker-oats-1kg', price: 229, originalPrice: 269,
     image: '/images/product_placeholder.png',
     category: 'Grocery', brand: 'Quaker', rating: 4.6, reviews: 4, description: 'Healthy and nutritious oats.', inStock: true,
-    isSale: true, isHotSale: true, hasOffer: true
+    isSale: true, isHotSale: true, hasOffer: true, isLimited: true
   },
   {
     id: '2', name: 'India Gate Rice 1kg', slug: 'india-gate-rice-1kg', price: 249,
@@ -110,7 +110,7 @@ export const PRODUCTS: Product[] = [
   {
     id: '17', name: 'Classic Potato Chips', slug: 'classic-potato-chips', price: 149,
     image: '/images/product_placeholder.png',
-    category: 'Snacks', brand: 'Lays', rating: 4.4, reviews: 4, description: 'Crispy salted potato chips.', inStock: true
+    category: 'Snacks', brand: 'Lays', rating: 4.4, reviews: 4, description: 'Crispy salted potato chips.', inStock: true, isLimited: true
   },
   {
     id: '18', name: 'Mixed Nuts 200g', slug: 'mixed-nuts', price: 429,
@@ -137,7 +137,7 @@ export const PRODUCTS: Product[] = [
   {
     id: '22', name: 'Nike Running Shoes', slug: 'nike-running-shoes', price: 5589,
     image: '/images/product_placeholder.png',
-    category: 'Fashion', brand: 'Nike', rating: 4.7, reviews: 4, description: 'Comfortable running shoes.', sizes: ['8', '9', '10', '11'], inStock: true
+    category: 'Fashion', brand: 'Nike', rating: 4.7, reviews: 4, description: 'Comfortable running shoes.', sizes: ['8', '9', '10', '11'], inStock: true, isLimited: true
   },
   {
     id: '23', name: 'Classic Analog Watch', slug: 'classic-watch', price: 3989,
@@ -191,7 +191,7 @@ export const PRODUCTS: Product[] = [
   {
     id: '32', name: 'Smart Watch Series 5', slug: 'smart-watch', price: 19989,
     image: '/images/product_placeholder.png',
-    category: 'Electronics', brand: 'TechBrand', rating: 4.7, reviews: 4, description: 'Fitness and health tracking smartwatch.', inStock: true
+    category: 'Electronics', brand: 'TechBrand', rating: 4.7, reviews: 4, description: 'Fitness and health tracking smartwatch.', inStock: true, isLimited: true
   },
 
   // HOME CARE

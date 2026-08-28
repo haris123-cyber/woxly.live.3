@@ -56,6 +56,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     const defaultColor = product.colors?.[0];
     const defaultSize = product.sizes?.[0];
     addItem(product, 1, defaultColor, defaultSize);
@@ -83,7 +84,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
     return (
       <Link
         href={`/products/${product.slug}`}
-        className="flex flex-row  mb-2 w-full justify-between items-center" >
+        className="flex flex-row  ml-1 mb-2 w-full justify-between items-center" >
         {/* left Side: Image */}
         <div className="w-[150px] min-[375px]:w-[210px] sm:w-[180px] md:w-[220px] shrink-0 -ml-5">
           <div className="relative w-full aspect-[4/3] rounded-[12px] sm:rounded-[16px] overflow-hidden bg-gray-100">
@@ -94,19 +95,39 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
               className="object-cover"
               sizes="(max-width: 374px) 150px, (max-width: 640px) 210px, (max-width: 768px) 180px, 220px"
             />
+            {/* Badges */}
+            <div className="absolute top-0 left-0 z-20 flex flex-col gap-1.5 items-start pointer-events-none">
+              {isHotSale && <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">HOT</div>}
+              {isNewArrived && <div className="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">NEW</div>}
+              {isLimited && <div className="bg-primary text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">LTD</div>}
+            </div>
           </div>
         </div>
+
+
         {/* right Side: Info */}
         <div className="flex-1  py-1 pr-4 flex flex-col ml-2 justify-center">
           <h3 className="text-[15px] font-bold text-zinc-900 mb-1 mt-2 leading-tight">
             {product.name}
           </h3>
           <p className="text-[11px]  text-zinc-400 leading-snug mb-3">
-            {product.description || "Lorem ipsum dolor sit amet, consectetuer."}
+            {product.description || "Lorem ipsum dolor sit amet, consectetuer."}.
           </p>
 
-          <div className="text-[18px] font-bold text-zinc-900 mb-1">
-            ₹{product.price.toFixed(0)}
+          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+            {discountPercentage > 0 && (
+              <span className="text-[15px] sm:text-[13px] font-bold text-[#439651]">
+                ↓{discountPercentage}%
+              </span>
+            )}
+            <span className="text-[16px] font-bold text-zinc-900">
+              ₹{product.price.toFixed(0)}
+            </span>
+            {originalPrice && (
+              <span className="text-[15px] sm:text-[13px] text-zinc-400 font-medium line-through">
+                ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1 mb-4">
@@ -174,7 +195,6 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-out z-10"
           />
-          absolute top-0 right-0 bg-[#ff2d55] text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-bl-lg z-10
           {/* Badges */}
           <div className="absolute top-0 left-0 z-20 flex flex-col gap-1.5 items-start pointer-events-none">
             {isHotSale && <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[10px] font-bold px-2.5 py-0.5 uppercase rounded-r shadow-sm">HOT</div>}
@@ -207,7 +227,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
       </div>
 
       {/* Product Info */}
-      <div className="px-1 sm:px-2 mt-1">
+      <div className="px-1 sm:px-2 mt-1 pb-2">
         {/* Name */}
         <h3 className="text-[13px] sm:text-[15px] font-bold text-zinc-800 leading-tight truncate mb-1">
           {product.name}
@@ -236,6 +256,14 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             <span className="text-[9px] sm:text-[16px] text-zinc-400">({product.reviews || 0})</span>
           </span>
         </div>
+
+        {/* Add to Cart Button */}
+        <button
+          onClick={handleAddToCart}
+          className="w-full mt-3 bg-primary hover:bg-[#5229db] text-white text-[12px] sm:text-[14px] font-bold py-2 sm:py-2.5 rounded-sm sm:rounded-sm flex items-center justify-center gap-2 transition-colors"
+        >
+          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" /> Add to Cart
+        </button>
       </div>
 
     </Link>

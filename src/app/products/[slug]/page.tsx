@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+
 import { motion, AnimatePresence } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { useParams, useRouter } from "next/navigation";
@@ -38,9 +40,12 @@ import {
   ZoomIn,
   Package,
   MapPin,
+  Megaphone,
   Zap,
   Paperclip,
   Flag,
+
+
   X,
   User,
   Clock,
@@ -512,8 +517,16 @@ export default function ProductDetailPage() {
               <div className="relative w-full h-full">
                 <Image src={rp.image} alt={rp.name} fill className={`object-cover ${isDesktop ? 'group-hover:scale-105 transition-transform duration-500' : ''}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                {/* Offer Badges */}
+                <div className="absolute top-2 left-0 z-20 flex flex-col gap-1.5 items-start pointer-events-none">
+                  {rp.isHotSale && <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 uppercase rounded-r shadow-sm">HOT</div>}
+                  {rp.isNewArrived && <div className="bg-emerald-600 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 uppercase rounded-r shadow-sm">NEW</div>}
+                  {rp.isLimited && <div className="bg-primary text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 uppercase rounded-r shadow-sm">LTD</div>}
+                  {rp.isSale && <div className="bg-blue-600 text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 uppercase rounded-r shadow-sm">SALE</div>}
+                </div>
               </div>
-              <div className={`absolute bottom-0 left-0 right-0 ${contentPadding} text-white`}>
+              <div className={`absolute bottom-0 left-0 right-0 ${contentPadding} text-white z-10`}>
                 <p className={titleTextClasses}>{rp.name}</p>
                 <p className={descTextClasses}>{rp.description || "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}</p>
               </div>
@@ -548,9 +561,11 @@ export default function ProductDetailPage() {
             <button
               onClick={handleCheckPincode}
               disabled={isCheckingPin || pincode.length !== 6}
-              className="h-[34px] px-4 bg-[#3f3f46] hover:bg-[#27272a] text-white rounded-sm text-[12px] font-medium transition-colors flex items-center justify-center tracking-wider"
+              className="h-[34px] px-4 gap-2 bg-[#3f3f46] hover:bg-[#27272a] text-white rounded-sm text-[12px] font-medium transition-colors flex items-center justify-center tracking-wider"
             >
-              {isCheckingPin ? "..." : "submit ▶"}
+              {isCheckingPin ? "..." : "submit "}
+              <ChevronRight className="w-3 h-3 -mr-2 text-white" />
+
             </button>
           </div>
         </div>
@@ -795,9 +810,9 @@ export default function ProductDetailPage() {
 
         {/* Product Info */}
         <div className="px-5 pt-4 pb-6">
-          <div className="w-fit ml-auto flex items-center bg-primary/10 rounded-sm gap-1.5 p-1 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-[9px] font-bold text-primary uppercase tracking-wider">In Stock</span>
+          <div className="w-fit ml-auto flex items-center bg-green-100 rounded-sm gap-1.5 p-1 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse" />
+            <span className="text-[9px] font-bold text-green-600 uppercase tracking-wider">In Stock</span>
           </div>
           {/* Title and Price */}
           <div className="flex items-start justify-between mb-2 gap-4">
@@ -805,11 +820,11 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
-            <div className="flex gap-2 shrink-0">
+            <div className="flex flex-col-2 items-center gap-2 shrink-0">
 
               {discountPercentage > 0 && (
                 <span
-                  className=" text-[#14a800] text-[12px] flex items-center gap-0.5 font-bold ">
+                  className=" text-[#14a800] text-[16px]  flex items-center gap-0.5 font-bold ">
                   <ArrowDown className="w-4 h-4" />
                   {discountPercentage}%
                 </span>
@@ -842,6 +857,30 @@ export default function ProductDetailPage() {
             ))}
             <span className="text-[13px] font-medium text-gray-500 ml-1.5">{product.rating || "4.8"}</span>
           </div>
+          {product.isLimited && (
+            <div className="relative flex flex-col items-start mb-6 -mt-6 w-fit ml-auto mr-2 select-none pointer-events-none">
+              <div className="relative z-10 flex flex-col items-center rotate-[-4deg] ml-2">
+                {/* Dark Banner */}
+                <div className="bg-[#1f2022] px-6 py-2 z-10 shadow-sm" style={{ transform: 'skewX(-10deg)' }}>
+                  <span className="block font-black text-[10px] tracking-widest text-white uppercase" style={{ transform: 'skewX(10deg)' }}>
+                    Limited Offer
+                  </span>
+                </div>
+
+                {/* Purple Banner */}
+                <div className="bg-[#a855f7] px-8 py-1.5 -mt-1 ml-10 z-0 shadow-sm" style={{ transform: 'skewX(-10deg)' }}>
+                  <span className="block font-black text-[10px] tracking-widest text-white uppercase" style={{ transform: 'skewX(10deg)' }}>
+                    Hurry Up!
+                  </span>
+                </div>
+              </div>
+
+              {/* Clock Icon */}
+              <div className="absolute -right-1 -top-2 z-20 bg-white rounded-full border-[4px] border-white flex items-center justify-center w-10 h-10 shadow-sm">
+                <Clock className="w-5 h-5 text-[#1f2022]" strokeWidth={2.5} />
+              </div>
+            </div>
+          )}
 
           {/* Options: Color */}
           {product.category === 'Fashion' && (
@@ -956,6 +995,7 @@ export default function ProductDetailPage() {
           )}
 
           <div ref={inPageCTARef} className="flex flex-col gap-3 mb-6 mt-4">
+
             <div className="flex gap-2 w-full ">
               {/* Quantity */}
               <div className="flex items-center justify-between  shrink-0 w-[120px] ">
@@ -1000,13 +1040,13 @@ export default function ProductDetailPage() {
             <div className="pl-6 w-full">
               <button
                 onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-                className="relative w-full h-[56px] rounded-br-4xl rounded-tl-4xl border border-rounded-md bg-[#f4f4f5] border border-gray-200 flex flex-col items-center justify-center transition-transform active:scale-[0.98] shadow-sm"
+                className="relative w-full h-[56px] rounded-br-4xl rounded-tl-4xl border border-rounded-md bg-[#25D366]/70 border border-gray-200 flex flex-col items-center justify-center transition-transform active:scale-[0.98] shadow-sm"
               >
                 <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-[54px] h-[54px] rounded-full bg-white flex items-center justify-center shadow-md">
                   <div className="w-[38px] h-[38px] bg-white rounded-full absolute" />
                   <WhatsAppIcon className="w-[36px] h-[36px] text-[#25D366] relative z-10" />
                 </div>
-                <div className="flex flex-col items-center justify-center pl-6">
+                <div className="flex flex-col items-center  justify-center pl-6">
                   <span className="text-[15px] font-bold text-gray-900 leading-tight">Enquire on WhatsApp</span>
                   <span className="text-[11px] font-medium text-gray-500 leading-tight mt-0.5">Chat with us for details</span>
                 </div>
@@ -1167,7 +1207,7 @@ export default function ProductDetailPage() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "120%", opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-              className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
+              className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:hidden left-4 right-4 z-50 bg-white rounded-[16px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] px-4 py-3 flex items-center justify-between border border-gray-100"
             >
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -1420,10 +1460,40 @@ export default function ProductDetailPage() {
 
             <div className="flex flex-col gap-4 mb-10">
               {product.isLimited && (
-                <div className="flex items-center mb-2">
-                  <span className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#ef4444] bg-[#fee2e2] px-3 py-1.5 rounded-md border border-[#fca5a5] shadow-sm animate-pulse">
-                    <Flame className="w-4 h-4" /> Hurry, only 9 left in stock!
-                  </span>
+                <div className="relative flex flex-col items-center justify-center mb-8 mt-6 w-fit mx-auto sm:ml-6 sm:mx-0 select-none pointer-events-none">
+                  {/* Decorative Elements */}
+                  <div className="absolute -top-3 left-4 text-[#a855f7] font-light text-2xl leading-none">+</div>
+                  <div className="absolute top-1 right-16 w-8 h-[2px] bg-[#1f2022] rotate-[-5deg]"></div>
+                  <div className="absolute top-0 left-10 w-16 h-[2px] bg-[#a855f7] rotate-[-10deg]"></div>
+                  <div className="absolute -bottom-3 left-6 w-16 h-[2px] bg-[#1f2022] rotate-[-15deg]"></div>
+                  <div className="absolute -bottom-5 right-16 w-12 h-[2px] bg-[#a855f7] rotate-[-5deg]"></div>
+                  <div className="absolute -bottom-4 right-10 text-[#1f2022] font-light text-2xl leading-none">+</div>
+                  <div className="absolute top-6 -left-6 text-[#1f2022] font-light text-2xl leading-none">+</div>
+                  {/* Triangles */}
+                  <div className="absolute -top-3 right-20 w-4 h-4 border-[2px] border-[#a855f7] rotate-12" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}></div>
+                  <div className="absolute bottom-2 -left-3 w-3 h-3 border-[2px] border-[#a855f7] rotate-[60deg]" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}></div>
+                  <div className="absolute -bottom-1 -right-2 w-4 h-4 border-[2px] border-[#1f2022] rotate-[120deg]" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}></div>
+
+                  <div className="relative z-10 flex flex-col items-center rotate-[-4deg]">
+                    {/* Dark Banner */}
+                    <div className="bg-[#1f2022] px-6 py-2 z-10 shadow-sm" style={{ transform: 'skewX(-10deg)' }}>
+                      <span className="block font-black text-lg sm:text-xl tracking-widest text-white uppercase" style={{ transform: 'skewX(10deg)' }}>
+                        Limited Offer
+                      </span>
+                    </div>
+
+                    {/* Purple Banner */}
+                    <div className="bg-[#a855f7] px-8 py-1.5 -mt-1 ml-10 z-0 shadow-sm" style={{ transform: 'skewX(-10deg)' }}>
+                      <span className="block font-black text-lg sm:text-xl tracking-widest text-white uppercase" style={{ transform: 'skewX(10deg)' }}>
+                        Hurry Up!
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Clock Icon */}
+                  <div className="absolute -right-10 -top-4 z-20 bg-white rounded-full border-[5px] sm:border-[6px] border-[#1f2022] flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 shadow-sm">
+                    <Clock className="w-7 h-7 sm:w-9 sm:h-9 text-[#1f2022]" strokeWidth={2.5} />
+                  </div>
                 </div>
               )}
 

@@ -154,7 +154,7 @@ function TrackOrderInner() {
                   <h3 className="text-xl font-extrabold text-gray-900 mb-8">Order Tracking</h3>
                   <div className="relative">
                     {/* Continuous Vertical Line */}
-                    <div className="absolute left-[23px] top-2 bottom-8 w-[2px] bg-gray-200"></div>
+                    <div className="absolute left-[23px] top-16 bottom-16 w-[2px] bg-gray-200"></div>
 
                     <div className="space-y-0 relative z-10">
                       {trackingData.steps.map((step: any, index: number) => {

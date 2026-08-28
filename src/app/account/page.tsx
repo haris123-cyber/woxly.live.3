@@ -96,7 +96,7 @@ const initialOrders: OrderItem[] = [
     size: "1kg",
     price: "₹249",
     image: "/images/product_placeholder.png",
-    status: "Delivered on Jul 17, 2025",
+    status: "Delivered ",
     statusColor: "green",
     statusDesc: "Your item has been delivered",
     date: "Jul 17, 2025 • 08:45 PM",
@@ -110,7 +110,7 @@ const initialOrders: OrderItem[] = [
     size: "1kg",
     price: "₹199",
     image: "/images/product_placeholder.png",
-    status: "Delivered on Jul 15, 2025",
+    status: "Delivered ",
     statusColor: "green",
     statusDesc: "",
     date: "Jul 15, 2025 • 11:20 AM",
@@ -126,7 +126,7 @@ const initialOrders: OrderItem[] = [
     size: "500ml",
     price: "₹509",
     image: "/images/product_placeholder.png",
-    status: "Cancelled on Mar 19, 2025",
+    status: "Cancelled ",
     statusColor: "red",
     statusDesc: "Your order was cancelled as per your request.",
     date: "Mar 19, 2025 • 09:15 AM",
@@ -145,18 +145,21 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
   const getStatusStyles = (color: string) => {
     switch (color) {
       case 'red':
-        return { bg: 'bg-red-50', text: 'text-red-600', dot: 'bg-red-500' };
+        return { bg: 'bg-[#DC2626]', text: 'text-white', dot: 'bg-red-500' };
       case 'yellow':
-        return { bg: 'bg-orange-50', text: 'text-orange-500', dot: 'bg-orange-500' };
+        return { bg: 'bg-[#EBB200]', text: 'text-white', dot: 'bg-orange-500' };
       default:
-        return { bg: 'bg-green-50', text: 'text-green-700', dot: 'bg-green-600' };
+        return { bg: 'bg-[#16A34A]', text: 'text-white', dot: 'bg-green-600' };
     }
   };
 
   const statusStyles = getStatusStyles(order.statusColor);
 
   return (
-    <div className="border-b border-gray-200 pb-4 pt-2 transition-all cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+    <div className="border-b border-gray-200 pb-4 pt-0 transition-all cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+      <div className={`${statusStyles.bg} ${statusStyles.text} font-semibold px-2 py-1 sm:px-3 sm:py-1.5 mb-2 text-[12px] sm:text-[12px] flex items-center gap-1.5 w-fit`}>
+        {order.status}
+      </div>
       <div className="flex gap-4 sm:gap-6">
         {/* Left: Product Image Box */}
         <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-md overflow-hidden bg-gray-100 shrink-0">
@@ -182,18 +185,15 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
           </div>
 
           <div className="flex items-center justify-between gap-3 mt-auto">
-            <div className={`${statusStyles.bg} ${statusStyles.text} font-semibold px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-[12px] flex items-center gap-1.5 w-fit`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${statusStyles.dot}`}></span>
-              {order.status}
-            </div>
+
 
             {order.trackAction && (
               <Link
                 href={`/track-order?id=${order.id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="px-3 sm:px-4 py-1 sm:py-1.5 border border-[#2563eb] text-[#2563eb] bg-blue-50 hover:bg-blue-100 rounded-lg text-[11px] sm:text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5"
+                className="px-3 sm:px-4 py-1  sm:py-1.5 border border-gray text-gray-700 hover:text-primary hover:border-primary   text-[11px] sm:text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5"
               >
-                <Truck className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Track
+                Track order
               </Link>
             )}
           </div>
@@ -217,7 +217,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
                 {showCancelBtn && order.cancelAction && (
                   <button
                     onClick={(e) => { e.stopPropagation(); onCancel?.(order.id); }}
-                    className="px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-[12px] font-bold transition-colors shadow-sm"
+                    className="px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 text-[12px] font-bold transition-colors shadow-sm"
                   >
                     Cancel Order
                   </button>
@@ -225,13 +225,13 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
                 {order.returnAction && (
                   <button
                     onClick={(e) => { e.stopPropagation(); onReturn?.(order.id); }}
-                    className="px-4 py-2 border border-blue-200 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg text-[12px] font-bold transition-colors shadow-sm"
+                    className="px-4 py-2 border border-blue-200 text-blue-600 bg-blue-50 hover:bg-blue-100 text-[12px] font-bold transition-colors shadow-sm"
                   >
                     Return Item
                   </button>
                 )}
                 {order.reviewAction && (
-                  <button onClick={(e) => e.stopPropagation()} className="px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5">
+                  <button onClick={(e) => e.stopPropagation()} className="px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50  text-[12px] font-bold transition-colors shadow-sm flex items-center gap-1.5">
                     <Star className="w-3.5 h-3.5 fill-gray-400 text-gray-400" /> Rate Product
                   </button>
                 )}
@@ -239,7 +239,7 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
 
               {/* Refund Box */}
               {showRefundBox && order.refundBox && (
-                <div className="mt-4 bg-[#f8f9fa] border border-gray-100 rounded-xl p-4">
+                <div className="mt-4 bg-[#f8f9fa] border border-gray-100  p-4">
                   <p className="text-[13px] mb-1.5">
                     <span className="font-bold text-gray-900">{order.refundTitle}</span>
                     <span className="text-gray-500 ml-1">{order.refundId}</span>
@@ -259,19 +259,19 @@ function OrderCard({ order, showCancelBtn = false, showRefundBox = true, onCance
 
 function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCancel: (id: string) => void, onReturn: (id: string) => void }) {
   return (
-    <div className="w-full">
-      <div className="mb-6">
+    <div className="w-full ">
+      <div className="mb-6 px-4 sm:px-0">
         <h2 className="text-[24px] font-extrabold text-gray-900">Order History</h2>
         <p className="text-[14px] text-gray-500 mt-1">Track and view all your past orders</p>
       </div>
 
-      <div className="flex flex-col gap-4 sm:p-6 bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+      <div className="flex flex-col gap-4 sm:p-6 bg-white p-4 sm:rounded-xl rounded-none shadow-sm hover:shadow-md transition-shadow border-y sm:border border-gray-100">
         {orders.map((order) => (
           <OrderCard key={order.id} order={order} showCancelBtn={true} onCancel={onCancel} onReturn={onReturn} />
         ))}
       </div>
 
-      <div className="bg-[#f0fdf4] border border-[#dcfce7] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-6">
+      <div className="bg-[#f0fdf4] border-y sm:border border-[#dcfce7] sm:rounded-2xl rounded-none p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-6">
         <div className="flex items-center gap-3.5">
           <div className="w-[50px] h-[50px] rounded-full bg-[#dcfce7] flex items-center justify-center shrink-0">
             <ShieldCheck className="w-6 h-6 text-[#16a34a]" strokeWidth={2} />
@@ -281,8 +281,8 @@ function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCa
             <p className="text-[12px] text-gray-600 font-medium">For any order related issues,<br className="hidden sm:block" /> our support team is here to help.</p>
           </div>
         </div>
-        <Link href="/contact">
-          <button className="border border-[#16a34a] text-[#16a34a] hover:bg-[#16a34a] hover:text-white px-4 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-1.5 transition-colors shrink-0 w-full sm:w-auto">
+        <Link href="/contact" className="w-full sm:w-auto">
+          <button className="border border-[#16a34a] text-[#16a34a] hover:bg-[#16a34a] hover:text-white px-4 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-1.5 transition-colors shrink-0 w-full">
             Contact Support
             <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
           </button>
@@ -297,7 +297,7 @@ function DetailsPanel() {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 px-4 sm:px-0">
         <div>
           <h2 className="text-[24px] font-extrabold text-[#0f172a]">Account Details</h2>
           <p className="text-[14px] text-gray-500 mt-1">Manage your personal information</p>
@@ -312,7 +312,7 @@ function DetailsPanel() {
         </div>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-white border-y sm:border border-gray-100 sm:rounded-2xl rounded-none p-4 sm:p-6 shadow-sm">
         <div className="space-y-4">
 
           <div>
@@ -434,7 +434,7 @@ function AddressPanel() {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 px-4 sm:px-0">
         <h2 className="text-[24px] font-extrabold text-[#0f172a]">My Addresses</h2>
         <button
           onClick={() => {
@@ -452,7 +452,7 @@ function AddressPanel() {
 
       <div className="flex flex-col gap-4">
         {addresses.map((addr, index) => (
-          <div key={addr.id} className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div key={addr.id} className="bg-white border-y sm:border border-gray-100 sm:rounded-2xl rounded-none p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start border-b border-gray-100 pb-4 mb-4">
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 bg-[#eff6ff] rounded-full flex items-center justify-center shrink-0">
@@ -642,17 +642,16 @@ function RewardPanel() {
 
   return (
     <div className="w-full">
-      <div className="mb-5">
+      <div className="mb-5 px-4 sm:px-0">
         <h2 className="text-[22px] font-extrabold text-gray-900 tracking-tight">My Reward Coins</h2>
         <p className="text-[13px] font-medium text-gray-500 mt-0.5">Shop more, earn more, save more!</p>
       </div>
 
       {/* Main Reward Card */}
-      <div className="bg-gradient-to-br from-[#0c4a28] to-[#126b3a] rounded-2xl p-5 mb-4 shadow-md relative overflow-hidden">
+      <div className="bg-gradient-to-br  mr-2 ml-2 from-[#0c4a28] to-[#126b3a] sm:rounded-2xl rounded-none p-5 mb-4 shadow-md relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-4 right-1/2 w-2 h-2 bg-yellow-400 rotate-45 rounded-sm opacity-60"></div>
         <div className="absolute top-10 right-4 w-1.5 h-1.5 bg-green-300 rounded-full opacity-60"></div>
-        <div className="absolute bottom-8 right-12 w-2 h-2 bg-green-400 rotate-12 rounded-sm opacity-60"></div>
 
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-4">
@@ -706,7 +705,7 @@ function RewardPanel() {
         )}
       </AnimatePresence>
 
-      <div className="bg-[#f2fbf5] border border-[#e5f6eb] rounded-xl p-4 flex items-center gap-3.5 mb-7 cursor-pointer hover:bg-green-50/80 transition-colors">
+      <div className="bg-[#f2fbf5] border-y sm:border border-[#e5f6eb] sm:rounded-xl rounded-none p-4 flex items-center gap-3.5 mb-7 cursor-pointer hover:bg-green-50/80 transition-colors">
         <div className="w-9 h-9 rounded-full bg-[#dcfce7] flex items-center justify-center shrink-0 border border-green-200/50">
           <ShieldCheck className="w-[18px] h-[18px] text-[#166534]" strokeWidth={2.5} />
         </div>
@@ -717,10 +716,10 @@ function RewardPanel() {
         <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={2} />
       </div>
 
-      <h3 className="font-bold text-gray-900 text-[15px] mb-4">How it works</h3>
+      <h3 className="font-bold text-gray-900 text-[15px] mb-4 px-4 sm:px-0">How it works</h3>
 
       <div className="flex flex-col gap-3 mb-8">
-        <div className="bg-white border border-gray-100 rounded-xl p-3.5 flex items-center gap-4 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
+        <div className="bg-white border-y sm:border border-gray-100 sm:rounded-xl rounded-none p-3.5 flex items-center gap-4 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="w-4 font-bold text-green-600 text-sm flex justify-center">1</div>
           <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center shrink-0">
             <ShoppingBag className="w-[18px] h-[18px] text-green-600" strokeWidth={2.5} />
@@ -732,7 +731,7 @@ function RewardPanel() {
           <ChevronRight className="w-4 h-4 text-gray-300" strokeWidth={2.5} />
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-xl p-3.5 flex items-center gap-4 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
+        <div className="bg-white border-y sm:border border-gray-100 sm:rounded-xl rounded-none p-3.5 flex items-center gap-4 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="w-4 font-bold text-purple-600 text-sm flex justify-center">2</div>
           <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
             <Star className="w-[18px] h-[18px] text-purple-600" strokeWidth={2.5} />
@@ -744,7 +743,7 @@ function RewardPanel() {
           <ChevronRight className="w-4 h-4 text-gray-300" strokeWidth={2.5} />
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-xl p-3.5 flex items-center gap-4 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
+        <div className="bg-white border-y sm:border border-gray-100 sm:rounded-xl rounded-none p-3.5 flex items-center gap-4 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="w-4 font-bold text-orange-500 text-sm flex justify-center">3</div>
           <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
             <Tag className="w-[18px] h-[18px] text-orange-500" strokeWidth={2.5} />
@@ -757,7 +756,7 @@ function RewardPanel() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-[#f0fdf4] to-[#f2fbf5]  p-5 shadow-sm relative overflow-hidden flex flex-col justify-center min-h-[140px]">
+      <div className="bg-gradient-to-br from-[#f0fdf4] to-[#f2fbf5] p-5 shadow-sm relative overflow-hidden flex flex-col justify-center min-h-[140px] sm:rounded-2xl rounded-none">
         <div className="flex items-start gap-3.5 relative z-10 ">
           <div className="shrink-0 mt-0.5">
             <Award className="w-8 h-8 text-[#166534]" strokeWidth={2} />
@@ -1008,12 +1007,12 @@ function AccountPageInner() {
         </div>
 
         {/* ── Main Content panel ── */}
-        <div className={`flex-1 px-4 lg:px-0 ${showMobileMenu ? 'hidden lg:block' : 'block'}`}>
-          <div className="overflow-hidden p-4 sm:p-6 min-h-[600px] mt-4 lg:mt-0">
+        <div className={`flex-1 ${showMobileMenu ? 'hidden lg:block' : 'block'}`}>
+          <div className="overflow-hidden px-0 sm:px-6 py-4 sm:py-6 min-h-[600px] mt-4 lg:mt-0">
             {/* Back button for mobile */}
             <button
               onClick={() => setShowMobileMenu(true)}
-              className="lg:hidden flex items-center gap-2 text-gray-500 hover:text-primary mb-6 transition-colors font-medium text-[13px]"
+              className="lg:hidden flex items-center gap-2 text-gray-500 hover:text-primary mb-6 transition-colors font-medium text-[13px] px-4"
             >
               <ArrowLeft className="w-4 h-4" /> Back to Overview
             </button>

@@ -22,7 +22,7 @@ export default function WatchlistPage() {
 
       <div className="container mx-auto px-4 py-4 md:py-12 min-h-[70vh]">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold font-heading">My Watchlist</h1>
+          <h1 className="text-3xl font-bold font-heading">My Wishlist</h1>
         </div>
 
         {items.length === 0 ? (
@@ -39,14 +39,14 @@ export default function WatchlistPage() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:flex sm:flex-col w-full bg-white sm:border sm:border-gray-200 rounded-sm">
+          <div className="grid grid-cols-2 sm:flex sm:flex-col w-full sm:bg-white sm:border sm:border-gray-200 sm:rounded-sm gap-2 sm:gap-0">
             {items.map((item) => {
               const price = item.price || 0;
               const originalPrice = price * 1.2; // Mock original price for UI
               const discountPercentage = Math.round(((originalPrice - price) / originalPrice) * 100);
 
               return (
-                <div key={item.id} className="flex flex-col sm:flex-row p-3 sm:p-6 border-b border-gray-200 odd:border-r sm:odd:border-r-0 last:border-b-0 hover:shadow-md transition-shadow relative group">
+                <div key={item.id} className="flex flex-col sm:flex-row p-3 sm:p-6 border border-gray-200 sm:border-x-0 sm:border-t-0 sm:border-b sm:last:border-b-0 hover:shadow-md transition-shadow relative group bg-white rounded-md sm:rounded-none">
                   <div className="flex sm:hidden justify-end w-full absolute top-2 right-2 z-10">
                     <button onClick={() => setItemToRemove(item)} className="p-1 rounded-full border border-gray-200 bg-white shadow-sm">
                       <Trash2 className="w-4 h-4 text-gray-500" />
@@ -127,12 +127,12 @@ export default function WatchlistPage() {
       </div>
       {itemToRemove && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg">
+          <div className="bg-white rounded-sm p-6 max-w-sm w-full shadow-lg">
             <h3 className="text-lg font-bold mb-2 text-gray-900">Remove Item</h3>
             <p className="text-gray-500 mb-6">Are you sure you want to remove &quot;{itemToRemove.name}&quot; from your watchlist?</p>
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={() => setItemToRemove(null)}>Cancel</Button>
-              <Button variant="destructive" onClick={() => { toggleItem(itemToRemove); setItemToRemove(null); }}>Remove</Button>
+              <Button variant="outline" className="rounded-sm" onClick={() => setItemToRemove(null)}>Cancel</Button>
+              <Button variant="destructive" className="rounded-sm" onClick={() => { toggleItem(itemToRemove); setItemToRemove(null); }}>Remove</Button>
             </div>
           </div>
         </div>
