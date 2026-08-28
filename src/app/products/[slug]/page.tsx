@@ -678,7 +678,7 @@ export default function ProductDetailPage() {
             </div>
             <button
               onClick={() => setIsComboSelected(!isComboSelected)}
-              className={`${isComboSelected ? "bg-white text-black border-2 border-black" : "bg-primary text-white hover:bg-black border-2 border-white"} px-3 sm:px-6 lg:px-8 py-3.5 lg:py-4 rounded-[12px] lg:rounded-[14px] font-bold text-[13px] lg:text-[15px] transition-all shadow-md whitespace-nowrap text-center flex-1 sm:flex-none sm:min-w-[180px] ml-2`}
+              className={`${isComboSelected ? "bg-white text-black border-2 border-black" : "bg-primary text-white hover:bg-black border-2 border-white"} px-3 sm:px-6 lg:px-8 py-3.5 lg:py-4 rounded-sm lg:rounded-sm font-bold text-[13px] lg:text-[15px] transition-all shadow-md whitespace-nowrap text-center flex-1 sm:flex-none sm:min-w-[180px] ml-2`}
             >
               {isComboSelected ? "Combo Selected ✓" : "Select Combo"}
             </button>
@@ -1116,7 +1116,25 @@ export default function ProductDetailPage() {
               </button>
               {isWarrantyOpen && (
                 <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
-                  All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
+                  <p className="mb-4">All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.</p>
+                  <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                    <table className="w-full text-left text-[12px] border-collapse">
+                      <tbody>
+                        <tr className="border-b border-gray-200 bg-gray-50">
+                          <th className="py-2 px-3 text-gray-700 font-semibold w-1/3 border-r border-gray-200">Type</th>
+                          <td className="py-2 px-3 text-gray-600">Standard Warranty</td>
+                        </tr>
+                        <tr className="border-b border-gray-200">
+                          <th className="py-2 px-3 text-gray-700 font-semibold border-r border-gray-200">Duration</th>
+                          <td className="py-2 px-3 text-gray-600">1 Year</td>
+                        </tr>
+                        <tr>
+                          <th className="py-2 px-3 text-gray-700 font-semibold border-r border-gray-200">Authenticity</th>
+                          <td className="py-2 px-3 text-gray-600">100% Genuine Product</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>
@@ -1136,6 +1154,7 @@ export default function ProductDetailPage() {
                 <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
                   Free standard delivery on orders over ₹50. Next day delivery available for orders placed before 2 PM. Tracking information will be provided once dispatched.
                 </div>
+
               )}
             </div>
           </div>
@@ -1184,10 +1203,30 @@ export default function ProductDetailPage() {
             </div>
 
             {activeTab === "description" && (
-              <p className="text-sm text-foreground leading-relaxed">
-                {product.description ||
-                  "Coorg blend. 75% chicory-free. Strong, South Indian style. Add up to 3 extra input fields for customers (e.g. gift note, review text). Maximum 3 custom fields allowed."}
-              </p>
+              <div className="pt-2 pb-4">
+                <p className="text-sm text-foreground leading-relaxed mb-4">
+                  {product.description ||
+                    "Coorg blend. 75% chicory-free. Strong, South Indian style. Add up to 3 extra input fields for customers (e.g. gift note, review text). Maximum 3 custom fields allowed."}
+                </p>
+                <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <table className="w-full text-left text-[12px] border-collapse">
+                    <tbody>
+                      <tr className="border-b border-gray-200 bg-gray-50">
+                        <th className="py-2 px-3 text-gray-700 font-semibold w-1/3 border-r border-gray-200">Brand</th>
+                        <td className="py-2 px-3 text-gray-600">Woxly</td>
+                      </tr>
+                      <tr className="border-b border-gray-200">
+                        <th className="py-2 px-3 text-gray-700 font-semibold border-r border-gray-200">Model</th>
+                        <td className="py-2 px-3 text-gray-600">{product.name}</td>
+                      </tr>
+                      <tr>
+                        <th className="py-2 px-3 text-gray-700 font-semibold border-r border-gray-200">Category</th>
+                        <td className="py-2 px-3 text-gray-600">{product.category || 'Lifestyle'}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             )}
 
             {activeTab === "reviews" && renderReviewsTab()}
@@ -1233,7 +1272,7 @@ export default function ProductDetailPage() {
               </div>
               <Button
                 onClick={handleAddToCart}
-                className="h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-[14px] px-6 shadow-sm border-0"
+                className="h-11 rounded-sm bg-primary hover:bg-primary/90 text-white font-semibold text-[14px] px-6 shadow-sm border-0"
               >
                 Add to Cart
               </Button>
@@ -1637,7 +1676,25 @@ export default function ProductDetailPage() {
               </button>
               {isWarrantyOpen && (
                 <div className="px-4 pb-4 pt-1 text-[13px] text-gray-600 leading-relaxed">
-                  All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.
+                  <p className="mb-4">All products come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available at checkout.</p>
+                  <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                    <table className="w-full text-left text-[12px] border-collapse">
+                      <tbody>
+                        <tr className="border-b border-gray-200 bg-gray-50">
+                          <th className="py-2 px-3 text-gray-700 font-semibold w-1/3 border-r border-gray-200">Type</th>
+                          <td className="py-2 px-3 text-gray-600">Standard Warranty</td>
+                        </tr>
+                        <tr className="border-b border-gray-200">
+                          <th className="py-2 px-3 text-gray-700 font-semibold border-r border-gray-200">Duration</th>
+                          <td className="py-2 px-3 text-gray-600">1 Year</td>
+                        </tr>
+                        <tr>
+                          <th className="py-2 px-3 text-gray-700 font-semibold border-r border-gray-200">Authenticity</th>
+                          <td className="py-2 px-3 text-gray-600">100% Genuine Product</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>
@@ -1691,14 +1748,32 @@ export default function ProductDetailPage() {
           </div>
 
           {activeTab === "description" && (
-            <div className="pt-2">
+            <div className="pt-2 pb-4">
               <p className="text-sm text-foreground mb-4 font-medium">
                 {product.description ||
                   "Coorg blend. 75% chicory-free. Strong, South Indian style."}
               </p>
-              <p className="text-sm text-foreground">
+              <p className="text-sm text-foreground mb-6">
                 Add up to 3 extra input fields for customers (e.g. gift note, review text). Maximum 3 custom fields allowed.
               </p>
+              <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                <table className="w-full text-left text-[13px] border-collapse">
+                  <tbody>
+                    <tr className="border-b border-gray-200 bg-gray-50">
+                      <th className="py-2.5 px-4 text-gray-700 font-semibold w-1/3 border-r border-gray-200">Brand</th>
+                      <td className="py-2.5 px-4 text-gray-600">Woxly</td>
+                    </tr>
+                    <tr className="border-b border-gray-200">
+                      <th className="py-2.5 px-4 text-gray-700 font-semibold border-r border-gray-200">Model</th>
+                      <td className="py-2.5 px-4 text-gray-600">{product.name}</td>
+                    </tr>
+                    <tr>
+                      <th className="py-2.5 px-4 text-gray-700 font-semibold border-r border-gray-200">Category</th>
+                      <td className="py-2.5 px-4 text-gray-600">{product.category || 'Lifestyle'}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 

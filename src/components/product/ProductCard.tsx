@@ -151,7 +151,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
               disabled={!product.inStock}
               className="bg-primary hover:bg-[#1c554b] text-white text-[13px] font-medium px-8 py-1.5 rounded-full transition-colors flex items-center justify-center"
             >
-              shop
+              <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button
               onClick={(e) => {
