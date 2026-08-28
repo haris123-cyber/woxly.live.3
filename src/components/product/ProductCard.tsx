@@ -234,24 +234,23 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
         </h3>
 
         {/* Price + Discount + Rating — all on one line */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-
+        <div className="flex items-center gap-1 sm:gap-1.5 w-full whitespace-nowrap">
           {discountPercentage > 0 && (
-            <span className="text-[13px] sm:text-[15px] font-bold text-[#439651]">
+            <span className="text-[12px] sm:text-[15px] font-bold text-[#439651] shrink-0">
               ↓{discountPercentage}%
             </span>
           )}
-          <span className="text-[13px] sm:text-[18px] font-black text-zinc-900 tracking-tight">
+          <span className="text-[13px] sm:text-[18px] font-black text-zinc-900 tracking-tight shrink-0">
             ₹{product.price.toFixed(2).replace(/\.00$/, '')}
           </span>
           {originalPrice && (
-            <span className="text-[13px] sm:text-[18px] text-zinc-400 font-medium line-through">
+            <span className="text-[12px] sm:text-[18px] text-zinc-400 font-medium line-through truncate min-w-0">
               ₹{originalPrice.toFixed(2).replace(/\.00$/, '')}
             </span>
           )}
 
-          <span className="ml-auto flex items-center gap-0.5">
-            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+          <span className="ml-auto flex items-center gap-0.5 shrink-0 pl-0.5">
+            <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400" />
             <span className="text-[10px] sm:text-[16px] font-bold text-zinc-600">{product.rating || "4.8"}</span>
             <span className="text-[9px] sm:text-[16px] text-zinc-400">({product.reviews || 0})</span>
           </span>
