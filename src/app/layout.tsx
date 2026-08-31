@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -22,6 +22,12 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Woxly - Elevate Your Lifestyle",
   description: "Premium quality products crafted for modern living. Discover our new collection at Woxly.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

@@ -10,7 +10,7 @@ export function Footer() {
   if (pathname === '/login' || pathname === '/signup') return null;
 
   return (
-    <footer className="bg-white pt-10 md:pt-16 pb-6 border-t border-zinc-200 font-sans">
+    <footer className="bg-white pt-10 md:pt-16 pb-26 sm:pb-6 border-t border-zinc-200 font-sans">
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8 mb-12">
 
