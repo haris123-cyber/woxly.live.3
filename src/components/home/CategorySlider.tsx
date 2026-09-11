@@ -1,36 +1,95 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import {
-  IconShirt, IconHanger, IconShoe, IconShoppingBag,
-  IconDeviceWatch, IconLayoutGrid, IconMoodKid,
-  IconDeviceLaptop, IconHome, IconBarbell, IconDiamond
-} from "@tabler/icons-react";
 
 const CATEGORIES = [
-  { name: "Men", icon: <IconShirt stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Women", icon: <IconHanger stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Shoes", icon: <IconShoe stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Bags", icon: <IconShoppingBag stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Accessories", icon: <IconDeviceWatch stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Beauty", icon: <IconDiamond stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Kids", icon: <IconMoodKid stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Electronics", icon: <IconDeviceLaptop stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Home", icon: <IconHome stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "Sports", icon: <IconBarbell stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
-  { name: "All", icon: <IconLayoutGrid stroke={1.5} className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-800 group-hover:text-[#8b5cf6] transition-colors" />, link: "/shop" },
+  {
+    name: "Vegetables & Fruits",
+    image: "/images/veg/Organic_broccoli_2.jpg",
+    link: "/shop",
+  },
+  {
+    name: "Grocery & Staples",
+    image: "/images/grocery/Quaker_Oats (2).jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Dairy & Eggs",
+    image: "/images/DAIRY & EGGS/farm_fresh_eggs_1789022099897.jpg",
+    link: "/shop",
+  },
+  {
+    name: "Beverages",
+    image: "/images/liquor/Peach_iced_tea_product_photography_20260910155712.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Snacks & Munchies",
+    image: "/images/snacks/Potato_chips_product_photography_20260910123202.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Food",
+    image: "/images/meat&seafood/Atlantic_Salmon_product_photography_20260910165654.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Fashion",
+    image: "/images/fashion/Denim_jacket_product.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Bags & Luggage",
+    image: "/images/fashion/Brown_leather_handbag.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Beauty & Personal Care",
+    image: "/images/beauty/Luxury_perfume_bottle_on_background_20260910124349.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Electronics",
+    image: "/images/electronics/Smart_Phone_Pro_product_photography_20260910125103.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Home & Kitchen",
+    image: "/images/home care/Dishwashing_liquid_product_photo…_20260910153837.jpeg",
+    link: "/shop",
+  },
+  {
+    name: "Liquor",
+    image: "/images/liquor/Vodka_bottles_on_studio_background_20260910154513.jpeg",
+    link: "/shop",
+  },
 ];
 
 export function CategorySlider() {
   return (
-    <section className="container mx-auto px-0 py-6 mb-0 mt-0">
-      <div className="flex overflow-x-auto justify-start items-center gap-3 sm:gap-8 px-5 pb-4 snap-x w-full ml-3 sm:ml-20 ">
+    <section className="container mx-auto px-2 py-6 -mb-4 ">
+      <div className="flex w-full  overflow-x-auto gap-4 sm:gap-8 px-5 pb-4  snap-x snap-mandatory scrollbar-hide">
         {CATEGORIES.map((cat, i) => (
-          <Link key={i} href={cat.link} className="group flex flex-col items-center gap-3 sm:gap-4 shrink-0 transition-transform hover:-translate-y-1 snap-start">
-            <div className="w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-[#f4eefc] group-hover:bg-[#efe4ff] transition-colors flex items-center justify-center">
-              {cat.icon}
+          <Link
+            key={i}
+            href={cat.link}
+            className="group flex shrink-0 flex-col items-center gap-2 sm:gap-3 snap-start transition-transform duration-200 hover:-translate-y-1"
+          >
+            {/* Category Image */}
+            <div className="relative w-14 h-14  sm:w-20 sm:h-20 overflow-hidden rounded-full bg-[#f4eefc] ring-1 ring-zinc-100 transition-all duration-200 group-hover:ring-[#8b5cf6] group-hover:shadow-md">
+              <Image
+                src={cat.image}
+                alt={cat.name}
+                fill
+                sizes="80px"
+                className="object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+
             </div>
-            <span className="font-bold text-[9px] sm:text-sm text-zinc-900 leading-tight tracking-wide whitespace-nowrap">{cat.name}</span>
+            <p className="font-medium text-[9px] sm:text-[14px] text-black tracking-tight letter-spacing-[1px] text-center">{cat.name}</p>
+
+
           </Link>
         ))}
       </div>

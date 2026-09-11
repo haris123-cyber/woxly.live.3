@@ -47,7 +47,7 @@ export default function CartPage() {
   // ── Empty state ──────────────────────────────
   if (items.length === 0) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center py-16 px-4 bg-[#f9fafb]">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center py-16 px-4 bg-white">
         <div className="w-24 h-24 rounded-full bg-[#f4eefc] flex items-center justify-center mb-6">
           <ShoppingBag className="w-11 h-11 text-primary" />
         </div>
@@ -63,7 +63,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-[#f9fafb] min-h-screen py-6 pb-8 lg:pb-10 lg:py-10">
+    <div className="bg-white min-h-screen py-6 pb-8 lg:pb-10 lg:py-10">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
 
@@ -100,7 +100,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 sm:p-6 bg-white p-2  rounded-md   hover:shadow-md transition-shadow relative group">
+            <div className="flex flex-col gap-4 sm:p-6  p-2  rounded-md   hover:shadow-md transition-shadow relative group">
               {items.map((item) => (
                 <div key={item.cartItemId} className="flex gap-4 sm:gap-6 border-b border-gray-200 pb-2">
                   <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-md overflow-hidden bg-gray-100 shrink-0">

@@ -39,6 +39,7 @@ const card: React.CSSProperties = {
   border: "1px solid #e5e7eb",
   boxShadow: "0 1px 6px rgba(0,0,0,0.05)",
   overflow: "hidden",
+
 };
 
 function StarRating({ count }: { count: number }) {
@@ -264,8 +265,7 @@ function OrdersPanel({ orders, onCancel, onReturn }: { orders: OrderItem[], onCa
         <h2 className="text-[24px] font-extrabold text-gray-900">Order History</h2>
         <p className="text-[14px] text-gray-500 mt-1">Track and view all your past orders</p>
       </div>
-
-      <div className="flex flex-col gap-4 sm:p-6 bg-white p-4 sm:rounded-xl rounded-none shadow-sm hover:shadow-md transition-shadow border-y sm:border border-gray-100">
+      <div className="flex flex-col gap-4 sm:p-6 bg-white p-4 sm:rounded-xl rounded-none sm:shadow-sm sm:hover:shadow-md transition-shadow border-0 sm:border border-gray-100">
         {orders.map((order) => (
           <OrderCard key={order.id} order={order} showCancelBtn={true} onCancel={onCancel} onReturn={onReturn} />
         ))}
@@ -457,25 +457,25 @@ function AddressPanel() {
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 bg-[#eff6ff] rounded-full flex items-center justify-center shrink-0">
                   {addr.label?.toLowerCase() === 'office' ? (
-                    <Briefcase className="w-5 h-5 text-[#2563eb]" strokeWidth={2.2} />
+                    <Briefcase className="w-5 h-5 text-primary" strokeWidth={2.2} />
                   ) : (
-                    <Home className="w-5 h-5 text-[#2563eb]" strokeWidth={2.2} />
+                    <Home className="w-5 h-5 text-primary" strokeWidth={2.2} />
                   )}
                 </div>
                 <div className="flex flex-col items-start">
                   <span className="font-bold text-[16px] text-gray-900">{addr.label || "Address"}</span>
                   {/* First address is default for demo purposes */}
                   {index === 0 && (
-                    <div className="flex items-center gap-1 mt-1 bg-[#eff6ff] text-[#2563eb] px-2 py-0.5 rounded-full text-[11px] font-bold w-fit">
+                    <div className="flex items-center gap-1 mt-1 bg-[#eff6ff] text-primary px-2 py-0.5 rounded-full text-[11px] font-bold w-fit">
                       <Star className="w-3 h-3" strokeWidth={2.5} /> Default
                     </div>
                   )}
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => handleEdit(addr)} className="flex flex-col items-center justify-center gap-1 bg-[#f8fafc] hover:bg-[#eff6ff] p-2 sm:px-3 rounded-lg text-[#2563eb] transition-colors">
-                  <Edit2 className="w-4 h-4" strokeWidth={2} />
-                  <span className="text-[10px] font-bold">Edit</span>
+                <button onClick={() => handleEdit(addr)} className="flex flex-col  text-primary items-center justify-center gap-1 bg-[#f8fafc] hover:bg-[#eff6ff] p-2 sm:px-3 rounded-lg text-[#2563eb] transition-colors">
+                  <Edit2 className="w-4 h-4 " strokeWidth={2} />
+                  <span className="text-[10px]  font-bold">Edit</span>
                 </button>
                 <button onClick={() => deleteAddress(addr.id)} className="flex flex-col items-center justify-center gap-1 bg-[#fef2f2] hover:bg-[#fee2e2] p-2 sm:px-3 rounded-lg text-[#ef4444] transition-colors">
                   <Trash2 className="w-4 h-4" strokeWidth={2} />
@@ -789,7 +789,7 @@ function RewardPanel() {
 }
 
 function BannerSlider() {
-  const banners = ['/images/sb1.png', '/images/sb2.png'];
+  const banners = ['/images/banners/image copy 7.png', '/images/sb2.png'];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -916,7 +916,7 @@ function AccountPageInner() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f3fc] pb-24 lg:pb-12">
+    <div className="min-h-screen bg-white pb-24 lg:pb-12">
       <div className="max-w-[1100px] mx-auto flex flex-col lg:flex-row gap-6 lg:gap-10 lg:pt-8 lg:px-4">
 
         {/* ── Navigation / Menu ── */}

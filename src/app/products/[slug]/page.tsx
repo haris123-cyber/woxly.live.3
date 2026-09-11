@@ -223,11 +223,7 @@ export default function ProductDetailPage() {
   const sizeLabels = ["S", "M", "L", "XL", "XXL"];
   const gallery = [
     product.image,
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
-    "/images/product_placeholder.png",
+    ...(product.images || [])
   ];
   const originalPrice = product.originalPrice;
 
@@ -806,6 +802,22 @@ export default function ProductDetailPage() {
               </button>
             </div>
           </div>
+
+          {/* Mobile Thumbnails */}
+          {gallery.length > 1 && (
+            <div className="flex gap-2 mt-3 overflow-x-auto hide-scrollbar">
+              {gallery.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setImageIndex(i)}
+                  className={`relative w-16 h-16 rounded-xl overflow-hidden bg-[#f4f4f9] shrink-0 transition-all ${imageIndex === i ? "border-2 border-primary opacity-100 scale-100" : "opacity-60 scale-95"
+                    }`}
+                >
+                  <Image src={img} alt="" fill className="object-cover" sizes="64px" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
@@ -1784,49 +1796,7 @@ export default function ProductDetailPage() {
         {renderRecentlyViewed(true)}
       </div>
 
-      {/* ── MANUFACTURER BANNERS ── */}
-      <div className=" py-10 lg:py-12 bg-white">
-        <div className="container mx-auto px-1 lg:px-6 max-w-7xl">
-          <div className="flex flex-col gap-0">
-            {/* Banner 1 */}
-            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
-              <Image
-                src="/images/product_placeholder.png"
-                alt="Manufacturer Banner 1"
-                fill
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
-                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 1</span>
-              </div>
-            </div>
-            {/* Banner 2 */}
-            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
-              <Image
-                src="/images/product_placeholder.png"
-                alt="Manufacturer Banner 2"
-                fill
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
-                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 2</span>
-              </div>
-            </div>
-            {/* Banner 3 */}
-            <div className="w-full aspect-[16/9] lg:aspect-[21/9] relative bg-[#f4f4f5]  overflow-hidden shadow-sm cursor-pointer group">
-              <Image
-                src="/images/product_placeholder.png"
-                alt="Manufacturer Banner 3"
-                fill
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-transparent transition-colors">
-                <span className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg text-sm font-bold text-gray-600 tracking-widest uppercase">Banner 3</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Fullscreen Image Lightbox */}
       <AnimatePresence>

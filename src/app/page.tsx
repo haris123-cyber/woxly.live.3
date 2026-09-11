@@ -10,59 +10,107 @@ import { CategorySlider } from "@/components/home/CategorySlider";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { FlashSaleTimer } from "@/components/home/FlashSaleTimer";
 import { PromoBanners } from "@/components/home/PromoBanners";
+import { StationaryBanners } from "@/components/home/StationaryBanners";
 
-// Reusable Product Carousel Component
 const ProductCarousel = ({
-
-  // Wait, I can't put `useEmblaCarousel` inside `page.tsx` if it's a Server Component, but `page.tsx` might not have `"use client"`!
-  // Let me check if `page.tsx` has `"use client"`.
   title,
   description,
   products,
   link,
   prependElement,
+  bannerImage,
+  bgColor = "bg-[#dcedcd]",
+  textColor = "text-[#1b4e2b]",
 }: {
   title: string;
   description?: string;
   products: typeof PRODUCTS;
   link: string;
   prependElement?: React.ReactNode;
+  bannerImage?: string;
+  bgColor?: string;
+  textColor?: string;
 }) => {
   return (
-    <section className="container mx-auto px-5 sm:px-6 py-6 mb-1">
-      <div className="flex flex-row items-center justify-between mb-4">
-        <div className="flex flex-col flex-1 min-w-0 pr-4">
-          <h2 className="font-heading text-xl sm:text-[26px] font-bold text-zinc-900 truncate">{title}</h2>
-          {description && (
-            <p className="text-[10px] sm:text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mt-1 truncate">
-              {description}
-            </p>
-          )}
-        </div>
-        <Link
-          href={link}
-          className="text-[13px] sm:text-[15px] font-bold text-zinc-900 hover:opacity-80 shrink-0 inline-flex items-center gap-2 sm:gap-3"
-        >
-          See All
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary flex items-center justify-center shadow-sm">
-            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" strokeWidth={2.5} />
+    <section className="container mx-auto px-5 sm:px-6 py-2 mb-1">
+
+      {/* Banner */}
+      <div
+        className={`relative rounded-xl sm:rounded-2xl ${bgColor} ${textColor} mb-3 overflow-hidden h-32 sm:h-44 md:h-52`}
+      >
+        {/* Full Banner Image */}
+        {bannerImage && (
+          <Image
+            src={bannerImage}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        )}
+
+        {/* Image Overlay */}
+        <div className="absolute inset-0 bg-black/25" />
+
+        {/* Banner Content */}
+        <div className="relative z-10 flex h-full flex-col justify-center p-4 sm:p-6">
+          <div className="w-2/3 min-w-0">
+            <h2 className="font-heading text-xl sm:text-[26px] font-bold text-current truncate">
+              {title}
+            </h2>
+
+            {description && (
+              <p className="text-[10px] sm:text-xs opacity-80 uppercase tracking-[0.12em] font-medium mt-1 truncate">
+                {description}
+              </p>
+            )}
+
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="bg-white mt-2 border-0 text-black hover:bg-gray-100 rounded-full h-7 sm:h-8 px-3 sm:px-4 text-[10px] sm:text-xs font-bold w-fit"
+            >
+              <Link
+                href={link}
+                className="text-[13px] sm:text-[15px] font-bold text-zinc-900 hover:opacity-80 inline-flex items-center gap-2 sm:gap-3"
+              >
+                See All
+
+                <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary flex items-center justify-center shadow-sm">
+                  <ArrowRight
+                    className="w-2 h-2 sm:w-4 sm:h-4 text-white"
+                    strokeWidth={2.5}
+                  />
+                </span>
+              </Link>
+            </Button>
           </div>
-        </Link>
+        </div>
       </div>
+
+      {/* Products */}
       <div className="relative">
         <div className="flex overflow-x-auto gap-3 sm:gap-4 snap-x snap-mandatory hide-scrollbar pb-4 -mx-5 sm:-mx-6 px-5 sm:px-6 scroll-px-5 sm:scroll-px-6 items-stretch">
+
           {prependElement && (
             <div className="w-[200px] sm:w-[280px] shrink-0 snap-start flex flex-col gap-3 sm:gap-4">
               {prependElement}
             </div>
           )}
+
           {products.map((product) => (
-            <div key={product.id} className="w-[180px] sm:w-[200px] md:w-[240px] lg:w-[280px] shrink-0 snap-start">
+            <div
+              key={product.id}
+              className="w-[180px] sm:w-[200px] md:w-[240px] lg:w-[280px] shrink-0 snap-start"
+            >
               <ProductCard product={product} />
             </div>
           ))}
+
         </div>
       </div>
+
     </section>
   );
 };
@@ -74,18 +122,18 @@ export default function Home() {
   const drinkProducts = PRODUCTS.filter(p => p.category === 'Beverages');
 
   const categoryImages = [
-    { name: "Vegetables & Fruits", image: "/images/product_placeholder.png" },
-    { name: "Grocery & Staples", image: "/images/product_placeholder.png" },
-    { name: "Dairy & Eggs", image: "/images/product_placeholder.png" },
-    { name: "Beverages", image: "/images/product_placeholder.png" },
-    { name: "Snacks & Munchies", image: "/images/product_placeholder.png" },
-    { name: "Food", image: "/images/product_placeholder.png" },
-    { name: "Fashion", image: "/images/product_placeholder.png" },
-    { name: "Bags & Luggage", image: "/images/product_placeholder.png" },
-    { name: "Beauty & Personal Care", image: "/images/product_placeholder.png" },
-    { name: "Electronics", image: "/images/product_placeholder.png" },
-    { name: "Home & Kitchen", image: "/images/product_placeholder.png" },
-    { name: "Liquor", image: "/images/product_placeholder.png" },
+    { name: "Vegetables & Fruits", image: "/images/veg/Organic_broccoli_2.jpg" },
+    { name: "Grocery & Staples", image: "/images/grocery/Quaker_Oats (2).jpeg" },
+    { name: "Dairy & Eggs", image: "/images/DAIRY & EGGS/farm_fresh_eggs_1789022099897.jpg" },
+    { name: "Beverages", image: "/images/liquor/Peach_iced_tea_product_photography_20260910155712.jpeg" },
+    { name: "Snacks & Munchies", image: "/images/snacks/Potato_chips_product_photography_20260910123202.jpeg" },
+    { name: "Food", image: "/images/meat&seafood/Atlantic_Salmon_product_photography_20260910165654.jpeg" },
+    { name: "Fashion", image: "/images/fashion/Denim_jacket_product.jpeg" },
+    { name: "Bags & Luggage", image: "/images/fashion/Brown_leather_handbag.jpeg" },
+    { name: "Beauty & Personal Care", image: "/images/beauty/Luxury_perfume_bottle_on_background_20260910124349.jpeg" },
+    { name: "Electronics", image: "/images/electronics/Smart_Phone_Pro_product_photography_20260910125103.jpeg" },
+    { name: "Home & Kitchen", image: "/images/home care/Dishwashing_liquid_product_photo…_20260910153837.jpeg" },
+    { name: "Liquor", image: "/images/liquor/Vodka_bottles_on_studio_background_20260910154513.jpeg" },
   ];
 
 
@@ -99,10 +147,12 @@ export default function Home() {
       {/* Best Sellers */}
       <ProductCarousel
         title="Best Sellers"
-
         description="Our most loved picks. Top-rated customer favorites."
         products={bestSellers}
         link="/shop"
+        bannerImage="/images/banners/Mobile_phones_displayed_diagonally_20260910171528.jpeg"
+        bgColor="bg-[#0f172a]"
+        textColor="text-white"
       />
 
       <PromoBanners />
@@ -116,58 +166,53 @@ export default function Home() {
           description="Farm-fresh produce picked daily."
           products={fruitsProducts}
           link="/shop"
-
+          bannerImage="/images/banners/Floating_fruits_on_dark_background_20260910171543.jpeg"
+          bgColor="bg-[#1e1b4b]"
+          textColor="text-white"
         />
       )}
 
       {fashionProducts.length > 0 && (
         <>
           <section className="container mx-auto px-4 sm:px-6 mt-10 mb-2">
-            <div className="grid grid-cols-[1.4fr_1fr] md:grid-cols-[1.6fr_1fr] gap-2 sm:gap-4 h-[160px] sm:h-[220px] md:h-[320px]">
+            <div className="relative w-full h-[160px] sm:h-[220px] md:h-[320px] overflow-hidden group">
 
-              {/* Left Banner */}
-              <div className="relative rounded-[0px] md:rounded-[0px] overflow-hidden bg-[#eaf5f2] flex flex-col justify-center h-full group shadow-sm border border-[#eaf5f2]">
-                <Image
-                  src="/images/hero_fashion.png"
-                  alt="Fashion Woman"
-                  fill
-                  className="object-cover object-[70%_top] opacity-90 transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#eaf5f2] via-[#eaf5f2]/90 to-transparent sm:w-[65%]" />
+              {/* Full Width Banner Image */}
+              <Image
+                src="/images/banners/image copy 6.png"
+                alt="Fashion Woman"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
 
-                <div className="relative z-10 p-4 sm:p-8 md:p-12 max-w-[150px] sm:max-w-[280px]">
+              {/* Dark/Light Overlay for Text */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#eaf5f2] via-[#eaf5f2]/85 to-transparent" />
+
+              {/* Content */}
+              <div className="relative z-10 flex h-full items-center p-4 sm:p-8 md:p-12">
+                <div className="max-w-[150px] sm:max-w-[280px] md:max-w-[400px]">
                   <h2 className="font-heading text-[18px] sm:text-[32px] md:text-[44px] font-extrabold text-[#111827] leading-[1.1] mb-1.5 sm:mb-2 tracking-tight">
-                    Go Behind<br />The Design
+                    Go Behind
+                    <br />
+                    The Design
                   </h2>
-                  <p className="text-[#374151] text-[9px] sm:text-[13px] italic mb-3 sm:mb-6 font-serif leading-tight">women Essentials Seasonals</p>
-                  <Button asChild className="bg-primary hover:bg-[#0f4c48]  text-white rounded-none font-bold px-3 sm:px-6 py-1.5 sm:py-2.5 border-0 h-auto w-fit text-[9px] sm:text-[12px] shadow-sm tracking-wide">
+
+                  <p className="text-[#374151] text-[9px] sm:text-[13px] italic mb-3 sm:mb-6 font-serif leading-tight">
+                    Women Essentials Seasonals
+                  </p>
+
+                  <Button
+                    asChild
+                    className="bg-primary hover:bg-[#0f4c48] text-white rounded-none font-bold px-3 sm:px-6 py-1.5 sm:py-2.5 border-0 h-auto w-fit text-[9px] sm:text-[12px] shadow-sm tracking-wide"
+                  >
                     <Link href="/shop">
                       Shop All
                     </Link>
                   </Button>
                 </div>
               </div>
-
-              {/* Right Banner */}
-              <div className="relative rounded-[0px] md:rounded-[0px] overflow-hidden bg-[#dcdfd8] p-4 sm:p-6 md:p-8 flex flex-col justify-end h-full group shadow-sm">
-                <Image
-                  src="/images/hero_fashion.png"
-                  alt="Unisex T-Shirts"
-                  fill
-                  className="object-cover object-center opacity-90 transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                <div className="relative z-10 w-full">
-                  <h3 className="font-heading text-[13px] sm:text-[18px] md:text-[22px] font-bold text-white mb-1 sm:mb-2 leading-snug line-clamp-2">
-                    Unisex summer cotton T-shirt
-                  </h3>
-                  <Link href="/shop" className="text-white text-[9px] sm:text-[12px] font-medium border-b border-white pb-0.5 hover:border-white/60 transition-colors w-fit block italic leading-none mt-2">
-                    Shop All
-                  </Link>
-                </div>
-              </div>
-
             </div>
           </section>
           <ProductCarousel
@@ -175,41 +220,24 @@ export default function Home() {
             description="Everyday wear. Every size. Every style."
             products={fashionProducts}
             link="/shop"
+            bannerImage="/images/hero_fashion.png"
+            bgColor="bg-[#fce7f3]"
+            textColor="text-white"
           />
         </>
       )}
 
       {drinkProducts.length > 0 && (
         <>
-          <section className="container mx-auto px-5 sm:px-6 mt-6 mb-5">
-            <div className="relative rounded-0 sm:rounded-lg overflow-hidden bg-zinc-900 h-44 -mt-10 sm:h-64 md:h-80 flex items-center shadow-lg group">
-              <Image
-                src="/images/hero_liquor.png"
-                alt="Premium Liquors"
-                fill
-                className="object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-              <div className="relative z-10 p-5 sm:p-8 md:p-16 max-w-2xl">
-                <h2 className="font-heading text-xl sm:text-3xl md:text-5xl font-bold mb-2 sm:mb-3 text-white drop-shadow-md">
-                  Premium Liquors
-                </h2>
-                <p className="text-white/90 text-xs sm:text-lg mb-3 sm:mb-6 drop-shadow-sm">
-                  Discover the finest selection of beverages for your perfect evening.
-                </p>
-                <Button asChild style={{ background: "#8b5cf6", color: "#fff", borderRadius: "8px", fontWeight: 700, padding: "7px 14px" }} className="hover:opacity-90 transition-opacity border-0 text-xs sm:text-base h-8 sm:h-auto">
-                  <Link href="/shop">
-                    Explore Spirits <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </section>
+          <StationaryBanners />
           <ProductCarousel
             title="Beverages & Drinks"
             description="Stay refreshed. Juices, drinks, tea, coffee and more."
             products={drinkProducts}
             link="/shop"
+            bannerImage="/images/banners/Liquors_aligned_on_glowing_shelf_20260910171532.jpeg"
+            bgColor="bg-[#18181b]"
+            textColor="text-white"
           />
         </>
       )}
@@ -290,20 +318,8 @@ export default function Home() {
       </section>
       {/* Bottom Banner Slots */}
       <section className="container mx-auto px-2 sm:px-6 py-6 sm:py-8">
-        <div className="flex flex-col gap-2 sm:gap-2">
-          <Link
-            href="/shop"
-            className="relative flex w-full aspect-[2/1] sm:aspect-[3/1] items-center justify-center  bg-zinc-900 overflow-hidden hover:opacity-95 transition-opacity"
-          >
-            <span className="text-sm sm:text-base font-medium text-white/50 select-none">600 × 200</span>
-          </Link>
-          <Link
-            href="/shop"
-            className="relative flex w-full min-h-[100px] aspect-[3/1] sm:min-h-[88px] sm:aspect-[6/1] items-center justify-center  bg-zinc-800 overflow-hidden hover:opacity-95 transition-opacity"
-          >
-            <span className="text-xs sm:text-sm font-medium text-white/40 select-none">Banner</span>
-          </Link>
-        </div>
+        <img src="/images/banners/image copy 3.png" alt="Banner" className="w-full h-full object-cover" />
+
       </section>
 
       {/* Features + Newsletter */}

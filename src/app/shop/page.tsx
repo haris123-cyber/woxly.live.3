@@ -430,34 +430,59 @@ export default function ShopPage() {
       <div className="lg:hidden px-5 pt-0 pb-8">
         {/* Sort / Filter bar */}
         <div className="relative mb-1 -mx-4">
-          <div className="flex items-center justify-center bg-white py-3 border-y border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-            <button
-              type="button"
-              onClick={() => setSortMenuOpen((v) => !v)}
-              className="flex-1 flex items-center justify-center gap-2 text-[14px] font-semibold text-gray-700"
-            >
-              <ArrowUpDown className="w-4 h-4 text-gray-400" />
-              Sort
-            </button>
+          <div className="flex items-center justify-between gap-3 mt-4 mb-5 px-4 w-full">
+            <div className="flex items-center gap-2 flex-1">
+              <button
+                type="button"
+                onClick={() => setSortMenuOpen((v) => !v)}
+                className="flex-1 flex items-center justify-center gap-2 text-[14px] py-1.5 border-2 rounded-sm border-black/10 font-semibold text-gray-700 bg-white "
+              >
+                <ArrowUpDown className="w-4 h-4 text-gray-400" />
+                Sort
+              </button>
 
-            <div className="w-[1px] h-[20px] bg-gray-200" />
+              <button
+                type="button"
+                onClick={() => setFilterOpen(true)}
+                className="flex-1 flex items-center justify-center gap-2 text-[14px] font-semibold py-1.5 border-2 rounded-sm border-black/10 bg-white text-gray-700"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-gray-400" />
+                Filter
+                {activeFiltersCount > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center ml-1">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setFilterOpen(true)}
-              className="flex-1 flex items-center justify-center gap-2 text-[14px] font-semibold text-gray-700"
-            >
-              <SlidersHorizontal className="w-4 h-4 text-gray-400" />
-              Filter
-              {activeFiltersCount > 0 && (
-                <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center ml-1">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </button>
+            <div className="flex items-center shrink-0">
+              <div className="bg-white p-1 rounded-sm flex items-center gap-1 border-2 border-black/5 shadow-sm">
+                {/* Grid View */}
+                <button
+                  type="button"
+                  onClick={() => setViewMode('grid')}
+                  className={`p-1.5 rounded-sm transition-colors ${viewMode === 'grid'
+                    ? 'bg-primary text-white'
+                    : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </button>
 
-            <div className="w-[1px] h-[20px] bg-gray-200" />
-
+                {/* List View */}
+                <button
+                  type="button"
+                  onClick={() => setViewMode('list')}
+                  className={`p-1.5 rounded-sm transition-colors ${viewMode === 'list'
+                    ? 'bg-primary text-white'
+                    : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                >
+                  <AlignJustify className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Sort panel — slides in from top */}
@@ -680,37 +705,7 @@ export default function ShopPage() {
             </div>
           </SheetContent>
         </Sheet>
-        <div className="flex items-center w-full">
-          {/* Other content */}
 
-          <div className="bg-white p-1 mr-1 mb-2 ml-auto rounded-sm flex items-center gap-1">
-
-            {/* Grid View */}
-            <button
-              type="button"
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-sm ${viewMode === 'grid'
-                ? 'bg-gray-100 text-gray-700'
-                : 'text-gray-400'
-                }`}
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-
-            {/* List View */}
-            <button
-              type="button"
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-sm ${viewMode === 'list'
-                ? 'bg-gray-100 text-gray-700'
-                : 'text-gray-400'
-                }`}
-            >
-              <AlignJustify className="w-4 h-4" />
-            </button>
-
-          </div>
-        </div>
 
         {/* Product grid — 2 columns or list */}
         <div className={viewMode === 'grid' ? "grid grid-cols-2 gap-3 sm:gap-4" : "flex flex-col"}>
