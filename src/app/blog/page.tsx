@@ -11,21 +11,21 @@ const blogPosts = [
     category: "HEALTHY LIVING",
     date: "May 10, 2025",
     readTime: "5 min read",
-    image: "/images/blog-health.webp",
+    image: "/images/blog-health.png",
   },
   {
     title: "Top 5 Bag Trends You'll Love in 2025",
     category: "FASHION",
     date: "May 8, 2025",
     readTime: "4 min read",
-    image: "/images/blog-fashion.webp",
+    image: "/images/blog-fashion.png",
   },
   {
     title: "Easy & Healthy Breakfast Ideas",
     category: "RECIPES",
     date: "May 6, 2025",
     readTime: "6 min read",
-    image: "/images/blog-recipe.webp",
+    image: "/images/blog-recipe.png",
   }
 ];
 
@@ -56,7 +56,7 @@ export default function BlogPage() {
     <div className="container mx-auto px-4 py-8 md:py-16 max-w-4xl min-h-[60vh]">
       <div className="mb-8">
         <h1 className="font-heading text-[32px] md:text-4xl font-extrabold text-[#001c30] mb-6 tracking-tight">Latest from Our Blog</h1>
-        
+
         {/* Search Bar */}
         <div className="relative mb-6">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -73,18 +73,17 @@ export default function BlogPage() {
 
         {/* Filter & Sort Bar */}
         <div className="bg-[#f8f6fb] rounded-2xl p-2 md:p-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-          
+
           {/* Categories */}
           <div className="flex items-center gap-1 overflow-x-auto w-full sm:w-auto scrollbar-hide py-1">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-2.5 rounded-full text-[14px] font-bold whitespace-nowrap transition-colors ${
-                  selectedCategory === cat 
-                    ? "bg-[#ecdffd] text-[#6d28d9]" 
+                className={`px-5 py-2.5 rounded-full text-[14px] font-bold whitespace-nowrap transition-colors ${selectedCategory === cat
+                    ? "bg-[#ecdffd] text-[#6d28d9]"
                     : "text-gray-600 hover:bg-gray-200/50 hover:text-gray-900"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -98,7 +97,7 @@ export default function BlogPage() {
               <ChevronDown className="w-4 h-4 text-gray-500" />
             </button>
             {/* Note: A proper select/dropdown menu goes here. For now, it acts as a toggle. */}
-            <select 
+            <select
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}

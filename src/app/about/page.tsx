@@ -45,7 +45,7 @@ export default function AboutPage() {
         <div className="w-full lg:w-[400px] shrink-0 mt-4 md:mt-0 flex items-center">
           <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden shadow-sm">
             <Image
-              src="/images/about-store.png"
+              src="/images/phone_mockup.png"
               alt="About Our Store"
               fill
               className="object-cover"
