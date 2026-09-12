@@ -5,27 +5,27 @@ import Link from "next/link";
 
 const CATEGORIES = [
   {
-    name: "Vegetables & Fruits",
+    name: "Veggies",
     image: "/images/veg/Organic_broccoli_2.jpg",
     link: "/shop",
   },
   {
-    name: "Grocery & Staples",
+    name: "Grocery",
     image: "/images/grocery/Quaker_Oats (2).jpeg",
     link: "/shop",
   },
   {
-    name: "Dairy & Eggs",
+    name: "Dairy",
     image: "/images/DAIRY & EGGS/farm_fresh_eggs_1789022099897.jpg",
     link: "/shop",
   },
   {
-    name: "Beverages",
+    name: "Drinks",
     image: "/images/liquor/Peach_iced_tea_product_photography_20260910155712.jpeg",
     link: "/shop",
   },
   {
-    name: "Snacks & Munchies",
+    name: "Snacks",
     image: "/images/snacks/Potato_chips_product_photography_20260910123202.jpeg",
     link: "/shop",
   },
@@ -40,12 +40,12 @@ const CATEGORIES = [
     link: "/shop",
   },
   {
-    name: "Bags & Luggage",
+    name: "Bags",
     image: "/images/fashion/Brown_leather_handbag.jpeg",
     link: "/shop",
   },
   {
-    name: "Beauty & Personal Care",
+    name: "Beauty",
     image: "/images/beauty/Luxury_perfume_bottle_on_background_20260910124349.jpeg",
     link: "/shop",
   },
@@ -55,7 +55,7 @@ const CATEGORIES = [
     link: "/shop",
   },
   {
-    name: "Home & Kitchen",
+    name: "Home",
     image: "/images/home care/Dishwashing_liquid_product_photo…_20260910153837.jpeg",
     link: "/shop",
   },
@@ -77,7 +77,7 @@ export function CategorySlider() {
             className="group flex shrink-0 flex-col items-center gap-2 sm:gap-3 snap-start transition-transform duration-200 hover:-translate-y-1"
           >
             {/* Category Image */}
-            <div className="relative w-14 h-14  sm:w-20 sm:h-20 overflow-hidden rounded-full bg-[#f4eefc] ring-1 ring-zinc-100 transition-all duration-200 group-hover:ring-[#8b5cf6] group-hover:shadow-md">
+            <div className="relative w-13 h-13  sm:w-20 sm:h-20 overflow-hidden rounded-full bg-[#f4eefc] ring-1 ring-zinc-100 transition-all duration-200 group-hover:ring-[#8b5cf6] group-hover:shadow-md">
               <Image
                 src={cat.image}
                 alt={cat.name}
