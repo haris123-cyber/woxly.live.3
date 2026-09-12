@@ -126,7 +126,7 @@ const initialOrders: OrderItem[] = [
     color: "",
     size: "500ml",
     price: "₹509",
-    image: "/images/product_placeholder.png",
+    image: "/images/grocery/Olive_oil_bottles.jpeg",
     status: "Cancelled ",
     statusColor: "red",
     statusDesc: "Your order was cancelled as per your request.",
