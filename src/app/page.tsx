@@ -32,7 +32,7 @@ const ProductCarousel = ({
   textColor?: string;
 }) => {
   return (
-    <section className="container mx-auto px-5 sm:px-6 py-2 mb-1">
+    <section className="container mx-auto px-4 sm:px-6 py-2 mb-1">
 
       {/* Banner */}
       <div
@@ -191,7 +191,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-r from-[#eaf5f2] via-[#eaf5f2]/85 to-transparent" />
 
               {/* Content */}
-              <div className="relative z-10 flex h-full items-center p-4 sm:p-8 md:p-12">
+              <div className="relative z-10 flex h-full items-center p-2 sm:p-8 md:p-12">
                 <div className="max-w-[150px] sm:max-w-[280px] md:max-w-[400px]">
                   <h2 className="font-heading text-[18px] sm:text-[32px] md:text-[44px] font-extrabold text-[#111827] leading-[1.1] mb-1.5 sm:mb-2 tracking-tight">
                     Go Behind

@@ -70,7 +70,7 @@ export function PromoBanners() {
   }, [scheduleUpdate, updateScales]);
 
   return (
-    <section className="container mx-auto w-full py-4 md:py-6">
+    <section className="container mx-2 w-full py-4 md:py-6">
       <div
         ref={scrollerRef}
         className="flex md:grid md:grid-cols-4 gap-1 sm:gap-2 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none hide-scrollbar px-5 sm:px-6 md:px-6 py-2 md:py-0 items-stretch overscroll-x-contain touch-pan-x"

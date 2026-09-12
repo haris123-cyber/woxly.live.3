@@ -25,7 +25,7 @@ const slides = [
     desc: "Discover our exclusive collection of fine writing instruments.",
     buttonText: "Shop Now",
     bgColor: "bg-[#1e3a8a]",
-    gradient: "from-[#1e3a8a]/90 via-[#1e40af]/60 to-transparent",
+    gradient: "from-black/90 via-black/60 to-transparentt",
     buttonBg: "bg-white text-[#1e3a8a] hover:bg-gray-100",
     image: "/images/banners/Headsets_lined_up_diagonally_20260910171540.jpeg",
   },
@@ -35,7 +35,7 @@ const slides = [
     desc: "Keep your workspace clean and productive.",
     buttonText: "Explore",
     bgColor: "bg-[#064e3b]",
-    gradient: "from-[#064e3b]/90 via-[#065f46]/60 to-transparent",
+    gradient: "from-black/90 via-black/60 to-transparent",
     buttonBg: "bg-[#8b5cf6] hover:bg-[#7c3aed] text-white",
     image: "/images/banners/Liquors_aligned_on_glowing_shelf_20260910171532.jpeg",
   }
@@ -67,14 +67,14 @@ export function StationaryBanners() {
         <div className="flex touch-pan-y flex-row -ml-4">
           {slides.map((slide) => (
             <div key={slide.id} className="flex-[0_0_92%] sm:flex-[0_0_100%] min-w-0 pl-4">
-              <div className={`relative rounded-[12px] sm:rounded-xl overflow-hidden ${slide.bgColor} h-[180px] sm:h-64 md:h-80 flex items-center shadow-sm w-full`}>
+              <div className={`relative rounded-[12px] sm:rounded-xl overflow-hidden  h-[180px] sm:h-64 md:h-80 flex items-center shadow-sm w-full`}>
                 {slide.image && (
                   <Image
                     src={slide.image}
                     alt={slide.title}
                     fill
                     priority
-                    className="object-cover opacity-80"
+                    className="object-cover opacity-100"
                   />
                 )}
                 <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />

@@ -101,52 +101,57 @@ export default function CartPage() {
             </div>
 
             <div className="flex flex-col gap-4 sm:p-6  p-2  rounded-md   hover:shadow-md transition-shadow relative group">
-              {items.map((item) => (
-                <div key={item.cartItemId} className="flex gap-4 sm:gap-6 border-b border-gray-200 pb-2">
-                  <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-md overflow-hidden bg-gray-100 shrink-0">
-                    <Image src={item.image} alt={item.name} fill className="object-cover" />
+              {items.map((item) => {
+                const liveProduct = PRODUCTS.find((p) => p.id === item.id);
+                const displayImage = liveProduct?.image || item.image;
+
+                return (
+                  <div key={item.cartItemId} className="flex gap-4 sm:gap-6 border-b border-gray-200 pb-2">
+                    <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-md overflow-hidden bg-gray-100 shrink-0">
+                      <Image src={displayImage} alt={item.name} fill className="object-cover" />
+                    </div>
+
+                    <div className="flex flex-col flex-1 min-w-0 py-1 relative mt-2">
+                      <div className="flex justify-between items-start mb-1 gap-2">
+                        <Link href={`/products/${item.slug}`} className="text-base sm:text-lg font-bold text-gray-900 hover:underline line-clamp-2 leading-tight">
+                          {item.name}
+                        </Link>
+                        <button
+                          onClick={() => removeItem(item.cartItemId)}
+                          className="p-1 text-gray-400 hover:text-red-500 transition-colors shrink-0"
+                        >
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </button>
+                      </div>
+
+                      <p className="text-[11px] sm:text-[13px] text-gray-400 mb-2 truncate max-w-[80%] leading-tight">
+                        {[item.selectedColor, item.selectedSize].filter(Boolean).join(" • ") || item.brand || "Lorem ipsum dolor sit amet, consectetuer."}
+                      </p>
+
+                      <div className="text-xl sm:text-lg font-bold text-primary mb-3">
+                        ₹{((item.price || 0)).toLocaleString()}
+                      </div>
+
+                      <div className="flex items-center gap-3 mt-auto">
+                        <button
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                          className="w-6 h-6 rounded bg-gray-200 text-gray-600 flex items-center justify-center disabled:opacity-50 hover:bg-gray-300 transition-colors"
+                        >
+                          <Minus className="w-3 h-3 font-bold" strokeWidth={3} />
+                        </button>
+                        <span className="text-sm font-bold text-gray-700 min-w-[12px] text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
+                          className="w-6 h-6 rounded bg-gray-200 text-gray-600 flex items-center justify-center hover:bg-gray-300 transition-colors"
+                        >
+                          <Plus className="w-3 h-3 font-bold" strokeWidth={3} />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="flex flex-col flex-1 min-w-0 py-1 relative mt-2">
-                    <div className="flex justify-between items-start mb-1 gap-2">
-                      <Link href={`/products/${item.slug}`} className="text-base sm:text-lg font-bold text-gray-900 hover:underline line-clamp-2 leading-tight">
-                        {item.name}
-                      </Link>
-                      <button
-                        onClick={() => removeItem(item.cartItemId)}
-                        className="p-1 text-gray-400 hover:text-red-500 transition-colors shrink-0"
-                      >
-                        <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </button>
-                    </div>
-
-                    <p className="text-[11px] sm:text-[13px] text-gray-400 mb-2 truncate max-w-[80%] leading-tight">
-                      {[item.selectedColor, item.selectedSize].filter(Boolean).join(" • ") || item.brand || "Lorem ipsum dolor sit amet, consectetuer."}
-                    </p>
-
-                    <div className="text-xl sm:text-lg font-bold text-primary mb-3">
-                      ₹{((item.price || 0)).toLocaleString()}
-                    </div>
-
-                    <div className="flex items-center gap-3 mt-auto">
-                      <button
-                        onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                        className="w-6 h-6 rounded bg-gray-200 text-gray-600 flex items-center justify-center disabled:opacity-50 hover:bg-gray-300 transition-colors"
-                      >
-                        <Minus className="w-3 h-3 font-bold" strokeWidth={3} />
-                      </button>
-                      <span className="text-sm font-bold text-gray-700 min-w-[12px] text-center">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                        className="w-6 h-6 rounded bg-gray-200 text-gray-600 flex items-center justify-center hover:bg-gray-300 transition-colors"
-                      >
-                        <Plus className="w-3 h-3 font-bold" strokeWidth={3} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
           </div>
@@ -297,7 +302,7 @@ export default function CartPage() {
             </Link>
           </div>
 
-          <div className="flex gap-2 mr-0 ml-2 overflow-x-auto hide-scrollbar pb-2 lg:grid lg:grid-cols-2 xl:grid-cols-4 lg:gap-6 lg:overflow-visible">
+          <div className="flex gap-2 mr-0 ml-2 overflow-x-auto hide-scrollbar pb-2 lg:grid lg:grid-cols-4 xl:grid-cols-4 lg:gap-6 lg:overflow-visible">
             {relatedProducts.slice(0, 4).map((rp) => (
               <div
                 key={rp.id}

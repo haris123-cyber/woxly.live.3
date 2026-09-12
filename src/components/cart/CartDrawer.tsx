@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { PRODUCTS } from "@/lib/mock-data";
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -39,55 +40,59 @@ export function CartDrawer() {
               </Button>
             </div>
           ) : (
-            items.map((item) => (
-              <div key={item.cartItemId} className="flex gap-4">
-                <div className="relative w-24 h-24 rounded-md overflow-hidden bg-muted shrink-0">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-medium line-clamp-1">{item.name}</h3>
-                      <button
-                        onClick={() => removeItem(item.cartItemId)}
-                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                    {(item.selectedColor || item.selectedSize) && (
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {item.selectedColor} {item.selectedSize ? `/ ${item.selectedSize}` : ''}
-                      </p>
-                    )}
-                    <p className="font-medium mt-1">₹{(item.price || 0).toFixed(2).replace(/\.00$/, '')}</p>
+            items.map((item) => {
+              const liveProduct = PRODUCTS.find((p) => p.id === item.id);
+              const displayImage = liveProduct?.image || item.image;
+
+              return (
+                <div key={item.cartItemId} className="flex gap-4">
+                  <div className="relative w-24 h-24 rounded-md overflow-hidden bg-muted shrink-0">
+                    <Image
+                      src={displayImage}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center border rounded-md">
-                      <button
-                        className="p-2 hover:bg-muted transition-colors disabled:opacity-50"
-                        onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                      >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="w-8 text-center text-sm">{item.quantity}</span>
-                      <button
-                        className="p-2 hover:bg-muted transition-colors"
-                        onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                      >
-                        <Plus className="w-3 h-3" />
-                      </button>
+                  <div className="flex flex-1 flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-medium line-clamp-1">{item.name}</h3>
+                        <button
+                          onClick={() => removeItem(item.cartItemId)}
+                          className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {(item.selectedColor || item.selectedSize) && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {item.selectedColor} {item.selectedSize ? `/ ${item.selectedSize}` : ''}
+                        </p>
+                      )}
+                      <p className="font-medium mt-1">₹{(item.price || 0).toFixed(2).replace(/\.00$/, '')}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center border rounded-md">
+                        <button
+                          className="p-2 hover:bg-muted transition-colors disabled:opacity-50"
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="w-8 text-center text-sm">{item.quantity}</span>
+                        <button
+                          className="p-2 hover:bg-muted transition-colors"
+                          onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
         </div>
 

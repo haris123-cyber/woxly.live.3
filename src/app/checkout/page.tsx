@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { PRODUCTS } from "@/lib/mock-data";
 import { useAddressStore } from "@/store/useAddressStore";
 import { useRewardStore } from "@/store/useRewardStore";
 import { toast } from "sonner";
@@ -141,11 +142,15 @@ export default function CheckoutPage() {
       </div>
 
       <div className="flex overflow-x-auto gap-3 pb-4 mb-2 scrollbar-hide">
-        {items.map(item => (
+        {items.map(item => {
+          const liveProduct = PRODUCTS.find((p) => p.id === item.id);
+          const displayImage = liveProduct?.image || item.image;
+          
+          return (
           <div key={item.id} className="w-[72px] h-[72px] rounded-[16px] border border-gray-100 overflow-hidden relative shrink-0">
-            <Image src={item.image} alt={item.name} fill className="object-cover p-1" />
+            <Image src={displayImage} alt={item.name} fill className="object-cover p-1" />
           </div>
-        ))}
+        )})}
       </div>
 
       {/* Order Summary Toggle */}

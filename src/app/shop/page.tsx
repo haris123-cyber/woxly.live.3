@@ -411,7 +411,7 @@ export default function ShopPage() {
                 min={priceRange[0]}
                 max={priceBounds.max}
                 onChange={(e) => {
-                  let val = Number(e.target.value);
+                  const val = Number(e.target.value);
                   setPriceRange([priceRange[0], val]);
                 }}
                 className="w-full rounded-lg border border-gray-200 pl-6 pr-2 py-2 text-xs font-bold text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all"
@@ -610,7 +610,7 @@ export default function ShopPage() {
                         min={priceRange[0]}
                         max={priceBounds.max}
                         onChange={(e) => {
-                          let val = Number(e.target.value);
+                          const val = Number(e.target.value);
                           setPriceRange([priceRange[0], val]);
                         }}
                         className="w-full rounded-sm border border-gray-200 pl-7 pr-2 py-2 text-sm font-bold text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all"
