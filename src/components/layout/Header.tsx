@@ -153,18 +153,16 @@ function MobileBottomNav() {
       </Link>
 
       {/* Center Action Button ↗ */}
-      <button
-        onClick={toggleCart}
+      <Link
+        href="/shop"
         className="absolute left-1/2 -top-5 -translate-x-1/2 flex items-center justify-center w-[58px] h-[58px] rounded-full bg-primary text-white shadow-lg border-[5px] border-[#f4f4f5] transition-transform active:scale-95 z-50"
       >
-        <Link href={'/shop'}>
-          <FontAwesomeIcon
-            icon={faArrowRightLong}
-            className="text-white text-xl rotate-[-45deg]"
-            strokeWidth={2}
-          />
-        </Link>
-      </button>
+        <FontAwesomeIcon
+          icon={faArrowRightLong}
+          className="text-white text-xl rotate-[-45deg]"
+          strokeWidth={2}
+        />
+      </Link>
 
       {/* Orders */}
       <Link href="/account?tab=orders" className="relative flex flex-col items-center justify-center gap-1 w-12 ml-6">
